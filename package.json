@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "eCommerce is a comprehensive online shopping portal that allows users to browse a wide range of products, view detailed descriptions, add their favorite products to the cart, and proceed to checkout.",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6"
+  }
 }
