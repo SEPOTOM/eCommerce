@@ -37,5 +37,7 @@ module.exports = {
       'error',
       'always',
     ],
+
+    'max-lines-per-function': ['warn', 40],
   },
 };
