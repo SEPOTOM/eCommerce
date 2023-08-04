@@ -8,6 +8,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'airbnb-base',
     'airbnb-typescript/base',
+    'prettier',
+    'plugin:prettier/recommended',
   ],
   'overrides': [
   ],
@@ -20,6 +22,7 @@ module.exports = {
   },
   'plugins': [
     '@typescript-eslint',
+    'prettier',
   ],
   'rules': {
     'indent': [
@@ -40,5 +43,6 @@ module.exports = {
     ],
 
     'max-lines-per-function': ['warn', 40],
+    'prettier/prettier': 'error',
   },
 };
