@@ -8,9 +8,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.2.1",
-    "@typescript-eslint/parser": "^6.2.1",
-    "ts-loader": "^9.4.4",
     "typescript": "^5.1.6"
   }
 }
