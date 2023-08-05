@@ -6,7 +6,6 @@
   "scripts": {
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
-    "prepare": "husky install",
     "pretty": "npx prettier src --check",
     "pretty-fix": "npx prettier src --write",
     "test": "jest src",
