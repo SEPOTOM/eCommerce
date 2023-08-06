@@ -45,4 +45,5 @@ module.exports = {
     'max-lines-per-function': ['warn', 40],
     'prettier/prettier': 'error',
   },
+  'ignorePatterns': ['.eslintrc.js'],
 };
