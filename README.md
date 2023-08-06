@@ -16,20 +16,33 @@ Git | Commerce Tools | TypeScript | Trello | Webpack | ESLint | Prettier | Husky
 
 ### Scripts for running ESLint tests:
 ***
+**General command for checking ESLint**
 ```
-"lint": "eslint src" - general command for checking ESLint.
-"lint-fix": "eslint src --fix" - general team with automatic correction of possible problems.
+"lint": "eslint src" 
 ```
-
+**General team with automatic correction of possible problems**
+```
+"lint-fix": "eslint src --fix" 
+```
 ### Scripts for running Prettier tests:
 ***
+**Сhecks that the files are already formatted, and does not overwrite them**
 ```
-"pretty": "npx prettier src --check" - checks that the files are already formatted, and does not overwrite them.
-"pretty-fix": "npx prettier src --write" - formats all files supported by Prettier in the current directory and its subdirectories.
+"pretty": "npx prettier src --check" 
+```
+
+**Formats all files supported by Prettier in the current directory and its subdirectories.**
+```
+"pretty-fix": "npx prettier src --write"
 ```
 
 ### Scripts for running Jest tests:
 ***
+**General command for checking jest**
 ```
-"test": "jest src" - general command for checking jest.
-"test-cov": "jest src --coverage" - the command to cover the code jest.
+"test": "jest src" 
+```
+**The command to cover the code jest**
+```
+"test-cov": "jest src --coverage" 
+```
