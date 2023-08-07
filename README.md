@@ -16,33 +16,43 @@ Git | Commerce Tools | TypeScript | Trello | Webpack | ESLint | Prettier | Husky
 
 ### Scripts for running ESLint tests:
 ***
-**General command for checking ESLint**
+**To run ESLint check**
 ```
-"lint": "eslint src" 
-```
-**General team with automatic correction of possible problems**
-```
-"lint-fix": "eslint src --fix" 
-```
-### Scripts for running Prettier tests:
-***
-**Сhecks that the files are already formatted, and does not overwrite them**
-```
-"pretty": "npx prettier src --check" 
+npm run lint
 ```
 
-**Formats all files supported by Prettier in the current directory and its subdirectories.**
+**To run ESLint force fix**
 ```
-"pretty-fix": "npx prettier src --write"
+npm run lint-fix
+```
+
+### Scripts for running Prettier tests:
+***
+**To run Prettier check**
+```
+npm run pretty 
+```
+
+**To run Prettier force fix**
+```
+npm run pretty-fix
 ```
 
 ### Scripts for running Jest tests:
 ***
-**General command for checking jest**
+**To run tests**
 ```
-"test": "jest src" 
+npm run test
 ```
-**The command to cover the code jest**
+
+**To see the test coverage**
 ```
-"test-cov": "jest src --coverage" 
+npm run test-cov
 ```
+In addition to the output to the console, the coverage folder will be created in the root of the project. The path coverage/lcov-report contains a file index.html, which provides a more user-friendly interface.
+
+### Instructions for setting up and running the project locally:
+1. git clone
+2. npm install
+3. npm husky install
+4. npm run dev
