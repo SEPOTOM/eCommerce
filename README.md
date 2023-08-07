@@ -50,9 +50,9 @@ Our application is that it's responsive calling, ensuring it looks great on vari
 |  npm **run lint**   |  run ESLint check   |
 |  npm **run lint-fix**  |  run ESLint force fix   |
 |  npm **run pretty**   |  run Prettier check  |
-|  npm **run pretty-fix **   |  run Prettier force fix  |
+|  npm **run pretty-fix**   |  run Prettier force fix  |
 |  npm **run test**   |  run Jest tests  |
-|  npm **run test-cov **   |  run Jest tests coverage |
+|  npm **run test-cov**   |  run Jest tests coverage |
 |  npm **run generate-css**   |  create styles using tailwind css |
 |  npm **run tailwind-watch**   |  create styles using tailwind css and run watcher |
 |  npm **run dev**   |  open project in "developer" mode |
