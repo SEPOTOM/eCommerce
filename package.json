@@ -4,8 +4,8 @@
   "description": "eCommerce is a comprehensive online shopping portal that allows users to browse a wide range of products, view detailed descriptions, add their favorite products to the cart, and proceed to checkout.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src --no-error-on-unmatched-pattern",
-    "lint-fix": "eslint src --fix --no-error-on-unmatched-pattern",
+    "lint": "eslint src --config=./eslintrc.cjs --no-error-on-unmatched-pattern",
+    "lint-fix": "eslint src --config=./eslintrc.cjs --fix --no-error-on-unmatched-pattern",
     "pretty": "npx prettier src --check",
     "pretty-fix": "npx prettier src --write",
     "test": "jest src --passWithNoTests",
