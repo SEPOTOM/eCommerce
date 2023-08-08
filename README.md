@@ -39,7 +39,7 @@ Our application is that it's responsive calling, ensuring it looks great on vari
 ## How to install and run project:
 1. clone the project to your computer, using `git clone` command;
 2. install all node modules `npm install`;
-3. allows to use husky `npm husky install`, run it once;
+3. allows to use husky `npx husky install`, run it once;
 4. open terminal, run `npm run tailwind-watch` command for watching with style generation;
 5. open another terminal, run `npm run dev` command for open project and enjoy =)
 
