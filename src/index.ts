@@ -1,9 +1,5 @@
-import "./style.css";
+import './style.css';
+import App from './components/App/App';
 
-function sum(a: number, b: number): number {
-  return a + b;
-}
-
-it('sum function works', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+const app = new App();
+app.build();
