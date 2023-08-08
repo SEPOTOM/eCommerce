@@ -1,9 +1,9 @@
 export default class GenericView {
   public buildGenericView(): void {
     const wrapper: HTMLDivElement = document.createElement('div');
-    const header = this.buildHeaderView();
-    const main = this.buildMainView();
-    const footer = this.buildFooterView();
+    const header: HTMLElement = this.buildHeaderView();
+    const main: HTMLElement = this.buildMainView();
+    const footer: HTMLElement = this.buildFooterView();
     wrapper.appendChild(header);
     wrapper.appendChild(main);
     wrapper.appendChild(footer);
