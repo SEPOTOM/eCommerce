@@ -87,3 +87,9 @@ export default class MyClass {
   // ...
 }
 ```
+
+## Naming folders and files
+
+The component, its file and folder must be named the same in the CamelCase register: **MyComponent/MyComponent.ts**
+
+The component that creates the markup must have the word "View" in its name: **HeaderView**, **RoundedButtonView** etc.
