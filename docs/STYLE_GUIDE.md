@@ -57,3 +57,33 @@ class MyBadClass {
   public setHandlers() {}
 }
 ```
+
+## The order of declaring entities in a module
+
+Order:
+1. All imports
+2. Known constants in advance
+3. Other constants
+4. Enums
+5. Variables
+6. Functions
+7. Exported functions/class
+
+```ts
+import AnotherModule from './AnotherModule';
+import getRandomNum from './randomNum';
+
+const DEFAULT_VALUE = 42;
+
+const randomNum = getRandomNum();
+
+enum codes {
+  OK = 200,
+}
+
+let nextValue = null;
+
+export default class MyClass {
+  // ...
+}
+```
