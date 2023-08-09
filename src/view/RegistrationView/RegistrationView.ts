@@ -1,3 +1,5 @@
+import { EventCallback } from './types';
+
 enum LabelTexts {
   EMAIL = 'Email',
 }
@@ -16,32 +18,32 @@ export default class RegistrationView {
     return form;
   }
 
-  private static buildRowView(labelText: LabelTexts, inputType: InputTypes, inputPattern?: string): HTMLElement {
+  private static buildRowView(labelText: LabelTexts, inputType: InputTypes, callback?: EventCallback): HTMLElement {
     const row = document.createElement('div');
 
-    const label = RegistrationView.buildLabelView(labelText, inputType, inputPattern);
+    const label = RegistrationView.buildLabelView(labelText, inputType, callback);
     row.append(label);
 
     return row;
   }
 
-  private static buildLabelView(text: LabelTexts, inputType: InputTypes, inputPattern?: string): HTMLLabelElement {
+  private static buildLabelView(text: LabelTexts, inputType: InputTypes, callback?: EventCallback): HTMLLabelElement {
     const label = document.createElement('label');
     label.textContent = text;
 
-    const input = RegistrationView.buildInputView(inputType, inputPattern);
+    const input = RegistrationView.buildInputView(inputType, callback);
     label.append(input);
 
     return label;
   }
 
-  private static buildInputView(type: InputTypes, pattern?: string): HTMLInputElement {
+  private static buildInputView(type: InputTypes, callback?: EventCallback): HTMLInputElement {
     const input = document.createElement('input');
     input.type = type;
     input.required = true;
 
-    if (pattern) {
-      input.pattern = pattern;
+    if (callback) {
+      input.addEventListener('change', callback);
     }
 
     return input;
