@@ -4,10 +4,12 @@ import validateEmail from './validation';
 
 enum LabelTexts {
   EMAIL = 'Email',
+  PASSWORD = 'Password',
 }
 
 enum InputTypes {
   EMAIL = 'email',
+  PASSWORD = 'password',
 }
 
 export default class RegistrationView {
@@ -16,6 +18,9 @@ export default class RegistrationView {
 
     const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL, validateEmail);
     form.append(emailRow);
+
+    const passwordRow = RegistrationView.buildRowView(LabelTexts.PASSWORD, InputTypes.PASSWORD);
+    form.append(passwordRow);
 
     return form;
   }
