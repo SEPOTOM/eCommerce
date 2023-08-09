@@ -10,6 +10,9 @@ export default class RegistrationView {
   public static buildRegistrationView(): HTMLFormElement {
     const form = document.createElement('form');
 
+    const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL);
+    form.append(emailRow);
+
     return form;
   }
 
