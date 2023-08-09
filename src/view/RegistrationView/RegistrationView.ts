@@ -13,6 +13,15 @@ export default class RegistrationView {
     return form;
   }
 
+  private static buildRowView(labelText: LabelTexts, inputType: InputTypes, inputPattern?: RegExp): HTMLElement {
+    const row = document.createElement('div');
+
+    const label = RegistrationView.buildLabelView(labelText, inputType, inputPattern);
+    row.append(label);
+
+    return row;
+  }
+
   private static buildLabelView(text: LabelTexts, inputType: InputTypes, inputPattern?: RegExp): HTMLLabelElement {
     const label = document.createElement('label');
     label.textContent = text;
