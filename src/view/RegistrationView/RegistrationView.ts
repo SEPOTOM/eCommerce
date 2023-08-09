@@ -16,7 +16,7 @@ export default class RegistrationView {
     return form;
   }
 
-  private static buildRowView(labelText: LabelTexts, inputType: InputTypes, inputPattern?: RegExp): HTMLElement {
+  private static buildRowView(labelText: LabelTexts, inputType: InputTypes, inputPattern?: string): HTMLElement {
     const row = document.createElement('div');
 
     const label = RegistrationView.buildLabelView(labelText, inputType, inputPattern);
@@ -25,7 +25,7 @@ export default class RegistrationView {
     return row;
   }
 
-  private static buildLabelView(text: LabelTexts, inputType: InputTypes, inputPattern?: RegExp): HTMLLabelElement {
+  private static buildLabelView(text: LabelTexts, inputType: InputTypes, inputPattern?: string): HTMLLabelElement {
     const label = document.createElement('label');
     label.textContent = text;
 
@@ -35,13 +35,13 @@ export default class RegistrationView {
     return label;
   }
 
-  private static buildInputView(type: InputTypes, pattern?: RegExp): HTMLInputElement {
+  private static buildInputView(type: InputTypes, pattern?: string): HTMLInputElement {
     const input = document.createElement('input');
     input.type = type;
     input.required = true;
 
     if (pattern) {
-      input.pattern = `${pattern}`;
+      input.pattern = pattern;
     }
 
     return input;
