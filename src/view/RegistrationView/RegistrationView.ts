@@ -1,3 +1,7 @@
+enum LabelTexts {
+  EMAIL = 'Email',
+}
+
 enum InputTypes {
   EMAIL = 'email',
 }
@@ -7,6 +11,16 @@ export default class RegistrationView {
     const form = document.createElement('form');
 
     return form;
+  }
+
+  private static buildLabelView(text: LabelTexts, inputType: InputTypes, inputPattern?: RegExp): HTMLLabelElement {
+    const label = document.createElement('label');
+    label.textContent = text;
+
+    const input = RegistrationView.buildInputView(inputType, inputPattern);
+    label.append(input);
+
+    return label;
   }
 
   private static buildInputView(type: InputTypes, pattern?: RegExp): HTMLInputElement {
