@@ -1,4 +1,4 @@
-import LoginView from "../LoginView/LoginView";
+import LoginView from '../LoginView/LoginView';
 
 export default class GenericView {
   public buildGenericView(): void {
