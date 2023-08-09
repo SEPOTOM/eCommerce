@@ -586,20 +586,20 @@ video {
   bottom: 0px;
 }
 
-.left-1\/4 {
-  left: 25%;
-}
-
-.top-1\/4 {
-  top: 25%;
-}
-
 .bottom-1\/4 {
   bottom: 25%;
 }
 
+.left-1\/4 {
+  left: 25%;
+}
+
 .right-1\/4 {
   right: 25%;
+}
+
+.top-1\/4 {
+  top: 25%;
 }
 
 .m-0 {

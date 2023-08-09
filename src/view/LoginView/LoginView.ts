@@ -24,7 +24,7 @@ export default class LoginView {
   public static loginInputAttributes = [
     ['type', 'text'],
     ['id', 'login'],
-    ['oninvalid', `this.setCustomValidity(' ')`],
+    ['oninvalid', 'this.setCustomValidity(" ")'],
     ['required', 'true'],
   ];
 
@@ -34,7 +34,7 @@ export default class LoginView {
     ['type', 'password'],
     ['id', 'password'],
     ['pattern', '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*s)(.{8,})$'],
-    ['oninvalid', `this.setCustomValidity(' ')`],
+    ['oninvalid', 'this.setCustomValidity(" ")'],
     ['required', 'true'],
   ];
 

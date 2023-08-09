@@ -1,18 +1,18 @@
 import LoginView from '../LoginView/LoginView';
 
 export default class GenericView {
-  public buildGenericView(): void {
+  public static buildGenericView(): void {
     const wrapper: HTMLDivElement = document.createElement('div');
-    const header: HTMLElement = this.buildHeaderView();
-    const main: HTMLElement = this.buildMainView();
-    const footer: HTMLElement = this.buildFooterView();
+    const header: HTMLElement = GenericView.buildHeaderView();
+    const main: HTMLElement = GenericView.buildMainView();
+    const footer: HTMLElement = GenericView.buildFooterView();
     wrapper.appendChild(header);
     wrapper.appendChild(main);
     wrapper.appendChild(footer);
     document.body.appendChild(wrapper);
   }
 
-  private getLoginButton(): HTMLButtonElement {
+  public static getLoginButton(): HTMLButtonElement {
     const loginButton: HTMLButtonElement = document.createElement('button');
     loginButton.innerHTML = 'Login button';
     loginButton.classList.add('border-solid');
@@ -25,21 +25,21 @@ export default class GenericView {
     return loginButton;
   }
 
-  private buildHeaderView(): HTMLElement {
+  public static buildHeaderView(): HTMLElement {
     const header: HTMLElement = document.createElement('header');
 
-    header.appendChild(this.getLoginButton());
+    header.appendChild(GenericView.getLoginButton());
     return header;
   }
 
-  private buildMainView(): HTMLElement {
+  public static buildMainView(): HTMLElement {
     const main: HTMLElement = document.createElement('main');
     main.textContent = 'main placeholder';
 
     return main;
   }
 
-  private buildFooterView(): HTMLElement {
+  public static buildFooterView(): HTMLElement {
     const footer: HTMLElement = document.createElement('footer');
     footer.textContent = 'footer placeholder';
 
