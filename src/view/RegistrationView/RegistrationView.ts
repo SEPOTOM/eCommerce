@@ -1,5 +1,7 @@
 import { EventCallback } from './types';
 
+import validateEmail from './validation';
+
 enum LabelTexts {
   EMAIL = 'Email',
 }
@@ -12,7 +14,7 @@ export default class RegistrationView {
   public static buildRegistrationView(): HTMLFormElement {
     const form = document.createElement('form');
 
-    const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL);
+    const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL, validateEmail);
     form.append(emailRow);
 
     return form;
