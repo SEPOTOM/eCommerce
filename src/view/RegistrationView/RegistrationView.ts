@@ -172,6 +172,7 @@ export default class RegistrationView {
     const input = document.createElement('input');
     input.type = type;
     input.required = true;
+    input.dataset.valid = 'false';
 
     let callback: EventCallback | null = null;
 
@@ -197,15 +198,22 @@ export default class RegistrationView {
   }
 
   private static validateInput(input: HTMLInputElement, regExp: RegExp, fieldName: string): void {
+    const localInput = input;
+
     if (regExp.test(input.value)) {
+      localInput.dataset.valid = 'true';
       console.log(`${fieldName} is valid!`);
     } else {
+      localInput.dataset.valid = 'false';
       console.error(`${fieldName} is invalid!`);
     }
   }
 
   private static validateDateInput(input: HTMLInputElement, regExp: RegExp, fieldName: string): void {
+    const localInput = input;
+
     if (!regExp.test(input.value)) {
+      localInput.dataset.valid = 'false';
       console.error(`${fieldName} must be in the format MM/DD/YYYY!`);
       return;
     }
@@ -213,6 +221,7 @@ export default class RegistrationView {
     const [month, day, year] = input.value.split('/').map((str: string) => Number(str));
 
     if (month > MONTHS_IN_YEAR || day > MAX_DAYS_IN_MONTH) {
+      localInput.dataset.valid = 'false';
       console.error(`${fieldName} is invalid!`);
       return;
     }
@@ -222,8 +231,10 @@ export default class RegistrationView {
     const userAge = (currentDateTimestamp - userBirthDateTimestamp) / MS_IN_YEAR;
 
     if (userAge > MIN_USER_AGE) {
+      localInput.dataset.valid = 'true';
       console.log(`${fieldName} is valid!`);
     } else {
+      localInput.dataset.valid = 'false';
       console.error(`Your age must be over ${MIN_USER_AGE} years old`);
     }
   }
