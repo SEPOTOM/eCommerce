@@ -6,6 +6,7 @@ enum LabelTexts {
   EMAIL = 'Email',
   PASSWORD = 'Password',
   FIRST_NAME = 'First name',
+  LAST_NAME = 'Last name',
 }
 
 enum InputTypes {
@@ -36,6 +37,14 @@ export default class RegistrationView {
       LabelTexts.FIRST_NAME
     );
     form.append(firstNameRow);
+
+    const lastNameRow = RegistrationView.buildRowView(
+      LabelTexts.LAST_NAME,
+      InputTypes.NAME,
+      NAME_REGEXP,
+      LabelTexts.LAST_NAME
+    );
+    form.append(lastNameRow);
 
     return form;
   }
