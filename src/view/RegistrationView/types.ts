@@ -5,3 +5,7 @@ export interface InputOptions {
   fieldName: string;
   regExp: RegExp;
 }
+
+export interface SelectOptions {
+  values: Record<string, string>;
+}

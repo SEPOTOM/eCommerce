@@ -1,4 +1,4 @@
-import { EventCallback, InputOptions } from './types';
+import { EventCallback, InputOptions, SelectOptions } from './types';
 
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
@@ -130,6 +130,21 @@ export default class RegistrationView {
     label.append(widget);
 
     return label;
+  }
+
+  private static buildSelectView({ values }: SelectOptions): HTMLSelectElement {
+    const select = document.createElement('select');
+
+    const entries = Object.entries(values);
+    entries.forEach(([key, value]) => {
+      const option = document.createElement('option');
+      option.textContent = value;
+      option.value = key;
+
+      select.append(option);
+    });
+
+    return select;
   }
 
   private static buildInputView({ type, regExp, fieldName }: InputOptions): HTMLInputElement {
