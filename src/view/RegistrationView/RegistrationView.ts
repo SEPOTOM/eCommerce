@@ -2,7 +2,7 @@ import { EventCallback } from './types';
 
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
-const NAME_REGEXP = /^[^\W\d_]+$/;
+const LETTERS_REGEXP = /^[^\W\d_]+$/;
 const DATE_REGEXP = /^[0-9]{1,2}\/[0-9]{2,}\/[0-9]{4,}$/;
 const STREET_REGEXP = /^.+$/;
 const MONTHS_IN_YEAR = 12;
@@ -17,6 +17,7 @@ enum LabelTexts {
   LAST_NAME = 'Last name',
   BIRTH_DATE = 'Date of birth',
   STREET = 'Street',
+  CITY = 'City',
 }
 
 enum InputTypes {
@@ -43,7 +44,7 @@ export default class RegistrationView {
     const firstNameRow = RegistrationView.buildRowView(
       LabelTexts.FIRST_NAME,
       InputTypes.TEXT,
-      NAME_REGEXP,
+      LETTERS_REGEXP,
       LabelTexts.FIRST_NAME
     );
     form.append(firstNameRow);
@@ -51,7 +52,7 @@ export default class RegistrationView {
     const lastNameRow = RegistrationView.buildRowView(
       LabelTexts.LAST_NAME,
       InputTypes.TEXT,
-      NAME_REGEXP,
+      LETTERS_REGEXP,
       LabelTexts.LAST_NAME
     );
     form.append(lastNameRow);
@@ -71,6 +72,9 @@ export default class RegistrationView {
       LabelTexts.STREET
     );
     form.append(streetRow);
+
+    const cityRow = RegistrationView.buildRowView(LabelTexts.CITY, InputTypes.TEXT, LETTERS_REGEXP, LabelTexts.CITY);
+    form.append(cityRow);
 
     return form;
   }
