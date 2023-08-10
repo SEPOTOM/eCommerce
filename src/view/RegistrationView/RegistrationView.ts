@@ -1,6 +1,6 @@
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
-const NAME_REGEXP = /^(\w*[^\d_])+$/;
+const NAME_REGEXP = /^[^\W\d_]+$/;
 
 enum LabelTexts {
   EMAIL = 'Email',
