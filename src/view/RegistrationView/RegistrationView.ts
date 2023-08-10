@@ -37,16 +37,16 @@ enum InputTypes {
 }
 
 export default class RegistrationView {
-  public static buildRegistrationView(): HTMLFormElement {
-    const form = document.createElement('form');
+  private form = document.createElement('form');
 
+  public buildRegistrationView(): HTMLFormElement {
     const userInfoRows = RegistrationView.buildUserInfoRows();
-    userInfoRows.forEach((userInfoRow) => form.append(userInfoRow));
+    userInfoRows.forEach((userInfoRow) => this.form.append(userInfoRow));
 
     const addressRows = RegistrationView.buildAddressRows();
-    addressRows.forEach((addressRow) => form.append(addressRow));
+    addressRows.forEach((addressRow) => this.form.append(addressRow));
 
-    return form;
+    return this.form;
   }
 
   private static buildUserInfoRows(): HTMLElement[] {
