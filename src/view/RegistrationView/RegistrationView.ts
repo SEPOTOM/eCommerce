@@ -1,18 +1,26 @@
+import { EventCallback } from './types';
+
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
 const NAME_REGEXP = /^[^\W\d_]+$/;
+const DATE_REGEXP = /^[0-9]{1,2}\/[0-9]{2,}\/[0-9]{4,}$/;
+const MONTHS_IN_YEAR = 12;
+const MAX_DAYS_IN_MONTH = 31;
+const MIN_USER_AGE = 18;
+const MS_IN_YEAR = 31536000000;
 
 enum LabelTexts {
   EMAIL = 'Email',
   PASSWORD = 'Password',
   FIRST_NAME = 'First name',
   LAST_NAME = 'Last name',
+  BIRTH_DATE = 'Date of birth',
 }
 
 enum InputTypes {
   EMAIL = 'email',
   PASSWORD = 'password',
-  NAME = 'text',
+  TEXT = 'text',
 }
 
 export default class RegistrationView {
@@ -32,7 +40,7 @@ export default class RegistrationView {
 
     const firstNameRow = RegistrationView.buildRowView(
       LabelTexts.FIRST_NAME,
-      InputTypes.NAME,
+      InputTypes.TEXT,
       NAME_REGEXP,
       LabelTexts.FIRST_NAME
     );
@@ -40,11 +48,19 @@ export default class RegistrationView {
 
     const lastNameRow = RegistrationView.buildRowView(
       LabelTexts.LAST_NAME,
-      InputTypes.NAME,
+      InputTypes.TEXT,
       NAME_REGEXP,
       LabelTexts.LAST_NAME
     );
     form.append(lastNameRow);
+
+    const birthDateRow = RegistrationView.buildRowView(
+      LabelTexts.BIRTH_DATE,
+      InputTypes.TEXT,
+      DATE_REGEXP,
+      LabelTexts.BIRTH_DATE
+    );
+    form.append(birthDateRow);
 
     return form;
   }
@@ -83,11 +99,25 @@ export default class RegistrationView {
     input.type = type;
     input.required = true;
 
-    input.addEventListener('change', (e: Event): void => {
-      if (e.currentTarget instanceof HTMLInputElement) {
-        RegistrationView.validateInput(input, regExp, fieldName);
-      }
-    });
+    let callback: EventCallback | null = null;
+
+    if (fieldName === LabelTexts.BIRTH_DATE) {
+      callback = (e: Event): void => {
+        if (e.currentTarget instanceof HTMLInputElement) {
+          RegistrationView.validateDateInput(input, regExp, fieldName);
+        }
+      };
+    } else {
+      callback = (e: Event): void => {
+        if (e.currentTarget instanceof HTMLInputElement) {
+          RegistrationView.validateInput(input, regExp, fieldName);
+        }
+      };
+    }
+
+    if (callback) {
+      input.addEventListener('change', callback);
+    }
 
     return input;
   }
@@ -97,6 +127,30 @@ export default class RegistrationView {
       console.log(`${fieldName} is valid!`);
     } else {
       console.error(`${fieldName} is invalid!`);
+    }
+  }
+
+  private static validateDateInput(input: HTMLInputElement, regExp: RegExp, fieldName: string): void {
+    if (!regExp.test(input.value)) {
+      console.error(`${fieldName} must be in the format MM/DD/YYYY!`);
+      return;
+    }
+
+    const [month, day, year] = input.value.split('/').map((str: string) => Number(str));
+
+    if (month > MONTHS_IN_YEAR || day > MAX_DAYS_IN_MONTH) {
+      console.error(`${fieldName} is invalid!`);
+      return;
+    }
+
+    const userBirthDateTimestamp = new Date(year, month, day).getTime();
+    const currentDateTimestamp = Date.now();
+    const userAge = (currentDateTimestamp - userBirthDateTimestamp) / MS_IN_YEAR;
+
+    if (userAge > MIN_USER_AGE) {
+      console.log(`${fieldName} is valid!`);
+    } else {
+      console.error(`Your age must be over ${MIN_USER_AGE} years old`);
     }
   }
 }
