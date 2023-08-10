@@ -44,10 +44,20 @@ enum ButtonText {
   SIGN_UP = 'Sign Up',
 }
 
+enum ClassNames {
+  FORM = 'flex flex-col gap-y-2.5 max-w-2xl mx-auto my-0',
+  LABEL = 'flex flex-col gap-y-1',
+  INPUT = 'p-1.5 border border-solid border-black',
+  SELECT = 'border border-solid border-black',
+  BUTTON = 'p-1.5 text-white bg-black',
+}
+
 export default class RegistrationView {
   private form = document.createElement('form');
 
   public buildRegistrationView(): HTMLFormElement {
+    this.form.className = ClassNames.FORM;
+
     const userInfoRows = RegistrationView.buildUserInfoRows();
     userInfoRows.forEach((userInfoRow) => this.form.append(userInfoRow));
 
@@ -66,6 +76,7 @@ export default class RegistrationView {
 
   private static buildButtonView(text: string, type: ButtonTypes, callback: EventCallback): HTMLButtonElement {
     const button = document.createElement('button');
+    button.className = ClassNames.BUTTON;
     button.textContent = text;
     button.type = type;
 
@@ -171,6 +182,7 @@ export default class RegistrationView {
 
   private static buildLabelView(text: LabelTexts, widget: HTMLElement): HTMLLabelElement {
     const label = document.createElement('label');
+    label.className = ClassNames.LABEL;
     label.textContent = text;
 
     label.append(widget);
@@ -180,6 +192,7 @@ export default class RegistrationView {
 
   private static buildSelectView({ values }: SelectOptions): HTMLSelectElement {
     const select = document.createElement('select');
+    select.className = ClassNames.SELECT;
 
     const entries = Object.entries(values);
     entries.forEach(([key, value]) => {
@@ -195,6 +208,7 @@ export default class RegistrationView {
 
   private static buildInputView({ type, regExp, fieldName }: InputOptions): HTMLInputElement {
     const input = document.createElement('input');
+    input.className = ClassNames.INPUT;
     input.type = type;
     input.required = true;
     input.dataset.valid = 'false';
