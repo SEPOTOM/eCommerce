@@ -1,6 +1,6 @@
 import { EventCallback } from './types';
 
-import validateEmail from './validation';
+import { validateEmail, validatePassword } from './validation';
 
 enum LabelTexts {
   EMAIL = 'Email',
@@ -19,7 +19,7 @@ export default class RegistrationView {
     const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL, validateEmail);
     form.append(emailRow);
 
-    const passwordRow = RegistrationView.buildRowView(LabelTexts.PASSWORD, InputTypes.PASSWORD);
+    const passwordRow = RegistrationView.buildRowView(LabelTexts.PASSWORD, InputTypes.PASSWORD, validatePassword);
     form.append(passwordRow);
 
     return form;
