@@ -123,6 +123,17 @@ export default class RegistrationView {
     return row;
   }
 
+  private static buildSelectRowField(labelText: LabelTexts, selectOptions: SelectOptions): HTMLElement {
+    const row = document.createElement('div');
+
+    const select = RegistrationView.buildSelectView(selectOptions);
+
+    const label = RegistrationView.buildLabelView(labelText, select);
+    row.append(label);
+
+    return row;
+  }
+
   private static buildLabelView(text: LabelTexts, widget: HTMLElement): HTMLLabelElement {
     const label = document.createElement('label');
     label.textContent = text;
