@@ -1,4 +1,4 @@
-import { EventCallback } from './types';
+import { EventCallback, InputOptions } from './types';
 
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
@@ -47,39 +47,39 @@ export default class RegistrationView {
   private static buildUserInfoRows(): HTMLElement[] {
     const rows: HTMLElement[] = [];
 
-    const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL, EMAIL_REGEXP, LabelTexts.EMAIL);
+    const emailRow = RegistrationView.buildInputRowView(LabelTexts.EMAIL, {
+      type: InputTypes.EMAIL,
+      regExp: EMAIL_REGEXP,
+      fieldName: LabelTexts.EMAIL,
+    });
     rows.push(emailRow);
 
-    const passwordRow = RegistrationView.buildRowView(
-      LabelTexts.PASSWORD,
-      InputTypes.PASSWORD,
-      PASSWORD_REGEXP,
-      LabelTexts.PASSWORD
-    );
+    const passwordRow = RegistrationView.buildInputRowView(LabelTexts.PASSWORD, {
+      type: InputTypes.PASSWORD,
+      regExp: PASSWORD_REGEXP,
+      fieldName: LabelTexts.PASSWORD,
+    });
     rows.push(passwordRow);
 
-    const firstNameRow = RegistrationView.buildRowView(
-      LabelTexts.FIRST_NAME,
-      InputTypes.TEXT,
-      LETTERS_REGEXP,
-      LabelTexts.FIRST_NAME
-    );
+    const firstNameRow = RegistrationView.buildInputRowView(LabelTexts.FIRST_NAME, {
+      type: InputTypes.TEXT,
+      regExp: LETTERS_REGEXP,
+      fieldName: LabelTexts.FIRST_NAME,
+    });
     rows.push(firstNameRow);
 
-    const lastNameRow = RegistrationView.buildRowView(
-      LabelTexts.LAST_NAME,
-      InputTypes.TEXT,
-      LETTERS_REGEXP,
-      LabelTexts.LAST_NAME
-    );
+    const lastNameRow = RegistrationView.buildInputRowView(LabelTexts.LAST_NAME, {
+      type: InputTypes.TEXT,
+      regExp: LETTERS_REGEXP,
+      fieldName: LabelTexts.LAST_NAME,
+    });
     rows.push(lastNameRow);
 
-    const birthDateRow = RegistrationView.buildRowView(
-      LabelTexts.BIRTH_DATE,
-      InputTypes.TEXT,
-      DATE_REGEXP,
-      LabelTexts.BIRTH_DATE
-    );
+    const birthDateRow = RegistrationView.buildInputRowView(LabelTexts.BIRTH_DATE, {
+      type: InputTypes.TEXT,
+      regExp: DATE_REGEXP,
+      fieldName: LabelTexts.BIRTH_DATE,
+    });
     rows.push(birthDateRow);
 
     return rows;
@@ -88,58 +88,51 @@ export default class RegistrationView {
   private static buildAddressRows(): HTMLElement[] {
     const rows: HTMLElement[] = [];
 
-    const streetRow = RegistrationView.buildRowView(
-      LabelTexts.STREET,
-      InputTypes.TEXT,
-      STREET_REGEXP,
-      LabelTexts.STREET
-    );
+    const streetRow = RegistrationView.buildInputRowView(LabelTexts.STREET, {
+      type: InputTypes.TEXT,
+      regExp: STREET_REGEXP,
+      fieldName: LabelTexts.STREET,
+    });
     rows.push(streetRow);
 
-    const cityRow = RegistrationView.buildRowView(LabelTexts.CITY, InputTypes.TEXT, LETTERS_REGEXP, LabelTexts.CITY);
+    const cityRow = RegistrationView.buildInputRowView(LabelTexts.CITY, {
+      type: InputTypes.TEXT,
+      regExp: LETTERS_REGEXP,
+      fieldName: LabelTexts.CITY,
+    });
     rows.push(cityRow);
 
-    const postalCodeRow = RegistrationView.buildRowView(
-      LabelTexts.POSTAL_CODE,
-      InputTypes.TEXT,
-      POSTAL_CODES_REGEXP,
-      LabelTexts.POSTAL_CODE
-    );
+    const postalCodeRow = RegistrationView.buildInputRowView(LabelTexts.POSTAL_CODE, {
+      type: InputTypes.TEXT,
+      regExp: POSTAL_CODES_REGEXP,
+      fieldName: LabelTexts.POSTAL_CODE,
+    });
     rows.push(postalCodeRow);
 
     return rows;
   }
 
-  private static buildRowView(
-    labelText: LabelTexts,
-    inputType: InputTypes,
-    regExp: RegExp,
-    fieldName: string
-  ): HTMLElement {
+  private static buildInputRowView(labelText: LabelTexts, inputOptions: InputOptions): HTMLElement {
     const row = document.createElement('div');
 
-    const label = RegistrationView.buildLabelView(labelText, inputType, regExp, fieldName);
+    const input = RegistrationView.buildInputView(inputOptions);
+
+    const label = RegistrationView.buildLabelView(labelText, input);
     row.append(label);
 
     return row;
   }
 
-  private static buildLabelView(
-    text: LabelTexts,
-    inputType: InputTypes,
-    regExp: RegExp,
-    fieldName: string
-  ): HTMLLabelElement {
+  private static buildLabelView(text: LabelTexts, widget: HTMLElement): HTMLLabelElement {
     const label = document.createElement('label');
     label.textContent = text;
 
-    const input = RegistrationView.buildInputView(inputType, regExp, fieldName);
-    label.append(input);
+    label.append(widget);
 
     return label;
   }
 
-  private static buildInputView(type: InputTypes, regExp: RegExp, fieldName: string): HTMLInputElement {
+  private static buildInputView({ type, regExp, fieldName }: InputOptions): HTMLInputElement {
     const input = document.createElement('input');
     input.type = type;
     input.required = true;
