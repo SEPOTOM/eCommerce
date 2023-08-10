@@ -65,18 +65,27 @@ export default class RegistrationView {
     );
     form.append(birthDateRow);
 
+    const addressRows = RegistrationView.buildAddressRows();
+    addressRows.forEach((addressRow) => form.append(addressRow));
+
+    return form;
+  }
+
+  private static buildAddressRows(): HTMLElement[] {
+    const rows: HTMLElement[] = [];
+
     const streetRow = RegistrationView.buildRowView(
       LabelTexts.STREET,
       InputTypes.TEXT,
       STREET_REGEXP,
       LabelTexts.STREET
     );
-    form.append(streetRow);
+    rows.push(streetRow);
 
     const cityRow = RegistrationView.buildRowView(LabelTexts.CITY, InputTypes.TEXT, LETTERS_REGEXP, LabelTexts.CITY);
-    form.append(cityRow);
+    rows.push(cityRow);
 
-    return form;
+    return rows;
   }
 
   private static buildRowView(
