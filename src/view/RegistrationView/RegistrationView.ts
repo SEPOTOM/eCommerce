@@ -30,8 +30,20 @@ export default class RegistrationView {
   public static buildRegistrationView(): HTMLFormElement {
     const form = document.createElement('form');
 
+    const userInfoRows = RegistrationView.buildUserInfoRows();
+    userInfoRows.forEach((userInfoRow) => form.append(userInfoRow));
+
+    const addressRows = RegistrationView.buildAddressRows();
+    addressRows.forEach((addressRow) => form.append(addressRow));
+
+    return form;
+  }
+
+  private static buildUserInfoRows(): HTMLElement[] {
+    const rows: HTMLElement[] = [];
+
     const emailRow = RegistrationView.buildRowView(LabelTexts.EMAIL, InputTypes.EMAIL, EMAIL_REGEXP, LabelTexts.EMAIL);
-    form.append(emailRow);
+    rows.push(emailRow);
 
     const passwordRow = RegistrationView.buildRowView(
       LabelTexts.PASSWORD,
@@ -39,7 +51,7 @@ export default class RegistrationView {
       PASSWORD_REGEXP,
       LabelTexts.PASSWORD
     );
-    form.append(passwordRow);
+    rows.push(passwordRow);
 
     const firstNameRow = RegistrationView.buildRowView(
       LabelTexts.FIRST_NAME,
@@ -47,7 +59,7 @@ export default class RegistrationView {
       LETTERS_REGEXP,
       LabelTexts.FIRST_NAME
     );
-    form.append(firstNameRow);
+    rows.push(firstNameRow);
 
     const lastNameRow = RegistrationView.buildRowView(
       LabelTexts.LAST_NAME,
@@ -55,7 +67,7 @@ export default class RegistrationView {
       LETTERS_REGEXP,
       LabelTexts.LAST_NAME
     );
-    form.append(lastNameRow);
+    rows.push(lastNameRow);
 
     const birthDateRow = RegistrationView.buildRowView(
       LabelTexts.BIRTH_DATE,
@@ -63,12 +75,9 @@ export default class RegistrationView {
       DATE_REGEXP,
       LabelTexts.BIRTH_DATE
     );
-    form.append(birthDateRow);
+    rows.push(birthDateRow);
 
-    const addressRows = RegistrationView.buildAddressRows();
-    addressRows.forEach((addressRow) => form.append(addressRow));
-
-    return form;
+    return rows;
   }
 
   private static buildAddressRows(): HTMLElement[] {
