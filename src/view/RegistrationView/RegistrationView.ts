@@ -251,4 +251,17 @@ export default class RegistrationView {
 
     return valid;
   }
+
+  private sendForm(e: Event): void {
+    e.preventDefault();
+
+    const { form } = this;
+    const formValid = RegistrationView.validateForm(form);
+
+    if (formValid) {
+      console.log('Sending form...');
+    } else {
+      console.error('Form is invalid!');
+    }
+  }
 }
