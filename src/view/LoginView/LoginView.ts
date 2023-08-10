@@ -117,7 +117,7 @@ export default class LoginView {
     });
   }
 
-  public static addAttributes(htmlElement: HTMLElement, styles: string[][]) {
+  public static addAttributes(htmlElement: HTMLElement, styles: string[][]): void {
     styles.forEach((element) => {
       htmlElement.setAttribute(element[0], element[1]);
     });
@@ -228,7 +228,7 @@ export default class LoginView {
     passwordInput.appendChild(passwordError);
   }
 
-  public static addValidation() {
+  public static addValidation(): void {
     const loginInput: HTMLInputElement = document.getElementById('login') as HTMLInputElement;
     const loginError: HTMLElement = document.getElementById('login-error') as HTMLElement;
 
@@ -262,7 +262,7 @@ export default class LoginView {
     passwordError: HTMLElement,
     loginInput: HTMLInputElement,
     loginError: HTMLElement
-  ) {
+  ): void {
     if (passwordInput.value.match(LoginView.PASSWORD_REGEX)) {
       LoginView.passwordValid = true;
     } else {
@@ -276,7 +276,7 @@ export default class LoginView {
     LoginView.toggleErrorMessages(passwordError, loginError);
   }
 
-  public static toggleErrorMessages(passwordError: HTMLElement, loginError: HTMLElement) {
+  public static toggleErrorMessages(passwordError: HTMLElement, loginError: HTMLElement): void {
     if (LoginView.passwordValid) {
       passwordError.classList.remove('block');
       passwordError.classList.add('hidden');
@@ -293,7 +293,7 @@ export default class LoginView {
     }
   }
 
-  public static cleanMainView() {
+  public static cleanMainView(): void {
     (document.querySelector('main') as HTMLElement).innerHTML = '';
   }
 }
