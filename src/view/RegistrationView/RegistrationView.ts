@@ -40,6 +40,10 @@ enum ButtonTypes {
   SUBMIT = 'submit',
 }
 
+enum ButtonText {
+  SIGN_UP = 'Sign Up',
+}
+
 export default class RegistrationView {
   private form = document.createElement('form');
 
@@ -49,6 +53,13 @@ export default class RegistrationView {
 
     const addressRows = RegistrationView.buildAddressRows();
     addressRows.forEach((addressRow) => this.form.append(addressRow));
+
+    const signUpButton = RegistrationView.buildButtonView(
+      ButtonText.SIGN_UP,
+      ButtonTypes.SUBMIT,
+      this.sendForm.bind(this)
+    );
+    this.form.append(signUpButton);
 
     return this.form;
   }
