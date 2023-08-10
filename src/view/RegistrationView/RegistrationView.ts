@@ -5,6 +5,10 @@ const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*
 const LETTERS_REGEXP = /^[^\W\d_]+$/;
 const DATE_REGEXP = /^[0-9]{1,2}\/[0-9]{2,}\/[0-9]{4,}$/;
 const STREET_REGEXP = /^.+$/;
+const US_POSTAL_CODE_REGEXP_STRING = '(^\\d{5}$)|(^\\d{5}-\\d{4}$)';
+const UK_POSTAL_CODE_REGEXP_STRING =
+  '(^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})$)';
+const POSTAL_CODES_REGEXP = new RegExp(`${US_POSTAL_CODE_REGEXP_STRING}|${UK_POSTAL_CODE_REGEXP_STRING}`);
 const MONTHS_IN_YEAR = 12;
 const MAX_DAYS_IN_MONTH = 31;
 const MIN_USER_AGE = 18;
@@ -18,6 +22,7 @@ enum LabelTexts {
   BIRTH_DATE = 'Date of birth',
   STREET = 'Street',
   CITY = 'City',
+  POSTAL_CODE = 'Postal code',
 }
 
 enum InputTypes {
@@ -93,6 +98,14 @@ export default class RegistrationView {
 
     const cityRow = RegistrationView.buildRowView(LabelTexts.CITY, InputTypes.TEXT, LETTERS_REGEXP, LabelTexts.CITY);
     rows.push(cityRow);
+
+    const postalCodeRow = RegistrationView.buildRowView(
+      LabelTexts.POSTAL_CODE,
+      InputTypes.TEXT,
+      POSTAL_CODES_REGEXP,
+      LabelTexts.POSTAL_CODE
+    );
+    rows.push(postalCodeRow);
 
     return rows;
   }
