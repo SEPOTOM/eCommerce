@@ -1,3 +1,6 @@
+import passwordShown from '../../assets/svg/eyeOpen.svg';
+import passwordHidden from '../../assets/svg/eyeClosed.svg';
+
 export default class LoginView {
   public static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
 
@@ -14,36 +17,38 @@ export default class LoginView {
   public static LOGIN_ERROR_HOVER: string =
     '1. Email address must be properly formatted (e.g., user@example.com)\n\r 2.Email address must not contain leading or trailing whitespace\n\r 3.Email address must contain a domain name (e.g., example.com)\n\r 4.Email address must contain an @ symbol separating local part and domain name';
 
-  public static loginViewStyles: string[] = ['bg-black', 'm-0', 'opacity-75', 'absolute', 'inset-x-0', 'inset-y-0'];
-
   public static loginWindowStyles: string[] = [
     'bg-white',
     'w-2/4',
     'h-2/4',
     'text-center',
     'm-auto',
-    'absolute',
     'top-1/4',
     'bottom-1/4',
     'left-1/4',
     'right-1/4',
     'max-w-500',
+    'min-w-320',
   ];
 
-  public static loginFormStyles: string[] = ['flex', 'flex-col', 'gap-2', 'py-12'];
+  public static loginFormStyles: string[] = ['flex', 'flex-col', 'gap-8', 'py-12'];
 
-  public static formCaptionStyles: string[] = ['text-5xl', 'mb-8'];
+  public static formCaptionStyles: string[] = ['text-4xl', 'mb-8'];
 
-  public static inputStyles: string[] = ['bg-slate-300', 'w-9/12', 'h-12'];
+  public static inputStyles: string[] = ['bg-slate-300', 'w-full', 'h-12'];
 
-  public static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-2'];
+  public static passwordContainerStyles: string[] = ['relative'];
 
-  public static loginButtonStyles: string[] = ['w-9/12', 'm-auto', 'bg-red-600', 'h-12', 'text-white'];
+  public static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'bottom-3'];
 
-  public static cancelButtonStyles: string[] = ['w-9/12', 'm-auto', 'bg-orange-600', 'h-12', 'text-white'];
+  public static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
+
+  public static loginButtonStyles: string[] = ['w-full', 'm-auto', 'bg-red-600', 'h-12', 'text-white'];
+
+  public static cancelButtonStyles: string[] = ['w-full', 'm-auto', 'bg-orange-600', 'h-12', 'text-white'];
 
   public static registrationButtonStyles: string[] = [
-    'w-9/12',
+    'w-full',
     'm-auto',
     'h-12',
     'border-2',
@@ -51,7 +56,7 @@ export default class LoginView {
     'text-blue-900',
   ];
 
-  public static validationErrorStyles: string[] = ['text-red-800', 'text-xs', 'hidden'];
+  public static validationErrorStyles: string[] = ['text-red-800', 'text-xs', 'hidden', 'absolute'];
 
   public static loginFormAttributes: string[][] = [['autocomplete', 'off']];
 
@@ -87,19 +92,19 @@ export default class LoginView {
   ];
 
   public static showLoginView(): void {
-    const loginView: HTMLDivElement = document.createElement('div');
+    const main: HTMLElement = document.querySelector('main') as HTMLElement;
     const loginWindow: HTMLDivElement = document.createElement('div');
     const loginForm: HTMLFormElement = document.createElement('form');
 
-    LoginView.addStyles(loginView, LoginView.loginViewStyles);
+    LoginView.cleanMainView();
+
     LoginView.addStyles(loginWindow, LoginView.loginWindowStyles);
     LoginView.addStyles(loginForm, LoginView.loginFormStyles);
     LoginView.addAttributes(loginForm, LoginView.loginFormAttributes);
     LoginView.addLoginForm(loginForm);
 
     loginWindow.appendChild(loginForm);
-    loginView.appendChild(loginWindow);
-    document.body.appendChild(loginView);
+    main.appendChild(loginWindow);
   }
 
   public static addStyles(htmlElement: HTMLElement, styles: string[]): void {
@@ -114,13 +119,13 @@ export default class LoginView {
     });
   }
 
-  public static addLoginForm(loginForm: HTMLFormElement): void {
-    LoginView.addLoginCaption(loginForm);
-    LoginView.addLoginInput(loginForm);
-    LoginView.addPasswordInput(loginForm);
-    LoginView.addLoginButtons(loginForm);
-    LoginView.addErrorBlock(loginForm);
-    LoginView.addValidation(loginForm);
+  public static async addLoginForm(loginForm: HTMLFormElement): Promise<void> {
+    await LoginView.addLoginCaption(loginForm);
+    await LoginView.addLoginInput(loginForm);
+    await LoginView.addPasswordInput(loginForm);
+    await LoginView.addLoginButtons(loginForm);
+    await LoginView.addErrorBlock();
+    LoginView.addValidation();
   }
 
   public static addLoginCaption(loginForm: HTMLFormElement): void {
@@ -143,14 +148,36 @@ export default class LoginView {
   }
 
   public static addPasswordInput(loginForm: HTMLFormElement): void {
-    const container = document.createElement('div');
-    const input = document.createElement('input');
+    const container: HTMLDivElement = document.createElement('div');
+    const input: HTMLInputElement = document.createElement('input');
+
+    LoginView.addStyles(container, LoginView.passwordContainerStyles);
 
     LoginView.addStyles(input, LoginView.inputStyles);
     LoginView.addAttributes(input, LoginView.passwordInputAttributes);
 
     container.appendChild(input);
     loginForm.appendChild(container);
+
+    LoginView.togglePasswordVisibility(container);
+  }
+
+  public static togglePasswordVisibility(container: HTMLDivElement): void {
+    const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
+    const showPasswordMode = document.createElement('img');
+    showPasswordMode.src = passwordHidden;
+    LoginView.addStyles(showPasswordMode, LoginView.passwordModeStyles);
+    container.appendChild(showPasswordMode);
+
+    showPasswordMode.addEventListener('click', () => {
+      if (showPasswordMode.src === passwordHidden) {
+        showPasswordMode.src = passwordShown;
+        passwordInput.type = 'text';
+      } else {
+        showPasswordMode.src = passwordHidden;
+        passwordInput.type = 'password';
+      }
+    });
   }
 
   public static addLoginButtons(loginForm: HTMLFormElement): void {
@@ -178,7 +205,10 @@ export default class LoginView {
     loginForm.appendChild(container);
   }
 
-  public static addErrorBlock(loginForm: HTMLFormElement): void {
+  public static addErrorBlock(): void {
+    const loginInputContainer = document.getElementById('login')?.parentElement as HTMLElement;
+    const passwordInput = document.getElementById('password')?.parentElement as HTMLElement;
+
     const loginError = document.createElement('div');
     const passwordError = document.createElement('div');
 
@@ -190,19 +220,19 @@ export default class LoginView {
     LoginView.addAttributes(passwordError, LoginView.passwordErrorAttributes);
     passwordError.textContent = LoginView.PASSWORD_ERROR_TEXT;
 
-    loginForm.appendChild(loginError);
-    loginForm.appendChild(passwordError);
+    loginInputContainer.appendChild(loginError);
+    passwordInput.appendChild(passwordError);
   }
 
-  public static addValidation(loginForm: HTMLFormElement) {
-    const loginInput: HTMLInputElement = (loginForm.childNodes[1] as HTMLElement).childNodes[0] as HTMLInputElement;
-    const loginError: HTMLElement = loginForm.childNodes[4] as HTMLElement as HTMLElement;
+  public static addValidation() {
+    const loginInput: HTMLInputElement = document.getElementById('login') as HTMLInputElement;
+    const loginError: HTMLElement = document.getElementById('login-error') as HTMLElement;
 
-    const passwordInput: HTMLInputElement = (loginForm.childNodes[2] as HTMLElement).childNodes[0] as HTMLInputElement;
-    const passwordError: HTMLElement = loginForm.childNodes[5] as HTMLElement as HTMLElement;
+    const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
+    const passwordError: HTMLElement = document.getElementById('password-error') as HTMLElement;
 
-    const submitButton: HTMLButtonElement = (loginForm.childNodes[3] as HTMLElement).childNodes[0] as HTMLButtonElement;
-    const cancelButton: HTMLButtonElement = (loginForm.childNodes[3] as HTMLElement).childNodes[1] as HTMLButtonElement;
+    const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
+    const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
     submitButton.addEventListener('click', () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
@@ -217,7 +247,7 @@ export default class LoginView {
     });
 
     cancelButton.addEventListener('click', () => {
-      LoginView.closeLoginView(loginForm);
+      LoginView.cleanMainView();
     });
   }
 
@@ -244,7 +274,7 @@ export default class LoginView {
     }
   }
 
-  public static closeLoginView(loginForm: HTMLFormElement) {
-    loginForm.parentElement?.parentElement?.remove();
+  public static cleanMainView() {
+    (document.querySelector('main') as HTMLElement).innerHTML = '';
   }
 }
