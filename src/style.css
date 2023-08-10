@@ -680,6 +680,10 @@ video {
   width: 1.5rem;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .min-w-320 {
   min-width: 320px;
 }

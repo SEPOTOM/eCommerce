@@ -1,6 +1,10 @@
 import LoginView from '../LoginView/LoginView';
+import loginIcon from '../../assets/svg/login.svg';
 
 export default class GenericView {
+
+  public static loginButtonStyles: string[] = ['w-10'];
+
   public static buildGenericView(): void {
     const wrapper: HTMLDivElement = document.createElement('div');
     const header: HTMLElement = GenericView.buildHeaderView();
@@ -12,17 +16,17 @@ export default class GenericView {
     document.body.appendChild(wrapper);
   }
 
-  public static getLoginButton(): HTMLButtonElement {
-    const loginButton: HTMLButtonElement = document.createElement('button');
-    loginButton.innerHTML = 'Login button';
-    loginButton.classList.add('border-solid');
-    loginButton.classList.add('border-black');
+  public static getLoginButton(): HTMLImageElement {
+    const loginImg: HTMLImageElement = document.createElement('img');
+    loginImg.src = loginIcon;
 
-    loginButton.addEventListener('click', (): void => {
+    LoginView.addStyles(loginImg, GenericView.loginButtonStyles);
+
+    loginImg.addEventListener('click', (): void => {
       LoginView.showLoginView();
     });
 
-    return loginButton;
+    return loginImg;
   }
 
   public static buildHeaderView(): HTMLElement {
