@@ -238,4 +238,17 @@ export default class RegistrationView {
       console.error(`Your age must be over ${MIN_USER_AGE} years old`);
     }
   }
+
+  private static validateForm(form: HTMLFormElement): boolean {
+    let valid = true;
+
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach((input) => {
+      if (input.dataset.valid === 'false') {
+        valid = false;
+      }
+    });
+
+    return valid;
+  }
 }
