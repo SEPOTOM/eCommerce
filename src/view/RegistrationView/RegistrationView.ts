@@ -1,14 +1,17 @@
 const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 const PASSWORD_REGEXP = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
+const NAME_REGEXP = /^(\w*[^\d_])+$/;
 
 enum LabelTexts {
   EMAIL = 'Email',
   PASSWORD = 'Password',
+  FIRST_NAME = 'First name',
 }
 
 enum InputTypes {
   EMAIL = 'email',
   PASSWORD = 'password',
+  NAME = 'text',
 }
 
 export default class RegistrationView {
@@ -25,6 +28,14 @@ export default class RegistrationView {
       LabelTexts.PASSWORD
     );
     form.append(passwordRow);
+
+    const firstNameRow = RegistrationView.buildRowView(
+      LabelTexts.FIRST_NAME,
+      InputTypes.NAME,
+      NAME_REGEXP,
+      LabelTexts.FIRST_NAME
+    );
+    form.append(firstNameRow);
 
     return form;
   }
