@@ -2,7 +2,6 @@ import LoginView from '../LoginView/LoginView';
 import loginIcon from '../../assets/svg/login.svg';
 
 export default class GenericView {
-
   public static loginButtonStyles: string[] = ['w-10'];
 
   public static buildGenericView(): void {
