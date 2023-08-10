@@ -91,6 +91,10 @@ export default class LoginView {
     ['title', LoginView.PASSWORD_ERROR_HOVER],
   ];
 
+  public static loginValid: boolean = true;
+
+  public static passwordValid: boolean = true;
+
   public static showLoginView(): void {
     const main: HTMLElement = document.querySelector('main') as HTMLElement;
     const loginWindow: HTMLDivElement = document.createElement('div');
@@ -240,10 +244,12 @@ export default class LoginView {
 
     passwordInput.addEventListener('input', () => {
       passwordError.classList.add('hidden');
+      LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
     });
 
     loginInput.addEventListener('input', () => {
       loginError.classList.add('hidden');
+      LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
     });
 
     cancelButton.addEventListener('click', () => {
@@ -258,14 +264,27 @@ export default class LoginView {
     loginError: HTMLElement
   ) {
     if (passwordInput.value.match(LoginView.PASSWORD_REGEX)) {
+      LoginView.passwordValid = true;
+    } else {
+      LoginView.passwordValid = false;
+    }
+    if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
+      LoginView.loginValid = true;
+    } else {
+      LoginView.loginValid = false;
+    }
+    LoginView.toggleErrorMessages(passwordError, loginError);
+  }
+
+  public static toggleErrorMessages(passwordError: HTMLElement, loginError: HTMLElement) {
+    if (LoginView.passwordValid) {
       passwordError.classList.remove('block');
       passwordError.classList.add('hidden');
     } else {
       passwordError.classList.add('block');
       passwordError.classList.remove('hidden');
     }
-
-    if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
+    if (LoginView.loginValid) {
       loginError.classList.remove('block');
       loginError.classList.add('hidden');
     } else {
