@@ -13,6 +13,10 @@ const MONTHS_IN_YEAR = 12;
 const MAX_DAYS_IN_MONTH = 31;
 const MIN_USER_AGE = 18;
 const MS_IN_YEAR = 31536000000;
+const Countries = {
+  US: 'The United States',
+  UK: 'The United Kingdom',
+};
 
 enum LabelTexts {
   EMAIL = 'Email',
@@ -23,6 +27,7 @@ enum LabelTexts {
   STREET = 'Street',
   CITY = 'City',
   POSTAL_CODE = 'Postal code',
+  COUNTRIES = 'Country',
 }
 
 enum InputTypes {
@@ -108,6 +113,11 @@ export default class RegistrationView {
       fieldName: LabelTexts.POSTAL_CODE,
     });
     rows.push(postalCodeRow);
+
+    const countriesRow = RegistrationView.buildSelectRowField(LabelTexts.COUNTRIES, {
+      values: Countries,
+    });
+    rows.push(countriesRow);
 
     return rows;
   }
