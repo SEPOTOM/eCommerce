@@ -7,8 +7,23 @@ import {
   CTP_SCOPES,
 } from '../APIClients/JSNinjas';
 
-export default class Authorization {
-  public static async loginClient(): Promise<string> {
+interface IClientLoginResponse {
+  access_token: string;
+  expires_in: number;
+  scope: string;
+  token_type: string;
+}
+
+interface ICustomerLoginResponse {
+  access_token: string;
+  expires_in: number;
+  scope: string;
+  refresh_token: string;
+  token_type: string;
+}
+
+class Authorization {
+  public static async loginClient(): Promise<IClientLoginResponse> {
     const queryString: string = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
 
     const response = await fetch(queryString, {
@@ -19,13 +34,13 @@ export default class Authorization {
       },
     });
 
-    const responseJSON = await response.json();
+    const responseJSON: IClientLoginResponse = await response.json();
 
-    return responseJSON.access_token;
+    return responseJSON;
   }
 
-  public static async loginBasicAuth(/* token: string */) {
-    const queryString: string = `${CTP_AUTH_URL}/oauth/${CTP_PROJECT_KEY}/customers/token`;
+  public static async loginBasicAuth(login: string, password: string): Promise<ICustomerLoginResponse> {
+    const queryString: string = `${CTP_AUTH_URL}/oauth/${CTP_PROJECT_KEY}/customers/token?grant_type=password&username=${login}&password=${password}&scope=${CTP_SCOPES}`;
 
     const response = await fetch(queryString, {
       method: 'POST',
@@ -35,8 +50,10 @@ export default class Authorization {
       },
     });
 
-    const responseJSON = await response.json();
+    const responseJSON: ICustomerLoginResponse = await response.json();
 
-    return responseJSON.access_token;
+    return responseJSON;
   }
 }
+
+export { Authorization, IClientLoginResponse, ICustomerLoginResponse };

@@ -1,6 +1,9 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
-import Authorization from '../../api/Authorization/Authorization';
+import {
+  Authorization,
+  /* IClientLoginResponse, */ ICustomerLoginResponse,
+} from '../../api/Authorization/Authorization';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -254,11 +257,15 @@ export default class LoginView {
 
     submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
-      // if (LoginView.passwordValid && LoginView.loginValid) {
-      const clientToken =
-        await Authorization.loginClient(/* loginInput.textContent as string, passwordInput.textContent as string */);
-      console.log(clientToken);
-      // }
+      if (LoginView.passwordValid && LoginView.loginValid) {
+        // const clientToken: IClientLoginResponse = await Authorization.loginClient();
+        // console.log('clientToken - ', clientToken.access_token);
+        const customerLogin: ICustomerLoginResponse = await Authorization.loginBasicAuth(
+          loginInput.value,
+          passwordInput.value
+        );
+        console.log(customerLogin);
+      }
     });
 
     passwordInput.addEventListener('input', () => {
