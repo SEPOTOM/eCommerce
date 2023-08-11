@@ -2,7 +2,7 @@ import LoginView from '../LoginView/LoginView';
 import loginIcon from '../../assets/svg/login.svg';
 
 export default class GenericView {
-  public static loginButtonStyles: string[] = ['w-10'];
+  private static loginButtonStyles: string[] = ['w-10'];
 
   public static buildGenericView(): void {
     const wrapper: HTMLDivElement = document.createElement('div');
@@ -15,7 +15,7 @@ export default class GenericView {
     document.body.appendChild(wrapper);
   }
 
-  public static getLoginButton(): HTMLImageElement {
+  private static getLoginButton(): HTMLImageElement {
     const loginImg: HTMLImageElement = document.createElement('img');
     loginImg.src = loginIcon;
 
@@ -28,21 +28,21 @@ export default class GenericView {
     return loginImg;
   }
 
-  public static buildHeaderView(): HTMLElement {
+  private static buildHeaderView(): HTMLElement {
     const header: HTMLElement = document.createElement('header');
 
     header.appendChild(GenericView.getLoginButton());
     return header;
   }
 
-  public static buildMainView(): HTMLElement {
+  private static buildMainView(): HTMLElement {
     const main: HTMLElement = document.createElement('main');
     main.textContent = 'main placeholder';
 
     return main;
   }
 
-  public static buildFooterView(): HTMLElement {
+  private static buildFooterView(): HTMLElement {
     const footer: HTMLElement = document.createElement('footer');
     footer.textContent = 'footer placeholder';
 
