@@ -1,9 +1,6 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
-import {
-  Authorization,
-  /* IClientLoginResponse, */ ICustomerLoginResponse,
-} from '../../api/Authorization/Authorization';
+import { Authorization, IError, ICustomerLoginResponse } from '../../api/Authorization/Authorization';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -56,7 +53,7 @@ export default class LoginView {
 
   private static passwordContainerStyles: string[] = ['relative'];
 
-  private static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'bottom-3'];
+  private static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'top-3'];
 
   private static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
 
@@ -258,13 +255,15 @@ export default class LoginView {
     submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
       if (LoginView.passwordValid && LoginView.loginValid) {
-        // const clientToken: IClientLoginResponse = await Authorization.loginClient();
-        // console.log('clientToken - ', clientToken.access_token);
-        const customerLogin: ICustomerLoginResponse = await Authorization.loginBasicAuth(
+        const customerLogin: ICustomerLoginResponse | IError = await Authorization.loginBasicAuth(
           loginInput.value,
           passwordInput.value
         );
-        console.log(customerLogin);
+        if ('message' in customerLogin) {
+          LoginView.addAuthErrorBlock(customerLogin);
+        } else {
+          console.log('Success token - ', customerLogin.access_token);
+        }
       }
     });
 
@@ -281,6 +280,18 @@ export default class LoginView {
     cancelButton.addEventListener('click', () => {
       LoginView.cleanMainView();
     });
+  }
+
+  private static addAuthErrorBlock(customerLogin: IError): void {
+    const authorizationError: HTMLDivElement = document.createElement('div');
+    const parent: HTMLElement = document.getElementById('password-error')?.parentElement as HTMLElement;
+
+    LoginView.addStyles(authorizationError, LoginView.validationErrorStyles);
+    authorizationError.classList.remove('hidden');
+
+    authorizationError.textContent = customerLogin.message;
+
+    parent.appendChild(authorizationError);
   }
 
   private static checkRegExp(

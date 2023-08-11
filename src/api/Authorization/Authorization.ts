@@ -22,6 +22,14 @@ interface ICustomerLoginResponse {
   token_type: string;
 }
 
+interface IError {
+  statusCode: number;
+  message: string;
+  errors: [];
+  error: string;
+  error_description: string;
+}
+
 class Authorization {
   public static async loginClient(): Promise<IClientLoginResponse> {
     const queryString: string = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
@@ -39,7 +47,7 @@ class Authorization {
     return responseJSON;
   }
 
-  public static async loginBasicAuth(login: string, password: string): Promise<ICustomerLoginResponse> {
+  public static async loginBasicAuth(login: string, password: string): Promise<ICustomerLoginResponse | IError> {
     const queryString: string = `${CTP_AUTH_URL}/oauth/${CTP_PROJECT_KEY}/customers/token?grant_type=password&username=${login}&password=${password}&scope=${CTP_SCOPES}`;
 
     const response: Response = await fetch(queryString, {
@@ -50,10 +58,10 @@ class Authorization {
       },
     });
 
-    const responseJSON: ICustomerLoginResponse = await response.json();
+    const responseJSON: ICustomerLoginResponse | IError = await response.json();
 
     return responseJSON;
   }
 }
 
-export { Authorization, IClientLoginResponse, ICustomerLoginResponse };
+export { Authorization, IClientLoginResponse, ICustomerLoginResponse, IError };
