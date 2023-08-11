@@ -17,6 +17,18 @@ export default class LoginView {
   public static LOGIN_ERROR_HOVER: string =
     '1. Email address must be properly formatted (e.g., user@example.com)\n\r 2.Email address must not contain leading or trailing whitespace\n\r 3.Email address must contain a domain name (e.g., example.com)\n\r 4.Email address must contain an @ symbol separating local part and domain name';
 
+  public static UPPER_CASE_REGEX: RegExp = /[A-Z]/;
+
+  public static LOWER_CASE_REGEX: RegExp = /[a-z]/;
+
+  public static NUMBERS_CASE_REGEX: RegExp = /[0-9]/;
+
+  public static SPECIAL_CASE_REGEX: RegExp = /[!@#$%^&*]/;
+
+  public static DOMAIN_REGEX: RegExp = /@[^\s@]+\.[^\s@]+$/;
+
+  public static PASSWORD_MIN_LENGTH: number = 8;
+
   public static loginWindowStyles: string[] = [
     'bg-white',
     'w-2/4',
@@ -35,7 +47,7 @@ export default class LoginView {
 
   public static formCaptionStyles: string[] = ['text-4xl', 'mb-8'];
 
-  public static inputStyles: string[] = ['bg-slate-300', 'w-full', 'h-12'];
+  public static inputStyles: string[] = ['bg-slate-300', 'w-full', 'h-12', 'px-2.5', 'pr-10'];
 
   public static passwordContainerStyles: string[] = ['relative'];
 
@@ -263,17 +275,64 @@ export default class LoginView {
     loginInput: HTMLInputElement,
     loginError: HTMLElement
   ): void {
+    let loginInputError = '';
+    let passwordInputError = '';
     if (passwordInput.value.match(LoginView.PASSWORD_REGEX)) {
       LoginView.passwordValid = true;
     } else {
       LoginView.passwordValid = false;
+      passwordInputError = LoginView.getPasswordError(passwordInput);
+      (document.getElementById('password-error') as HTMLElement).textContent = passwordInputError;
     }
     if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
       LoginView.loginValid = true;
     } else {
       LoginView.loginValid = false;
+      loginInputError = LoginView.getLoginError(loginInput);
+      (document.getElementById('login-error') as HTMLElement).textContent = loginInputError;
     }
     LoginView.toggleErrorMessages(passwordError, loginError);
+  }
+
+  public static getPasswordError(password: HTMLInputElement): string {
+    let error: string = '';
+    if (password.value[0] === ' ' || password.value[password.value.length - 1] === ' ') {
+      error = 'Password must not contain leading or trailing whitespace';
+    }
+    if (password.value.length < LoginView.PASSWORD_MIN_LENGTH) {
+      error = 'Password must be at least 8 characters long';
+    }
+    if (!password.value.match(LoginView.UPPER_CASE_REGEX)) {
+      error = 'Password must contain at least one uppercase letter (A-Z)';
+    }
+    if (!password.value.match(LoginView.LOWER_CASE_REGEX)) {
+      error = 'Password must contain at least one lowercase letter (a-z)';
+    }
+    if (!password.value.match(LoginView.NUMBERS_CASE_REGEX)) {
+      error = 'Password must contain at least one digit (0-9)';
+    }
+    if (!password.value.match(LoginView.SPECIAL_CASE_REGEX)) {
+      error = 'Password must contain at least one special character !@#$%^&*';
+    }
+    return error;
+  }
+
+  public static getLoginError(login: HTMLInputElement): string {
+    let error: string = '';
+    const loginArray = login.value.split('');
+    if (!login.value.match(LoginView.EMAIL_REGEX)) {
+      error = 'Email address must be properly formatted (e.g., user@example.com)';
+    }
+    if (!login.value.match(LoginView.DOMAIN_REGEX)) {
+      error = 'Email address must contain a domain name (e.g., example.com)';
+    }
+    if (login.value[0] === ' ' || login.value[login.value.length - 1] === ' ') {
+      error = 'Password must not contain leading or trailing whitespace';
+    }
+    if (!loginArray.includes('@')) {
+      error = 'Email address must contain an "@" symbol separating local part and domain name';
+    }
+    return error;
   }
 
   public static toggleErrorMessages(passwordError: HTMLElement, loginError: HTMLElement): void {
