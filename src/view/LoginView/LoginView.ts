@@ -1,5 +1,6 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
+import Authorization from '../../api/Authorization/Authorization';
 
 export default class LoginView {
   public static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -238,8 +239,13 @@ export default class LoginView {
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
     const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
-    submitButton.addEventListener('click', () => {
+    submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
+      // if (LoginView.passwordValid && LoginView.loginValid) {
+      const clientToken =
+        await Authorization.loginClient(/* loginInput.textContent as string, passwordInput.textContent as string */);
+      console.log(clientToken);
+      // }
     });
 
     passwordInput.addEventListener('input', () => {
