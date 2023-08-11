@@ -5,7 +5,7 @@ describe('RegistrationView class', () => {
     expect(RegistrationView).toBeDefined();
   });
 
-  it('an instance must have a buildGenericView method', () => {
+  it('an instance must have a buildRegistrationView method', () => {
     const instance = new RegistrationView();
 
     expect(instance.buildRegistrationView).toBeDefined();
