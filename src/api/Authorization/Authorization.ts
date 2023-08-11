@@ -5,7 +5,7 @@ import {
   CTP_AUTH_URL,
   /* CTP_API_URL, */
   CTP_SCOPES,
-} from '../APIClients/JSNinjas';
+} from '../APIClients/JSNinjas-MobileSPA';
 
 interface IClientLoginResponse {
   access_token: string;
