@@ -13,10 +13,15 @@ interface ICustomerLoginResponse {
   token_type: string;
 }
 
+interface IErrorItems {
+  code: string;
+  message: string;
+}
+
 interface IError {
   statusCode: number;
   message: string;
-  errors: [];
+  errors: IErrorItems[];
   error: string;
   error_description: string;
 }

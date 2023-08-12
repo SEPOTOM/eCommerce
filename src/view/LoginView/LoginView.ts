@@ -260,6 +260,7 @@ export default class LoginView {
         if ('message' in customerLogin) {
           LoginView.addAuthErrorBlock(customerLogin);
         } else {
+          document.getElementById('password-error')?.nextElementSibling?.remove();
           console.log('Success token - ', customerLogin.access_token);
         }
       }
