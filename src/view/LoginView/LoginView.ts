@@ -9,14 +9,8 @@ export default class LoginView {
   private static PASSWORD_ERROR_TEXT: string =
     'Password does not meet a complexity criteria. Hover this text to see the criteria.';
 
-  private static PASSWORD_ERROR_HOVER: string =
-    'The complexity criteria:\n\r1. At least 8 characters long\n\r2. At least one uppercase letter (A-Z)\n\r3. At least one lowercase letter (a-z)\n\r4. At least one digit (0-9)\n\r5. At least one special character (!@#$%^&*)\n\r6. Of no leading or trailing whitespace';
-
   private static LOGIN_ERROR_TEXT: string =
     'Login does not meet requirements. Hover this text to see the requirements.';
-
-  private static LOGIN_ERROR_HOVER: string =
-    '1. Email address must be properly formatted (e.g., user@example.com)\n\r 2.Email address must not contain leading or trailing whitespace\n\r 3.Email address must contain a domain name (e.g., example.com)\n\r 4.Email address must contain an @ symbol separating local part and domain name';
 
   private static UPPER_CASE_REGEX: RegExp = /[A-Z]/;
 
@@ -94,15 +88,9 @@ export default class LoginView {
 
   private static cancelButtonAttributes: string[][] = [['id', 'cancel-login']];
 
-  private static loginErrorAttributes: string[][] = [
-    ['id', 'login-error'],
-    ['title', LoginView.LOGIN_ERROR_HOVER],
-  ];
+  private static loginErrorAttributes: string[][] = [['id', 'login-error']];
 
-  private static passwordErrorAttributes: string[][] = [
-    ['id', 'password-error'],
-    ['title', LoginView.PASSWORD_ERROR_HOVER],
-  ];
+  private static passwordErrorAttributes: string[][] = [['id', 'password-error']];
 
   private static loginValid: boolean = true;
 
