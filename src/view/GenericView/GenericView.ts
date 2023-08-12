@@ -22,7 +22,8 @@ export default class GenericView {
     LoginView.addStyles(loginImg, GenericView.loginButtonStyles);
 
     loginImg.addEventListener('click', (): void => {
-      LoginView.showLoginView();
+      const main: HTMLElement = document.querySelector('main') as HTMLElement;
+      main.appendChild(LoginView.showLoginView());
     });
 
     return loginImg;

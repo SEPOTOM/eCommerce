@@ -6,31 +6,9 @@ import {
   /* CTP_API_URL, */
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-MobileSPA';
+import { IClientLoginResponse, ICustomerLoginResponse, IError } from './Types';
 
-interface IClientLoginResponse {
-  access_token: string;
-  expires_in: number;
-  scope: string;
-  token_type: string;
-}
-
-interface ICustomerLoginResponse {
-  access_token: string;
-  expires_in: number;
-  scope: string;
-  refresh_token: string;
-  token_type: string;
-}
-
-interface IError {
-  statusCode: number;
-  message: string;
-  errors: [];
-  error: string;
-  error_description: string;
-}
-
-class Authorization {
+export default class Authorization {
   public static async loginClient(): Promise<IClientLoginResponse> {
     const queryString: string = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
 
@@ -63,5 +41,3 @@ class Authorization {
     return responseJSON;
   }
 }
-
-export { Authorization, IClientLoginResponse, ICustomerLoginResponse, IError };
