@@ -45,9 +45,27 @@ export default class LoginView {
 
   private static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
 
-  private static loginButtonStyles: string[] = ['w-full', 'm-auto', 'bg-red-600', 'h-12', 'text-white', 'hover:bg-red-400', 'transition-all', 'duration-500'];
+  private static loginButtonStyles: string[] = [
+    'w-full',
+    'm-auto',
+    'bg-red-600',
+    'h-12',
+    'text-white',
+    'hover:bg-red-400',
+    'transition-all',
+    'duration-500',
+  ];
 
-  private static cancelButtonStyles: string[] = ['w-full', 'm-auto', 'bg-orange-600', 'h-12', 'text-white', 'hover:bg-orange-400', 'transition-all', 'duration-500'];
+  private static cancelButtonStyles: string[] = [
+    'w-full',
+    'm-auto',
+    'bg-orange-600',
+    'h-12',
+    'text-white',
+    'hover:bg-orange-400',
+    'transition-all',
+    'duration-500',
+  ];
 
   private static registrationButtonStyles: string[] = [
     'w-full',
@@ -59,7 +77,7 @@ export default class LoginView {
     'hover:bg-blue-900',
     'hover:text-white',
     'transition-all',
-    'duration-500'
+    'duration-500',
   ];
 
   private static validationErrorStyles: string[] = ['text-red-800', 'text-base', 'hidden', 'absolute'];
