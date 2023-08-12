@@ -14,6 +14,9 @@ export default class LoginView {
   private static LOGIN_ERROR_TEXT: string =
     'Login does not meet requirements. Hover this text to see the requirements.';
 
+  private static EXCLAMATION_MARK =
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 inline text-amber-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>';
+
   private static UPPER_CASE_REGEX: RegExp = /[A-Z]/;
 
   private static LOWER_CASE_REGEX: RegExp = /[a-z]/;
@@ -65,7 +68,7 @@ export default class LoginView {
     'text-blue-900',
   ];
 
-  private static validationErrorStyles: string[] = ['text-red-800', 'text-xs', 'hidden', 'absolute'];
+  private static validationErrorStyles: string[] = ['text-red-800', 'text-xs', 'hidden', 'absolute', 'text-left'];
 
   private static loginWindowAttributes: string[][] = [['id', 'login-form']];
 
@@ -284,8 +287,9 @@ export default class LoginView {
     LoginView.addStyles(authorizationError, LoginView.validationErrorStyles);
     authorizationError.classList.remove('hidden');
 
-    authorizationError.textContent = customerLogin.message;
+    authorizationError.innerHTML = LoginView.EXCLAMATION_MARK + customerLogin.message;
 
+    document.getElementById('password-error')?.nextElementSibling?.remove();
     parent.appendChild(authorizationError);
   }
 
@@ -302,20 +306,22 @@ export default class LoginView {
     } else {
       LoginView.passwordValid = false;
       passwordInputError = LoginView.getPasswordError(passwordInput);
-      (document.getElementById('password-error') as HTMLElement).textContent = passwordInputError;
+      (document.getElementById('password-error') as HTMLElement).innerHTML =
+        LoginView.EXCLAMATION_MARK + passwordInputError;
     }
     if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
       LoginView.loginValid = true;
     } else {
       LoginView.loginValid = false;
       loginInputError = LoginView.getLoginError(loginInput);
-      (document.getElementById('login-error') as HTMLElement).textContent = loginInputError;
+      (document.getElementById('login-error') as HTMLElement).innerHTML = LoginView.EXCLAMATION_MARK + loginInputError;
     }
     LoginView.toggleErrorMessages(passwordError, loginError);
   }
 
   private static getPasswordError(password: HTMLInputElement): string {
     let error: string = '';
+    document.getElementById('password-error')?.nextElementSibling?.remove();
     if (password.value[0] === ' ' || password.value[password.value.length - 1] === ' ') {
       error = 'Password must not contain leading or trailing whitespace';
     }
