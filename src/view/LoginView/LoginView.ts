@@ -262,8 +262,7 @@ export default class LoginView {
     submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
       if (LoginView.passwordValid && LoginView.loginValid) {
-        const customerLogin: ICustomerLoginResponse | IError = await Authorization.loginBasicAuth(
-        //const customerLogin: ICustomerLoginResponse = await Authorization.loginBasicAuth(
+        const customerLogin: ICustomerLoginResponse | IError | Error = await Authorization.loginBasicAuth(
           loginInput.value,
           passwordInput.value
         );
@@ -290,7 +289,7 @@ export default class LoginView {
     });
   }
 
-  private static addAuthErrorBlock(customerLogin: IError): void {
+  private static addAuthErrorBlock(customerLogin: IError | Error): void {
     const authorizationError: HTMLDivElement = document.createElement('div');
     const parent: HTMLElement = document.getElementById('password-error')?.parentElement as HTMLElement;
 
