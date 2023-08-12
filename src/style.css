@@ -665,8 +665,8 @@ video {
   width: 2.5rem;
 }
 
-.w-2\/4 {
-  width: 50%;
+.w-3\/4 {
+  width: 75%;
 }
 
 .w-6 {
@@ -677,12 +677,8 @@ video {
   width: 100%;
 }
 
-.min-w-320 {
-  min-width: 320px;
-}
-
-.max-w-500 {
-  max-width: 500px;
+.max-w-md {
+  max-width: 28rem;
 }
 
 .flex-col {

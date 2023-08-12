@@ -31,7 +31,7 @@ export default class LoginView {
 
   private static loginWindowStyles: string[] = [
     'bg-white',
-    'w-2/4',
+    'w-3/4',
     'h-2/4',
     'text-center',
     'm-auto',
@@ -39,8 +39,7 @@ export default class LoginView {
     'bottom-1/4',
     'left-1/4',
     'right-1/4',
-    'max-w-500',
-    'min-w-320',
+    'max-w-md',
   ];
 
   private static loginFormStyles: string[] = ['flex', 'flex-col', 'gap-8', 'py-12'];
