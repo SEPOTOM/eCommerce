@@ -23,9 +23,7 @@ export default class Authorization {
       });
       responseJSON = await response.json();
     } catch (error) {
-      responseJSON = new Error(
-        'Cannot reach out to server. Please, check your network connection and server availability.'
-      );
+      responseJSON = new Error('Please check your network connection or try again.');
     }
 
     return responseJSON;
@@ -48,9 +46,7 @@ export default class Authorization {
       });
       responseJSON = await responsePromise.json();
     } catch (error) {
-      responseJSON = new Error(
-        'Cannot reach out to server. Please, check your network connection and server availability.'
-      );
+      responseJSON = new Error('Please check your network connection or try again.');
     }
     return responseJSON;
   }
