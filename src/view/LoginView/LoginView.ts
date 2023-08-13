@@ -1,5 +1,7 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
+import Authorization from '../../api/Authorization/Authorization';
+import { ICustomerLoginResponse } from '../../api/Authorization/Types';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -43,9 +45,27 @@ export default class LoginView {
 
   private static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
 
-  private static loginButtonStyles: string[] = ['w-full', 'm-auto', 'bg-red-600', 'h-12', 'text-white'];
+  private static loginButtonStyles: string[] = [
+    'w-full',
+    'm-auto',
+    'bg-red-600',
+    'h-12',
+    'text-white',
+    'hover:bg-red-400',
+    'transition-all',
+    'duration-500',
+  ];
 
-  private static cancelButtonStyles: string[] = ['w-full', 'm-auto', 'bg-orange-600', 'h-12', 'text-white'];
+  private static cancelButtonStyles: string[] = [
+    'w-full',
+    'm-auto',
+    'bg-orange-600',
+    'h-12',
+    'text-white',
+    'hover:bg-orange-400',
+    'transition-all',
+    'duration-500',
+  ];
 
   private static registrationButtonStyles: string[] = [
     'w-full',
@@ -54,9 +74,15 @@ export default class LoginView {
     'border-2',
     'border-blue-900',
     'text-blue-900',
+    'hover:bg-blue-900',
+    'hover:text-white',
+    'transition-all',
+    'duration-500',
   ];
 
   private static validationErrorStyles: string[] = ['text-red-800', 'text-base', 'hidden', 'absolute'];
+
+  private static loginWindowAttributes: string[][] = [['id', 'login-form']];
 
   private static loginFormAttributes: string[][] = [['autocomplete', 'off']];
 
@@ -85,24 +111,28 @@ export default class LoginView {
 
   private static passwordErrorAttributes: string[][] = [['id', 'password-error']];
 
+  private static loginWindow: HTMLDivElement;
+
   private static loginValid: boolean = true;
 
   private static passwordValid: boolean = true;
 
-  public static showLoginView(): void {
-    const main: HTMLElement = document.querySelector('main') as HTMLElement;
-    const loginWindow: HTMLDivElement = document.createElement('div');
+  public static showLoginView(): HTMLDivElement {
+    LoginView.loginWindow = document.createElement('div');
     const loginForm: HTMLFormElement = document.createElement('form');
 
-    LoginView.cleanMainView();
+    LoginView.cleanLoginView();
 
-    LoginView.addStyles(loginWindow, LoginView.loginWindowStyles);
+    LoginView.addStyles(LoginView.loginWindow, LoginView.loginWindowStyles);
     LoginView.addStyles(loginForm, LoginView.loginFormStyles);
+
+    LoginView.addAttributes(LoginView.loginWindow, LoginView.loginWindowAttributes);
     LoginView.addAttributes(loginForm, LoginView.loginFormAttributes);
+
     LoginView.addLoginForm(loginForm);
 
-    loginWindow.appendChild(loginForm);
-    main.appendChild(loginWindow);
+    LoginView.loginWindow.appendChild(loginForm);
+    return LoginView.loginWindow;
   }
 
   public static addStyles(htmlElement: HTMLElement, styles: string[]): void {
@@ -230,8 +260,15 @@ export default class LoginView {
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
     const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
-    submitButton.addEventListener('click', () => {
+    submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
+      if (LoginView.passwordValid && LoginView.loginValid) {
+        const customerLogin: ICustomerLoginResponse = await Authorization.loginBasicAuth(
+          loginInput.value,
+          passwordInput.value
+        );
+        console.log(customerLogin);
+      }
     });
 
     passwordInput.addEventListener('input', () => {
@@ -245,7 +282,7 @@ export default class LoginView {
     });
 
     cancelButton.addEventListener('click', () => {
-      LoginView.cleanMainView();
+      LoginView.cleanLoginView();
     });
   }
 
@@ -332,7 +369,7 @@ export default class LoginView {
     }
   }
 
-  private static cleanMainView(): void {
-    (document.querySelector('main') as HTMLElement).innerHTML = '';
+  private static cleanLoginView(): void {
+    LoginView.loginWindow.remove();
   }
 }
