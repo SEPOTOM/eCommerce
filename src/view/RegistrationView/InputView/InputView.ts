@@ -1,9 +1,9 @@
-import htmlToElement from '../../../utils/htmlToElement';
+import Converter from '../../../components/Converter/Converter';
 import { InputOptions } from '../types';
 import HTML from './InputView.html';
 
 export default abstract class InputView {
-  protected input = htmlToElement<HTMLInputElement>(HTML) || document.createElement('input');
+  protected input = Converter.htmlToElement<HTMLInputElement>(HTML) || document.createElement('input');
 
   public buildInputView({ regExp, id, type }: InputOptions): HTMLInputElement {
     this.input.addEventListener('change', () => {

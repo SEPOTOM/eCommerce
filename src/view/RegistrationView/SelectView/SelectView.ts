@@ -1,9 +1,9 @@
-import htmlToElement from '../../../utils/htmlToElement';
+import Converter from '../../../components/Converter/Converter';
 import OptionView from './OptionView.ts/OptionView';
 import HTML from './SelectView.html';
 
 export default class SelectView {
-  private select = htmlToElement<HTMLSelectElement>(HTML) || document.createElement('select');
+  private select = Converter.htmlToElement<HTMLSelectElement>(HTML) || document.createElement('select');
 
   public buildSelectView(values: Record<string, string>, id?: string): HTMLSelectElement {
     const entries = Object.entries(values);

@@ -1,4 +1,4 @@
-import htmlToElement from '../../utils/htmlToElement';
+import Converter from '../../components/Converter/Converter';
 import SimpleInputView from './InputView/SimpleInputView/SimpleInputView';
 import DateInputView from './InputView/DateInputView/DateInputView';
 import SelectView from './SelectView/SelectView';
@@ -44,7 +44,7 @@ const inputOptions: InputOptions[] = [
 ];
 
 export default class RegistrationView {
-  private form = htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
+  private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
