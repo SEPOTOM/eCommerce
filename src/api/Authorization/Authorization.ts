@@ -5,7 +5,7 @@ import {
   CTP_AUTH_URL,
   /* CTP_API_URL, */
   CTP_SCOPES,
-} from '../APIClients/JSNinjas-MobileSPA';
+} from '../APIClients/JSNinjas';
 import { IClientLoginResponse, ICustomerLoginResponse, IError } from './Types';
 
 export default class Authorization {
@@ -44,6 +44,27 @@ export default class Authorization {
         headers: {
           Authorization: `Basic ${btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`)}`,
           'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      responseJSON = await responsePromise.json();
+    } catch (error) {
+      responseJSON = new Error(
+        'Cannot reach out to server. Please, check your network connection and server availability.'
+      );
+    }
+    return responseJSON;
+  }
+
+  public static async refreshCustomerToken(refreshToken: string): Promise<ICustomerLoginResponse | IError | Error> {
+    const queryString: string = `${CTP_AUTH_URL}/oauth/token?grant_type=refresh_token&refresh_token=${refreshToken}`;
+    let responseJSON: ICustomerLoginResponse | IError | Error;
+
+    try {
+      const responsePromise = await fetch(queryString, {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`)}`,
+          // 'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
       responseJSON = await responsePromise.json();

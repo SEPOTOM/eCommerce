@@ -604,10 +604,6 @@ video {
   top: 0.75rem;
 }
 
-.bottom-3 {
-  bottom: 0.75rem;
-}
-
 .m-auto {
   margin: auto;
 }
@@ -728,10 +724,6 @@ video {
   padding-right: 2.5rem;
 }
 
-.text-left {
-  text-align: left;
-}
-
 .text-center {
   text-align: center;
 }
@@ -739,16 +731,6 @@ video {
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
-}
-
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
 }
 
 .text-base {

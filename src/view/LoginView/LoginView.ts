@@ -2,6 +2,7 @@ import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, IError } from '../../api/Authorization/Types';
+import Tokens from '../../components/Tokens/Tokens';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -234,10 +235,8 @@ export default class LoginView {
   private static addValidation(): void {
     const loginInput: HTMLInputElement = document.getElementById('login') as HTMLInputElement;
     const loginError: HTMLElement = document.getElementById('login-error') as HTMLElement;
-
     const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
     const passwordError: HTMLElement = document.getElementById('password-error') as HTMLElement;
-
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
     const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
@@ -252,7 +251,8 @@ export default class LoginView {
           LoginView.addAuthErrorBlock(customerLogin);
         } else {
           document.getElementById('password-error')?.nextElementSibling?.remove();
-          console.log('Success token - ', customerLogin.access_token);
+          Tokens.setCustomerTokens(customerLogin);
+          console.log(await Tokens.getCustomerTokens());
         }
       }
     });
