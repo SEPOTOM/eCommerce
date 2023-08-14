@@ -1,12 +1,15 @@
 import Converter from '../../components/Converter/Converter';
 import InputView from './InputView/InputView';
 import DateInputView from './InputView/DateInputView/DateInputView';
+import DynamicInputView from './InputView/DynamicInputView/DynamicInputView';
 import SelectView from './SelectView/SelectView';
 import { InputOptions } from './types';
-import { ValidationData, Countries } from './data';
+import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps } from './data';
 import HTML from './RegistrationView.html';
 
+const DEFAULT_COUNTRY = 'US';
 const BIRTH_DATE_INPUT_INDEX = 4;
+const POSTAL_CODE_INPUT_INDEX = 7;
 
 enum InputTypes {
   EMAIL = 'email',
@@ -34,12 +37,16 @@ const inputOptions: InputOptions[] = [
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
+  private select: HTMLSelectElement | null = null;
+
+  private postalCodeInputObject: DynamicInputView | null = null;
+
   private inputObjects: InputView[] = [];
 
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
 
-    RegistrationView.configureSelect(rows);
+    this.configureSelect(rows);
     this.configureInputs(rows);
     this.configureButton();
     this.configureForm();
@@ -59,6 +66,12 @@ export default class RegistrationView {
 
       if (index === BIRTH_DATE_INPUT_INDEX) {
         inputObject = new DateInputView();
+      } else if (index === POSTAL_CODE_INPUT_INDEX) {
+        this.postalCodeInputObject = new DynamicInputView(
+          PostalCodeRegExps[DEFAULT_COUNTRY],
+          PostalCodeErrorMessages[DEFAULT_COUNTRY]
+        );
+        inputObject = this.postalCodeInputObject;
       } else {
         inputObject = new InputView();
       }
@@ -71,13 +84,16 @@ export default class RegistrationView {
     });
   }
 
-  private static configureSelect(rows: NodeListOf<Element>): void {
+  private configureSelect(rows: NodeListOf<Element>): void {
     const lastRow = rows[rows.length - 1];
     const label = lastRow.querySelector(`.${ClassNames.LABEL}`);
     const id = label?.getAttribute('for') || '';
 
-    const select = new SelectView().buildSelectView(Countries, id);
-    lastRow.append(select);
+    this.select = new SelectView().buildSelectView(Countries, id);
+
+    this.select.addEventListener('change', this.changePostalCodeInputValidation.bind(this));
+
+    lastRow.append(this.select);
   }
 
   private configureButton(): void {
@@ -111,6 +127,15 @@ export default class RegistrationView {
     this.inputObjects = [];
 
     this.form.removeEventListener('click', this.validateInputs);
+  }
+
+  private changePostalCodeInputValidation(): void {
+    const countyCode = `${this.select?.value}`;
+
+    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
+    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
+
+    this.postalCodeInputObject?.validateInput();
   }
 
   private static validateForm(form: HTMLElement): boolean {

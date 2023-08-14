@@ -1,9 +1,5 @@
 import { PatternAndMessage } from './types';
 
-const US_POSTAL_CODE_REGEXP_STRING = '(^\\d{5}$)|(^\\d{5}-\\d{4}$)';
-const UK_POSTAL_CODE_REGEXP_STRING =
-  '(^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})$)';
-
 const ErrorMessages = {
   EMAIL: 'The email must be in the format example@email.com',
   FIRST_NAME: 'First name is invalid',
@@ -25,7 +21,6 @@ const RegExps = {
   LETTERS: /^[^\W\d_]+$/,
   DATE: /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4,}$/,
   STREET: /^.+$/,
-  POSTAL_CODES: new RegExp(`${US_POSTAL_CODE_REGEXP_STRING}|${UK_POSTAL_CODE_REGEXP_STRING}`),
   MIN_LENGTH: /.{8,}/,
   ONE_UPPERCASE: /[A-Z]/,
   ONE_LOWERCASE: /[a-z]/,
@@ -54,5 +49,15 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
   DATE: [[RegExps.DATE, ErrorMessages.DATE]],
   STREET: [[RegExps.STREET, ErrorMessages.STREET]],
   CITY: [[RegExps.LETTERS, ErrorMessages.CITY]],
-  POSTAL_CODES: [[RegExps.POSTAL_CODES, ErrorMessages.POSTAL_CODES]],
+  POSTAL_CODES: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
+};
+
+export const PostalCodeRegExps: Record<string, RegExp> = {
+  US: /(^\d{5}$)|(^\d{5}-\d{4}$)/,
+  UK: /(^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$)/,
+};
+
+export const PostalCodeErrorMessages: Record<string, string> = {
+  US: 'Enter the correct postal code for the United States',
+  UK: 'Enter the correct postal code for the United Kingdom',
 };
