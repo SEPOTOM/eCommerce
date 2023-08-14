@@ -11,7 +11,7 @@ const ErrorMessages = {
 };
 
 export default class DateInputView extends InputView {
-  protected validateInput(): void {
+  public validateInput(): void {
     super.validateInput();
 
     if (!this.errorBlock.textContent) {

@@ -27,7 +27,7 @@ export default class InputView {
     return this.view;
   }
 
-  protected validateInput(): void {
+  public validateInput(): void {
     if (this.validationData) {
       for (let i = 0; i < this.validationData.length; i += 1) {
         const [regExp, message] = this.validationData[i];

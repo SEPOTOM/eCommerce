@@ -34,12 +34,15 @@ const inputOptions: InputOptions[] = [
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
+  private inputObjects: InputView[] = [];
+
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
 
     RegistrationView.configureSelect(rows);
     this.configureInputs(rows);
     this.configureButton();
+    this.configureForm();
 
     return this.form;
   }
@@ -52,13 +55,17 @@ export default class RegistrationView {
 
       localInputOption.id = labels[index].getAttribute('for') || '';
 
-      let inputRow: HTMLDivElement | null = null;
+      let inputObject: InputView | null = null;
 
       if (index === BIRTH_DATE_INPUT_INDEX) {
-        inputRow = new DateInputView().buildInputView(localInputOption);
+        inputObject = new DateInputView();
       } else {
-        inputRow = new InputView().buildInputView(localInputOption);
+        inputObject = new InputView();
       }
+
+      this.inputObjects.push(inputObject);
+
+      const inputRow = inputObject.buildInputView(localInputOption);
 
       rows[index].append(inputRow);
     });
@@ -78,6 +85,11 @@ export default class RegistrationView {
     button?.addEventListener('click', this.sendForm);
   }
 
+  private configureForm(): void {
+    this.validateInputs = this.validateInputs.bind(this);
+    this.form.addEventListener('click', this.validateInputs);
+  }
+
   private sendForm(e: Event): void {
     e.preventDefault();
 
@@ -89,6 +101,16 @@ export default class RegistrationView {
     } else {
       console.error('Form is invalid!');
     }
+  }
+
+  private validateInputs(): void {
+    this.inputObjects.forEach((inputObject) => {
+      inputObject.validateInput();
+    });
+
+    this.inputObjects = [];
+
+    this.form.removeEventListener('click', this.validateInputs);
   }
 
   private static validateForm(form: HTMLElement): boolean {
