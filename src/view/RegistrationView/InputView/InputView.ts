@@ -12,7 +12,7 @@ export default class InputView {
   protected validationData: PatternAndMessage[] | null = null;
 
   public buildInputView({ validationData, id, type }: InputOptions): HTMLDivElement {
-    this.input.addEventListener('change', this.validateInput.bind(this));
+    this.input.addEventListener('input', this.validateInput.bind(this));
 
     this.validationData = validationData;
 
