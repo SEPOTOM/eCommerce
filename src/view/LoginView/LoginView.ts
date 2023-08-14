@@ -2,6 +2,7 @@ import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse } from '../../api/Authorization/Types';
+import RegistrationView from '../RegistrationView/RegistrationView';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
@@ -209,10 +210,10 @@ export default class LoginView {
   }
 
   private static addLoginButtons(loginForm: HTMLFormElement): void {
-    const container = document.createElement('div');
-    const okButton = document.createElement('button');
-    const cancelButton = document.createElement('button');
-    const registrationButton = document.createElement('button');
+    const container: HTMLDivElement = document.createElement('div');
+    const okButton: HTMLButtonElement = document.createElement('button');
+    const cancelButton: HTMLButtonElement = document.createElement('button');
+    const registrationButton: HTMLButtonElement = document.createElement('button');
 
     LoginView.addStyles(container, LoginView.buttonContainerStyles);
 
@@ -226,11 +227,21 @@ export default class LoginView {
 
     LoginView.addStyles(registrationButton, LoginView.registrationButtonStyles);
     registrationButton.textContent = 'Registration';
+    LoginView.redirectToRegistration(registrationButton);
 
     container.appendChild(okButton);
     container.appendChild(cancelButton);
     container.appendChild(registrationButton);
     loginForm.appendChild(container);
+  }
+
+  private static redirectToRegistration(registrationButton: HTMLButtonElement) {
+    registrationButton.addEventListener('click', () => {
+      const newRegistrationView: RegistrationView = new RegistrationView();
+      const newRegistrationForm: HTMLFormElement = newRegistrationView.buildRegistrationView();
+      LoginView.cleanLoginView();
+      document.querySelector('main')?.appendChild(newRegistrationForm);
+    });
   }
 
   private static addErrorBlock(): void {

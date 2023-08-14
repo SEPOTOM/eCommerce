@@ -38,7 +38,6 @@ export default class GenericView {
 
   private static buildMainView(): HTMLElement {
     const main: HTMLElement = document.createElement('main');
-    main.textContent = 'main placeholder';
 
     return main;
   }
