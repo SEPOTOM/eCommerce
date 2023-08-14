@@ -621,6 +621,18 @@ video {
   top: 25%;
 }
 
+.top-32 {
+  top: 8rem;
+}
+
+.top-8 {
+  top: 2rem;
+}
+
+.top-9 {
+  top: 2.25rem;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -709,6 +721,18 @@ video {
 
 .gap-y-2\.5 {
   row-gap: 0.625rem;
+}
+
+.gap-y-3 {
+  row-gap: 0.75rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
+}
+
+.gap-y-6 {
+  row-gap: 1.5rem;
 }
 
 .border {
