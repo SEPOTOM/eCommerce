@@ -9,19 +9,40 @@ export default class Tokens {
     Tokens.customerTokens = tokens;
     localStorage.setItem('expires_in', `${Date.now() + Tokens.customerTokens.expires_in}`);
     localStorage.setItem('refresh_token', `${Tokens.customerTokens.refresh_token}`);
+    localStorage.setItem('scope', `${Tokens.customerTokens.scope}`);
+    localStorage.setItem('token_type', `${Tokens.customerTokens.token_type}`);
   }
 
   public static async getCustomerTokens(): Promise<ICustomerLoginResponse> {
-    if (Number(localStorage.getItem('expires_in')) < Date.now()) {
+    if (
+      (Number(localStorage.getItem('expires_in')) < Date.now() || !Tokens.customerTokens) &&
+      localStorage.getItem('refresh_token')
+    ) {
       await Tokens.refreshCustomerTokens();
     }
     return Tokens.customerTokens;
   }
 
-  public static async refreshCustomerTokens() {
-    const newTokens = await Authorization.refreshCustomerToken(Tokens.customerTokens.refresh_token);
+  private static async refreshCustomerTokens(): Promise<void> {
+    const newTokens = await Authorization.refreshCustomerToken(localStorage.getItem('refresh_token') as string);
     if ('access_token' in newTokens) {
-      Tokens.setCustomerTokens(newTokens);
+      Tokens.customerTokens = {
+        access_token: newTokens.access_token,
+        expires_in: Number(localStorage.getItem('expires_in')),
+        scope: localStorage.getItem('scope') as string,
+        refresh_token: localStorage.getItem('refresh_token') as string,
+        token_type: localStorage.getItem('token_type') as string,
+      };
     }
+  }
+
+  public static deleteCustomerTokens(): void {
+    Tokens.setCustomerTokens({
+      access_token: '',
+      expires_in: 0,
+      scope: '',
+      refresh_token: '',
+      token_type: '',
+    });
   }
 }

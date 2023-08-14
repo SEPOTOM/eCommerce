@@ -64,7 +64,7 @@ export default class Authorization {
         method: 'POST',
         headers: {
           Authorization: `Basic ${btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`)}`,
-          // 'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
       responseJSON = await responsePromise.json();
