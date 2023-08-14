@@ -6,22 +6,32 @@ const UK_POSTAL_CODE_REGEXP_STRING =
 
 const ErrorMessages = {
   EMAIL: 'The email must be in the format example@email.com',
-  PASSWORD: 'Password is invalid',
   FIRST_NAME: 'First name is invalid',
   LAST_NAME: 'Last name is invalid',
   DATE: 'The date must be in the format MM/DD/YYYY',
   STREET: 'Street is invalid',
   CITY: 'City is invalid',
   POSTAL_CODES: 'Postal code is invalid',
+  MIN_LENGTH: 'Must be at least 8 characters long',
+  ONE_UPPERCASE: 'There must be at least one uppercase character (A-Z)',
+  ONE_LOWERCASE: 'There must be at least one lowercase character (a-z)',
+  ONE_DIGIT: 'There must be at least one digit',
+  ONE_SPECIAL: 'There must be at least one special character (!@#$%^&*)',
+  NO_EDGE_WHITESPACE: 'There should be no leading or trailing whitespace',
 };
 
 const RegExps = {
   EMAIL: /^\S+@\S+\.\S+$/,
-  PASSWORD: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/,
   LETTERS: /^[^\W\d_]+$/,
   DATE: /^[0-9]{1,2}\/[0-9]{2,}\/[0-9]{4,}$/,
   STREET: /^.+$/,
   POSTAL_CODES: new RegExp(`${US_POSTAL_CODE_REGEXP_STRING}|${UK_POSTAL_CODE_REGEXP_STRING}`),
+  MIN_LENGTH: /.{8,}/,
+  ONE_UPPERCASE: /[A-Z]/,
+  ONE_LOWERCASE: /[a-z]/,
+  ONE_DIGIT: /\d/,
+  ONE_SPECIAL: /[!@#$%^&*]/,
+  NO_EDGE_WHITESPACE: /^\S.*\S$/,
 };
 
 export const Countries = {
@@ -31,7 +41,14 @@ export const Countries = {
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   EMAIL: [[RegExps.EMAIL, ErrorMessages.EMAIL]],
-  PASSWORD: [[RegExps.PASSWORD, ErrorMessages.PASSWORD]],
+  PASSWORD: [
+    [RegExps.MIN_LENGTH, ErrorMessages.MIN_LENGTH],
+    [RegExps.ONE_UPPERCASE, ErrorMessages.ONE_UPPERCASE],
+    [RegExps.ONE_LOWERCASE, ErrorMessages.ONE_LOWERCASE],
+    [RegExps.ONE_DIGIT, ErrorMessages.ONE_DIGIT],
+    [RegExps.ONE_SPECIAL, ErrorMessages.ONE_SPECIAL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+  ],
   FIRST_NAME: [[RegExps.LETTERS, ErrorMessages.FIRST_NAME]],
   LAST_NAME: [[RegExps.LETTERS, ErrorMessages.LAST_NAME]],
   DATE: [[RegExps.DATE, ErrorMessages.DATE]],
