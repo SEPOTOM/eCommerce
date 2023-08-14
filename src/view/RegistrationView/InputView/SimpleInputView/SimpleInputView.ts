@@ -4,10 +4,10 @@ export default class SimpleInputView extends InputView {
   protected validateInput(regExp: RegExp): void {
     if (this.isValid(regExp)) {
       this.input.dataset.valid = 'true';
-      console.log(`${this.input.id} is valid!`);
+      this.errorBlock.textContent = '';
     } else {
       this.input.dataset.valid = 'false';
-      console.error(`${this.input.id} is invalid!`);
+      this.errorBlock.textContent = `${this.input.id} is invalid!`;
     }
   }
 }

@@ -3,9 +3,13 @@ import { InputOptions } from '../types';
 import HTML from './InputView.html';
 
 export default abstract class InputView {
-  protected input = Converter.htmlToElement<HTMLInputElement>(HTML) || document.createElement('input');
+  protected view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
-  public buildInputView({ regExp, id, type }: InputOptions): HTMLInputElement {
+  protected input = this.view.querySelector('input') || document.createElement('input');
+
+  protected errorBlock = this.view.querySelector('div') || document.createElement('div');
+
+  public buildInputView({ regExp, id, type }: InputOptions): HTMLDivElement {
     this.input.addEventListener('change', () => {
       this.validateInput(regExp);
     });
@@ -18,7 +22,7 @@ export default abstract class InputView {
       this.input.type = type;
     }
 
-    return this.input;
+    return this.view;
   }
 
   protected abstract validateInput(regExp: RegExp): void;

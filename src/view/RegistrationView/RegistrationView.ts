@@ -52,15 +52,15 @@ export default class RegistrationView {
 
       localInputOption.id = labels[index].getAttribute('for') || '';
 
-      let input: HTMLInputElement | null = null;
+      let inputRow: HTMLDivElement | null = null;
 
       if (index === BIRTH_DATE_INPUT_INDEX) {
-        input = new DateInputView().buildInputView(localInputOption);
+        inputRow = new DateInputView().buildInputView(localInputOption);
       } else {
-        input = new SimpleInputView().buildInputView(localInputOption);
+        inputRow = new SimpleInputView().buildInputView(localInputOption);
       }
 
-      rows[index].append(input);
+      rows[index].append(inputRow);
     });
   }
 
