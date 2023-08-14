@@ -23,7 +23,7 @@ const ErrorMessages = {
 const RegExps = {
   EMAIL: /^\S+@\S+\.\S+$/,
   LETTERS: /^[^\W\d_]+$/,
-  DATE: /^[0-9]{1,2}\/[0-9]{2,}\/[0-9]{4,}$/,
+  DATE: /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4,}$/,
   STREET: /^.+$/,
   POSTAL_CODES: new RegExp(`${US_POSTAL_CODE_REGEXP_STRING}|${UK_POSTAL_CODE_REGEXP_STRING}`),
   MIN_LENGTH: /.{8,}/,
