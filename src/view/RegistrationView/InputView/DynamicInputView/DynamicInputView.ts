@@ -10,11 +10,9 @@ export default class DynamicInputView extends InputView {
 
   public validateInput(): void {
     if (!this.isValid(this.regExp)) {
-      this.input.dataset.valid = 'false';
-      this.errorBlock.textContent = this.message;
+      this.makeInputInvalid(this.message);
     } else {
-      this.input.dataset.valid = 'true';
-      this.errorBlock.textContent = '';
+      this.makeInputValid();
     }
 
     if (!this.errorBlock.textContent) {

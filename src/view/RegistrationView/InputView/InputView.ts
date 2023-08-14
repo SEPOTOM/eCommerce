@@ -33,12 +33,10 @@ export default class InputView {
         const [regExp, message] = this.validationData[i];
 
         if (!this.isValid(regExp)) {
-          this.input.dataset.valid = 'false';
-          this.errorBlock.textContent = message;
+          this.makeInputInvalid(message);
           break;
         } else {
-          this.input.dataset.valid = 'true';
-          this.errorBlock.textContent = '';
+          this.makeInputValid();
         }
       }
     }
@@ -46,5 +44,15 @@ export default class InputView {
 
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
+  }
+
+  protected makeInputValid(): void {
+    this.input.dataset.valid = 'true';
+    this.errorBlock.textContent = '';
+  }
+
+  protected makeInputInvalid(message: string): void {
+    this.input.dataset.valid = 'false';
+    this.errorBlock.textContent = message;
   }
 }

@@ -18,16 +18,14 @@ export default class DateInputView extends InputView {
       const [month, day, year] = this.input.value.split('/').map((str: string) => Number(str));
 
       if (month > MONTHS_IN_YEAR || month < 1) {
-        this.input.dataset.valid = 'false';
-        this.errorBlock.textContent = ErrorMessages.MONTH;
+        this.makeInputInvalid(ErrorMessages.MONTH);
         return;
       }
 
       const formattedMonth = month - 1;
 
       if (day > MAX_DAYS_IN_MONTHS[formattedMonth]) {
-        this.input.dataset.valid = 'false';
-        this.errorBlock.textContent = ErrorMessages.DAY;
+        this.makeInputInvalid(ErrorMessages.DAY);
         return;
       }
 
@@ -36,11 +34,9 @@ export default class DateInputView extends InputView {
       const userAge = (currentDateTimestamp - userBirthDateTimestamp) / MS_IN_YEAR;
 
       if (userAge > MIN_USER_AGE) {
-        this.input.dataset.valid = 'true';
-        this.errorBlock.textContent = '';
+        this.makeInputValid();
       } else {
-        this.input.dataset.valid = 'false';
-        this.errorBlock.textContent = ErrorMessages.AGE;
+        this.makeInputInvalid(ErrorMessages.AGE);
       }
     }
   }
