@@ -1,9 +1,9 @@
 import Converter from '../../components/Converter/Converter';
-import SimpleInputView from './InputView/SimpleInputView/SimpleInputView';
+import InputView from './InputView/InputView';
 import DateInputView from './InputView/DateInputView/DateInputView';
 import SelectView from './SelectView/SelectView';
 import { InputOptions } from './types';
-import { RegExps, Countries } from './data';
+import { ValidationData, Countries } from './data';
 import HTML from './RegistrationView.html';
 
 const BIRTH_DATE_INPUT_INDEX = 4;
@@ -21,14 +21,14 @@ enum ClassNames {
 }
 
 const inputOptions: InputOptions[] = [
-  { regExp: RegExps.EMAIL, type: InputTypes.EMAIL },
-  { regExp: RegExps.PASSWORD, type: InputTypes.PASSWORD },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.DATE },
-  { regExp: RegExps.STREET },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.POSTAL_CODES },
+  { validationData: ValidationData.EMAIL, type: InputTypes.EMAIL },
+  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
+  { validationData: ValidationData.FIRST_NAME },
+  { validationData: ValidationData.LAST_NAME },
+  { validationData: ValidationData.DATE },
+  { validationData: ValidationData.STREET },
+  { validationData: ValidationData.CITY },
+  { validationData: ValidationData.POSTAL_CODES },
 ];
 
 export default class RegistrationView {
@@ -57,7 +57,7 @@ export default class RegistrationView {
       if (index === BIRTH_DATE_INPUT_INDEX) {
         inputRow = new DateInputView().buildInputView(localInputOption);
       } else {
-        inputRow = new SimpleInputView().buildInputView(localInputOption);
+        inputRow = new InputView().buildInputView(localInputOption);
       }
 
       rows[index].append(inputRow);
