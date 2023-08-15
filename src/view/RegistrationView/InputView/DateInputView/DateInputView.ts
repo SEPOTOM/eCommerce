@@ -5,8 +5,8 @@ const MIN_USER_AGE = 18;
 const MS_IN_YEAR = 31536000000;
 const MAX_DAYS_IN_MONTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const ErrorMessages = {
-  MONTH: 'Enter the correct month number (MM/DD/YYYY)',
-  DAY: 'Enter the correct day for the specified month (MM/DD/YYYY)',
+  MONTH: 'Incorrect month number (MM/DD/YYYY)',
+  DAY: 'Incorrect day for the specified month (MM/DD/YYYY)',
   AGE: `Your age must be over ${MIN_USER_AGE} years old`,
 };
 
