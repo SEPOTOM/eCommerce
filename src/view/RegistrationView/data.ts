@@ -4,7 +4,6 @@ const ErrorMessages = {
   EMAIL: 'The email must be in the format example@email.com',
   LAST_NAME: 'Last name is invalid',
   DATE: 'The date must be in the format MM/DD/YYYY',
-  STREET: 'Street is invalid',
   CITY: 'City is invalid',
   POSTAL_CODES: 'Postal code is invalid',
   MIN_LENGTH: 'Must be at least 8 characters long',
@@ -69,7 +68,10 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.DATE, ErrorMessages.DATE],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
-  STREET: [[RegExps.STREET, ErrorMessages.STREET]],
+  STREET: [
+    [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+  ],
   CITY: [[RegExps.LETTERS, ErrorMessages.CITY]],
   POSTAL_CODES: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
 };
