@@ -119,6 +119,15 @@ export default class RegistrationView {
     }
   }
 
+  private changePostalCodeInputValidation(): void {
+    const countyCode = `${this.select?.value}`;
+
+    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
+    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
+
+    this.postalCodeInputObject?.validateInput();
+  }
+
   private validateInputs(): void {
     this.inputObjects.forEach((inputObject) => {
       inputObject.validateInput();
@@ -127,15 +136,6 @@ export default class RegistrationView {
     this.inputObjects = [];
 
     this.form.removeEventListener('click', this.validateInputs);
-  }
-
-  private changePostalCodeInputValidation(): void {
-    const countyCode = `${this.select?.value}`;
-
-    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
-    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
-
-    this.postalCodeInputObject?.validateInput();
   }
 
   private static validateForm(form: HTMLElement): boolean {
