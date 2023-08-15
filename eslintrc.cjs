@@ -44,6 +44,10 @@ module.exports = {
 
     'max-lines-per-function': ['warn', 40],
     'prettier/prettier': 'error',
+    'class-methods-use-this': 'off',
+    'import/no-extraneous-dependencies': ['error', {'devDependencies': true}],
+    'vars-on-top': 'off',
+    'no-var': 'off',
   },
   'ignorePatterns': ['.eslintrc.js'],
 };

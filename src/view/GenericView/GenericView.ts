@@ -1,21 +1,36 @@
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import Homepage from '../Homepage/Homepage';
+
 export default class GenericView {
+  private header: Header;
+
+  private footer: Footer;
+
+  private homepage: Homepage;
+
+  constructor() {
+    this.header = new Header();
+    this.footer = new Footer();
+    this.homepage = new Homepage();
+  }
+
   public buildGenericView(): void {
-    const wrapper: HTMLDivElement = document.createElement('div');
-    const header: HTMLElement = this.buildHeaderView();
-    const main: HTMLElement = this.buildMainView();
-    const footer: HTMLElement = this.buildFooterView();
-    wrapper.appendChild(header);
-    wrapper.appendChild(main);
-    wrapper.appendChild(footer);
-    document.body.appendChild(wrapper);
+    this.drawMainPage();
   }
 
-  private buildHeaderView(): HTMLElement {
-    const header: HTMLElement = document.createElement('header');
-    header.textContent = 'header placeholder';
-
-    return header;
+  private drawMainPage(): void {
+    this.header.init();
+    this.homepage.init();
+    this.footer.init();
   }
+
+  //   private buildHeaderView(): HTMLElement {
+  //     const header: HTMLElement = document.createElement('header');
+  //     header.textContent = 'header placeholder';
+
+  //     return header;
+  //   }
 
   private buildMainView(): HTMLElement {
     const main: HTMLElement = document.createElement('main');
