@@ -24,7 +24,7 @@ enum ClassNames {
 }
 
 const inputOptions: InputOptions[] = [
-  { validationData: ValidationData.EMAIL, type: InputTypes.EMAIL },
+  { validationData: ValidationData.EMAIL },
   { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
   { validationData: ValidationData.FIRST_NAME },
   { validationData: ValidationData.LAST_NAME },

@@ -14,6 +14,8 @@ const ErrorMessages = {
   ONE_DIGIT: 'There must be at least one digit',
   ONE_SPECIAL: 'There must be at least one special character (!@#$%^&*)',
   NO_EDGE_WHITESPACE: 'There should be no leading or trailing whitespace',
+  ONE_AT_SYMBOL: 'There must be at least one @ symbol',
+  DOMAIN: 'Wrong domain (e.g., example.com)',
 };
 
 const RegExps = {
@@ -27,6 +29,8 @@ const RegExps = {
   ONE_DIGIT: /\d/,
   ONE_SPECIAL: /[!@#$%^&*]/,
   NO_EDGE_WHITESPACE: /^\S.*\S$/,
+  AT_SYMBOL: /@/,
+  DOMAIN: /@[^\s@]+\.[^\s@]+/,
 };
 
 export const Countries = {
@@ -35,7 +39,12 @@ export const Countries = {
 };
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
-  EMAIL: [[RegExps.EMAIL, ErrorMessages.EMAIL]],
+  EMAIL: [
+    [RegExps.AT_SYMBOL, ErrorMessages.ONE_AT_SYMBOL],
+    [RegExps.DOMAIN, ErrorMessages.DOMAIN],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+    [RegExps.EMAIL, ErrorMessages.EMAIL],
+  ],
   PASSWORD: [
     [RegExps.MIN_LENGTH, ErrorMessages.MIN_LENGTH],
     [RegExps.ONE_UPPERCASE, ErrorMessages.ONE_UPPERCASE],
