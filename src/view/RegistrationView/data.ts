@@ -2,7 +2,6 @@ import { PatternAndMessage } from './types';
 
 const ErrorMessages = {
   EMAIL: 'The email must be in the format example@email.com',
-  FIRST_NAME: 'First name is invalid',
   LAST_NAME: 'Last name is invalid',
   DATE: 'The date must be in the format MM/DD/YYYY',
   STREET: 'Street is invalid',
@@ -16,6 +15,8 @@ const ErrorMessages = {
   NO_EDGE_WHITESPACE: 'There should be no leading or trailing whitespace',
   ONE_AT_SYMBOL: 'There must be at least one @ symbol',
   DOMAIN: 'Wrong domain (e.g., example.com)',
+  ONE_SYMBOL: 'There must be at least one character',
+  LETTERS: 'Use only Latin letters',
 };
 
 const RegExps = {
@@ -28,9 +29,10 @@ const RegExps = {
   ONE_LOWERCASE: /[a-z]/,
   ONE_DIGIT: /\d/,
   ONE_SPECIAL: /[!@#$%^&*]/,
-  NO_EDGE_WHITESPACE: /^\S.*\S$/,
+  NO_EDGE_WHITESPACE: /^(?!\s).*(?<!\s)$/,
   AT_SYMBOL: /@/,
   DOMAIN: /@[^\s@]+\.[^\s@]+/,
+  ONE_SYMBOL: /.+/,
 };
 
 export const Countries = {
@@ -53,7 +55,11 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.ONE_SPECIAL, ErrorMessages.ONE_SPECIAL],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
-  FIRST_NAME: [[RegExps.LETTERS, ErrorMessages.FIRST_NAME]],
+  FIRST_NAME: [
+    [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+    [RegExps.LETTERS, ErrorMessages.LETTERS],
+  ],
   LAST_NAME: [[RegExps.LETTERS, ErrorMessages.LAST_NAME]],
   DATE: [[RegExps.DATE, ErrorMessages.DATE]],
   STREET: [[RegExps.STREET, ErrorMessages.STREET]],
