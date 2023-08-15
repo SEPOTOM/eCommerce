@@ -65,7 +65,10 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
     [RegExps.LETTERS, ErrorMessages.LETTERS],
   ],
-  DATE: [[RegExps.DATE, ErrorMessages.DATE]],
+  DATE: [
+    [RegExps.DATE, ErrorMessages.DATE],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+  ],
   STREET: [[RegExps.STREET, ErrorMessages.STREET]],
   CITY: [[RegExps.LETTERS, ErrorMessages.CITY]],
   POSTAL_CODES: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
