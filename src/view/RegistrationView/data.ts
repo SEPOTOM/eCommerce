@@ -60,7 +60,11 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
     [RegExps.LETTERS, ErrorMessages.LETTERS],
   ],
-  LAST_NAME: [[RegExps.LETTERS, ErrorMessages.LAST_NAME]],
+  LAST_NAME: [
+    [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+    [RegExps.LETTERS, ErrorMessages.LETTERS],
+  ],
   DATE: [[RegExps.DATE, ErrorMessages.DATE]],
   STREET: [[RegExps.STREET, ErrorMessages.STREET]],
   CITY: [[RegExps.LETTERS, ErrorMessages.CITY]],
