@@ -2,12 +2,17 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Homepage from '../Homepage/Homepage';
 
+import LoginView from '../LoginView/LoginView';
+import loginIcon from '../../assets/svg/login.svg';
+
 export default class GenericView {
-  private header: Header;
+    private header: Header;
 
-  private footer: Footer;
+    private footer: Footer;
+  
+    private homepage: Homepage;
 
-  private homepage: Homepage;
+  private static loginButtonStyles: string[] = ['w-10'];
 
   constructor() {
     this.header = new Header();
@@ -25,24 +30,26 @@ export default class GenericView {
     this.footer.init();
   }
 
-  //   private buildHeaderView(): HTMLElement {
-  //     const header: HTMLElement = document.createElement('header');
-  //     header.textContent = 'header placeholder';
-
-  //     return header;
-  //   }
-
-  private buildMainView(): HTMLElement {
-    const main: HTMLElement = document.createElement('main');
-    main.textContent = 'main placeholder';
-
-    return main;
+// TODO: if you need check Login page, please change it in the buildGenericView method
+  private drawLoginPage(): void {
+    this.header.init();
+    this.getLoginButton();
+    this.footer.init();
   }
 
-  private buildFooterView(): HTMLElement {
-    const footer: HTMLElement = document.createElement('footer');
-    footer.textContent = 'footer placeholder';
+  private getLoginButton(): HTMLImageElement {
+    const loginImg: HTMLImageElement = document.createElement('img');
+    loginImg.src = loginIcon;
 
-    return footer;
+    LoginView.addStyles(loginImg, GenericView.loginButtonStyles);
+
+    loginImg.addEventListener('click', (): void => {
+      const main: HTMLElement = document.querySelector('main') as HTMLElement;
+      main.appendChild(LoginView.showLoginView());
+    });
+
+    return loginImg;
   }
 }
+
+
