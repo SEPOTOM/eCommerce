@@ -1,18 +1,15 @@
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Homepage from '../Homepage/Homepage';
+import Header from '../Header/HeaderView';
+import Footer from '../Footer/FooterView';
+import Homepage from '../Homepage/HomepageView';
 
 import LoginView from '../LoginView/LoginView';
-import loginIcon from '../../assets/svg/login.svg';
 
 export default class GenericView {
-    private header: Header;
+  private header: Header;
 
-    private footer: Footer;
-  
-    private homepage: Homepage;
+  private footer: Footer;
 
-  private static loginButtonStyles: string[] = ['w-10'];
+  private homepage: Homepage;
 
   constructor() {
     this.header = new Header();
@@ -22,6 +19,7 @@ export default class GenericView {
 
   public buildGenericView(): void {
     this.drawMainPage();
+    // this.drawLoginPage();
   }
 
   private drawMainPage(): void {
@@ -30,26 +28,10 @@ export default class GenericView {
     this.footer.init();
   }
 
-// TODO: if you need check Login page, please change it in the buildGenericView method
+  // TODO: if you need check Login page, please change it in the buildGenericView method
   private drawLoginPage(): void {
     this.header.init();
-    this.getLoginButton();
+    document.body.append(LoginView.showLoginView());
     this.footer.init();
   }
-
-  private getLoginButton(): HTMLImageElement {
-    const loginImg: HTMLImageElement = document.createElement('img');
-    loginImg.src = loginIcon;
-
-    LoginView.addStyles(loginImg, GenericView.loginButtonStyles);
-
-    loginImg.addEventListener('click', (): void => {
-      const main: HTMLElement = document.querySelector('main') as HTMLElement;
-      main.appendChild(LoginView.showLoginView());
-    });
-
-    return loginImg;
-  }
 }
-
-

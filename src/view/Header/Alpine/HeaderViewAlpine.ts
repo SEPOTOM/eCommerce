@@ -1,4 +1,4 @@
-import Links from '../../Data/Links';
+import Links from '../../../data/links';
 
 export default () => ({
   showMobileMenu: false,
