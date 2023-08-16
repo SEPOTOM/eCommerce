@@ -1,12 +1,15 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
-import { ICustomerLoginResponse } from '../../api/Authorization/Types';
+import { ICustomerLoginResponse, IError } from '../../api/Authorization/Types';
 
 export default class LoginView {
   private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
 
   private static PASSWORD_REGEX: RegExp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
+
+  private static EXCLAMATION_MARK =
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 inline text-amber-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>';
 
   private static UPPER_CASE_REGEX: RegExp = /[A-Z]/;
 
@@ -41,7 +44,7 @@ export default class LoginView {
 
   private static passwordContainerStyles: string[] = ['relative'];
 
-  private static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'bottom-3'];
+  private static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'top-3'];
 
   private static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
 
@@ -263,11 +266,16 @@ export default class LoginView {
     submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
       if (LoginView.passwordValid && LoginView.loginValid) {
-        const customerLogin: ICustomerLoginResponse = await Authorization.loginBasicAuth(
+        const customerLogin: ICustomerLoginResponse | IError | Error = await Authorization.loginBasicAuth(
           loginInput.value,
           passwordInput.value
         );
-        console.log(customerLogin);
+        if ('message' in customerLogin) {
+          LoginView.addAuthErrorBlock(customerLogin);
+        } else {
+          document.getElementById('password-error')?.nextElementSibling?.remove();
+          console.log('Success token - ', customerLogin.access_token);
+        }
       }
     });
 
@@ -286,6 +294,19 @@ export default class LoginView {
     });
   }
 
+  private static addAuthErrorBlock(customerLogin: IError | Error): void {
+    const authorizationError: HTMLDivElement = document.createElement('div');
+    const parent: HTMLElement = document.getElementById('password-error')?.parentElement as HTMLElement;
+
+    LoginView.addStyles(authorizationError, LoginView.validationErrorStyles);
+    authorizationError.classList.remove('hidden');
+
+    authorizationError.innerHTML = LoginView.EXCLAMATION_MARK + customerLogin.message;
+
+    document.getElementById('password-error')?.nextElementSibling?.remove();
+    parent.appendChild(authorizationError);
+  }
+
   private static checkRegExp(
     passwordInput: HTMLInputElement,
     passwordError: HTMLElement,
@@ -299,20 +320,22 @@ export default class LoginView {
     } else {
       LoginView.passwordValid = false;
       passwordInputError = LoginView.getPasswordError(passwordInput);
-      (document.getElementById('password-error') as HTMLElement).textContent = passwordInputError;
+      (document.getElementById('password-error') as HTMLElement).innerHTML =
+        LoginView.EXCLAMATION_MARK + passwordInputError;
     }
     if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
       LoginView.loginValid = true;
     } else {
       LoginView.loginValid = false;
       loginInputError = LoginView.getLoginError(loginInput);
-      (document.getElementById('login-error') as HTMLElement).textContent = loginInputError;
+      (document.getElementById('login-error') as HTMLElement).innerHTML = LoginView.EXCLAMATION_MARK + loginInputError;
     }
     LoginView.toggleErrorMessages(passwordError, loginError);
   }
 
   private static getPasswordError(password: HTMLInputElement): string {
     let error: string = '';
+    document.getElementById('password-error')?.nextElementSibling?.remove();
     if (password.value[0] === ' ' || password.value[password.value.length - 1] === ' ') {
       error = 'Do not use whitespace';
     }

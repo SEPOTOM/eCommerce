@@ -601,10 +601,6 @@ video {
   bottom: 25%;
 }
 
-.bottom-3 {
-  bottom: 0.75rem;
-}
-
 .left-1\/4 {
   left: 25%;
 }
@@ -619,6 +615,10 @@ video {
 
 .top-1\/4 {
   top: 25%;
+}
+
+.top-3 {
+  top: 0.75rem;
 }
 
 .m-auto {
@@ -637,6 +637,10 @@ video {
   display: block;
 }
 
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -651,6 +655,10 @@ video {
 
 .h-2\/4 {
   height: 50%;
+}
+
+.h-6 {
+  height: 1.5rem;
 }
 
 .w-10 {
@@ -753,6 +761,11 @@ video {
 
 .lowercase {
   text-transform: lowercase;
+}
+
+.text-amber-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 191 36 / var(--tw-text-opacity));
 }
 
 .text-blue-900 {
