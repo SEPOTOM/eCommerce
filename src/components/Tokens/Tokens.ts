@@ -1,5 +1,5 @@
 import Authorization from '../../api/Authorization/Authorization';
-import { ICustomerLoginResponse } from '../../api/Authorization/Types';
+import { ICustomerLoginResponse } from '../../types';
 
 export default class Tokens {
   // Please use the Tokens.customerTokens object once a customer logged in successfully

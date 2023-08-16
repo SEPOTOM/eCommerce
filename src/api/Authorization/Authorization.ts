@@ -6,7 +6,7 @@ import {
   /* CTP_API_URL, */
   CTP_SCOPES,
 } from '../APIClients/JSNinjas';
-import { IClientLoginResponse, ICustomerLoginResponse, IError } from './Types';
+import { IClientLoginResponse, ICustomerLoginResponse, IError } from '../../types';
 
 export default class Authorization {
   public static async loginClient(): Promise<IClientLoginResponse | IError | Error> {

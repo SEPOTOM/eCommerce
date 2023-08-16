@@ -1,7 +1,7 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
-import { ICustomerLoginResponse, IError } from '../../api/Authorization/Types';
+import { ICustomerLoginResponse, IError } from '../../types';
 import Tokens from '../../components/Tokens/Tokens';
 
 export default class LoginView {
