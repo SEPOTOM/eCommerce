@@ -1,6 +1,6 @@
-import Header from '../Header/HeaderView';
-import Footer from '../Footer/FooterView';
-import Homepage from '../Homepage/HomepageView';
+import Header from '../HeaderView/HeaderView';
+import Footer from '../FooterView/FooterView';
+import Homepage from '../HomepageView/HomepageView';
 
 import LoginView from '../LoginView/LoginView';
 
