@@ -2,7 +2,6 @@ import InputView from '../InputView';
 
 const MONTHS_IN_YEAR = 12;
 const MIN_USER_AGE = 18;
-const MS_IN_YEAR = 31536000000;
 const MAX_DAYS_IN_MONTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const ErrorMessages = {
   MONTH: 'Incorrect month number (MM/DD/YYYY)',
@@ -29,15 +28,34 @@ export default class DateInputView extends InputView {
         return;
       }
 
-      const userBirthDateTimestamp = new Date(year, formattedMonth, day).getTime();
-      const currentDateTimestamp = Date.now();
-      const userAge = (currentDateTimestamp - userBirthDateTimestamp) / MS_IN_YEAR;
-
-      if (userAge > MIN_USER_AGE) {
+      if (DateInputView.isOverMinAge(formattedMonth, day, year)) {
         this.makeInputValid();
       } else {
         this.makeInputInvalid(ErrorMessages.AGE);
       }
     }
+  }
+
+  private static isOverMinAge(userMonth: number, userDay: number, userYear: number): boolean {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+
+    if (currentYear - userYear > MIN_USER_AGE) {
+      return true;
+    }
+
+    if (currentYear - userYear === MIN_USER_AGE) {
+      if (currentMonth > userMonth) {
+        return true;
+      }
+
+      if (currentMonth === userMonth && currentDay >= userDay) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
