@@ -1,6 +1,7 @@
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Homepage from '../Homepage/Homepage';
+import Page404 from '../Page404/Page404';
 
 export default class GenericView {
   private header: Header;
@@ -9,10 +10,13 @@ export default class GenericView {
 
   private homepage: Homepage;
 
+  private page404: Page404;
+
   constructor() {
     this.header = new Header();
     this.footer = new Footer();
     this.homepage = new Homepage();
+    this.page404 = new Page404();
   }
 
   public buildGenericView(): void {
@@ -21,7 +25,8 @@ export default class GenericView {
 
   private drawMainPage(): void {
     this.header.init();
-    this.homepage.init();
+    this.page404.init();
+    // this.homepage.init();
     this.footer.init();
   }
 
@@ -32,17 +37,17 @@ export default class GenericView {
   //     return header;
   //   }
 
-  private buildMainView(): HTMLElement {
-    const main: HTMLElement = document.createElement('main');
-    main.textContent = 'main placeholder';
+  //   private buildMainView(): HTMLElement {
+  //     const main: HTMLElement = document.createElement('main');
+  //     main.textContent = 'main placeholder';
 
-    return main;
-  }
+  //     return main;
+  //   }
 
-  private buildFooterView(): HTMLElement {
-    const footer: HTMLElement = document.createElement('footer');
-    footer.textContent = 'footer placeholder';
+  //   private buildFooterView(): HTMLElement {
+  //     const footer: HTMLElement = document.createElement('footer');
+  //     footer.textContent = 'footer placeholder';
 
-    return footer;
-  }
+  //     return footer;
+  //   }
 }
