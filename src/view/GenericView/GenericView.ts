@@ -1,52 +1,48 @@
+import HeaderView from '../HeaderView/HeaderView';
+import FooterView from '../FooterView/FooterView';
+import HomepageView from '../HomepageView/HomepageView';
 import LoginView from '../LoginView/LoginView';
-import loginIcon from '../../assets/svg/login.svg';
+import Page404View from '../Page404View/Page404View';
 
 export default class GenericView {
-  private static loginButtonStyles: string[] = ['w-10'];
+  private header: HeaderView;
 
-  public static buildGenericView(): void {
-    const wrapper: HTMLDivElement = document.createElement('div');
-    const header: HTMLElement = GenericView.buildHeaderView();
-    const main: HTMLElement = GenericView.buildMainView();
-    const footer: HTMLElement = GenericView.buildFooterView();
-    wrapper.appendChild(header);
-    wrapper.appendChild(main);
-    wrapper.appendChild(footer);
-    document.body.appendChild(wrapper);
+  private footer: FooterView;
+
+  private homepage: HomepageView;
+
+  private page404: Page404View;
+
+  constructor() {
+    this.header = new HeaderView();
+    this.footer = new FooterView();
+    this.homepage = new HomepageView();
+    this.page404 = new Page404View();
   }
 
-  private static getLoginButton(): HTMLImageElement {
-    const loginImg: HTMLImageElement = document.createElement('img');
-    loginImg.src = loginIcon;
-
-    LoginView.addStyles(loginImg, GenericView.loginButtonStyles);
-
-    loginImg.addEventListener('click', (): void => {
-      const main: HTMLElement = document.querySelector('main') as HTMLElement;
-      main.appendChild(LoginView.showLoginView());
-    });
-
-    return loginImg;
+  public buildGenericView(): void {
+    this.drawMainPage();
+    // this.drawLoginPage();
+    // this.drawPage404();
   }
 
-  private static buildHeaderView(): HTMLElement {
-    const header: HTMLElement = document.createElement('header');
-
-    header.appendChild(GenericView.getLoginButton());
-    return header;
+  private drawMainPage(): void {
+    this.header.init();
+    this.homepage.init();
+    this.footer.init();
   }
 
-  private static buildMainView(): HTMLElement {
-    const main: HTMLElement = document.createElement('main');
-    main.textContent = 'main placeholder';
-
-    return main;
+  // TODO: use it in "buildGenericView" for display [ Login ] page
+  private drawLoginPage(): void {
+    this.header.init();
+    document.body.append(LoginView.showLoginView());
+    this.footer.init();
   }
 
-  private static buildFooterView(): HTMLElement {
-    const footer: HTMLElement = document.createElement('footer');
-    footer.textContent = 'footer placeholder';
-
-    return footer;
+  // TODO: use it in "buildGenericView" for display [ 404 ] page
+  private drawPage404(): void {
+    this.header.init();
+    this.page404.init();
+    this.footer.init();
   }
 }
