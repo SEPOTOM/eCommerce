@@ -14,20 +14,20 @@ enum ErrorMessages {
 }
 
 export default class Registration {
-  public async register(credentials: CustomerCredentials): Promise<void> {
+  public async register(credentials: CustomerCredentials): Promise<boolean> {
     const bearerToken = await this.getBearerToken();
 
     if (bearerToken === '') {
-      return;
+      return false;
     }
 
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/customers?scope=${CTP_SCOPES}`;
     const body = JSON.stringify(credentials);
 
-    let data;
+    let response;
 
     try {
-      const response = await fetch(endpoint, {
+      response = await fetch(endpoint, {
         body,
         method: 'POST',
         headers: {
@@ -35,13 +35,14 @@ export default class Registration {
           'Content-Type': 'application/json',
         },
       });
-      data = await response.json();
+      const data = await response.json();
+
+      console.log(data);
     } catch (err) {
       console.error(ErrorMessages.SERVER);
-      return;
     }
 
-    console.log(data);
+    return response?.ok || false;
   }
 
   private async getBearerToken(): Promise<string> {

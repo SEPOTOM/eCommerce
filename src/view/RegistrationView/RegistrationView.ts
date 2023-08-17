@@ -85,7 +85,7 @@ export default class RegistrationView {
     button?.addEventListener('click', this.sendForm.bind(this));
   }
 
-  private sendForm(e: Event): void {
+  private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
     const { form } = this;
@@ -93,7 +93,13 @@ export default class RegistrationView {
 
     if (formValid) {
       const credentials = this.collectCredentials();
-      new Registration().register(credentials);
+      const ok = await new Registration().register(credentials);
+
+      if (ok) {
+        form.dataset.registered = 'true';
+      } else {
+        form.dataset.registered = 'false';
+      }
     } else {
       console.error('Form is invalid!');
     }
