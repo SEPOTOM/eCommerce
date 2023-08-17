@@ -1,25 +1,29 @@
-import Header from '../HeaderView/HeaderView';
-import Footer from '../FooterView/FooterView';
-import Homepage from '../HomepageView/HomepageView';
-
+import HeaderView from '../HeaderView/HeaderView';
+import FooterView from '../FooterView/FooterView';
+import HomepageView from '../HomepageView/HomepageView';
 import LoginView from '../LoginView/LoginView';
+import Page404View from '../Page404View/Page404View';
 
 export default class GenericView {
-  private header: Header;
+  private header: HeaderView;
 
-  private footer: Footer;
+  private footer: FooterView;
 
-  private homepage: Homepage;
+  private homepage: HomepageView;
+
+  private page404: Page404View;
 
   constructor() {
-    this.header = new Header();
-    this.footer = new Footer();
-    this.homepage = new Homepage();
+    this.header = new HeaderView();
+    this.footer = new FooterView();
+    this.homepage = new HomepageView();
+    this.page404 = new Page404View();
   }
 
   public buildGenericView(): void {
     this.drawMainPage();
     // this.drawLoginPage();
+    // this.drawPage404();
   }
 
   private drawMainPage(): void {
@@ -28,10 +32,17 @@ export default class GenericView {
     this.footer.init();
   }
 
-  // TODO: if you need check Login page, please change it in the buildGenericView method
+  // TODO: use it in "buildGenericView" for display [ Login ] page
   private drawLoginPage(): void {
     this.header.init();
     document.body.append(LoginView.showLoginView());
+    this.footer.init();
+  }
+
+  // TODO: use it in "buildGenericView" for display [ 404 ] page
+  private drawPage404(): void {
+    this.header.init();
+    this.page404.init();
     this.footer.init();
   }
 }
