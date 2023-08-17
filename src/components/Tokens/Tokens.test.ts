@@ -1,4 +1,4 @@
-import Tokens from "./Tokens";
+import Tokens from './Tokens';
 
 describe('Class elements existence check', () => {
   it('Class Tokens should be defined', () => {

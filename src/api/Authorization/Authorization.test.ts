@@ -1,4 +1,4 @@
-import Authorization from "./Authorization";
+import Authorization from './Authorization';
 
 describe('Class elements existence check', () => {
   it('Class Authorization should be defined', () => {
