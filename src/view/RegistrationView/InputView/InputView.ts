@@ -5,7 +5,7 @@ import HTML from './InputView.html';
 export default abstract class InputView {
   protected input = Converter.htmlToElement<HTMLInputElement>(HTML) || document.createElement('input');
 
-  public buildInputView({ regExp, id, type }: InputOptions): HTMLInputElement {
+  public buildInputView({ regExp, id, type, dataAttr }: InputOptions): HTMLInputElement {
     this.input.addEventListener('change', () => {
       this.validateInput(regExp);
     });
@@ -16,6 +16,10 @@ export default abstract class InputView {
 
     if (type) {
       this.input.type = type;
+    }
+
+    if (dataAttr) {
+      this.input.dataset[dataAttr.name] = dataAttr.value;
     }
 
     return this.input;

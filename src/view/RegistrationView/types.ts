@@ -1,5 +1,9 @@
 export interface InputOptions {
+  regExp: RegExp;
   type?: string;
   id?: string;
-  regExp: RegExp;
+  dataAttr?: {
+    name: string;
+    value: string;
+  };
 }
