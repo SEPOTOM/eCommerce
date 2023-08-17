@@ -49,8 +49,9 @@ export default {
     },
 
     performance: {
-        maxAssetSize: 1500000,
-        maxEntrypointSize: 1500000,
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
     },
 
     plugins: [

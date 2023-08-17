@@ -13,4 +13,17 @@ interface ICustomerLoginResponse {
   token_type: string;
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse };
+interface IErrorItems {
+  code: string;
+  message: string;
+}
+
+interface IError {
+  statusCode: number;
+  message: string;
+  errors: IErrorItems[];
+  error: string;
+  error_description: string;
+}
+
+export { IClientLoginResponse, ICustomerLoginResponse, IError };

@@ -1,7 +1,13 @@
 import GenericView from '../../view/GenericView/GenericView';
 
 export default class App {
-  public static build(): void {
-    GenericView.buildGenericView();
+  private view: GenericView;
+
+  constructor() {
+    this.view = new GenericView();
+  }
+
+  public build(): void {
+    this.view.buildGenericView();
   }
 }
