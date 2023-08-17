@@ -1,12 +1,6 @@
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse } from '../../types';
-
-enum TokenPayload {
-  EXPIRES_IN = 'expires_in',
-  REFRESH_TOKEN = 'refresh_token',
-  SCOPE = 'scope',
-  TOKEN_TYPE = 'token_type',
-}
+import { TokenPayload } from '../../types';
 
 export default class Tokens {
   // Please use the Tokens.customerTokens object once a customer logged in successfully

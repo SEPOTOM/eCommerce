@@ -26,4 +26,11 @@ interface IError {
   error_description: string;
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError };
+enum TokenPayload {
+  EXPIRES_IN = 'expires_in',
+  REFRESH_TOKEN = 'refresh_token',
+  SCOPE = 'scope',
+  TOKEN_TYPE = 'token_type',
+}
+
+export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload };
