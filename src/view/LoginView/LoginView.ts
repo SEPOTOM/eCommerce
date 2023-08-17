@@ -252,7 +252,7 @@ export default class LoginView {
         } else {
           document.getElementById('password-error')?.nextElementSibling?.remove();
           Tokens.setCustomerTokens(customerLogin);
-          console.log(await Tokens.getCustomerTokens());
+          // TODO: do the actions needed on successful login right here
         }
       }
     });
