@@ -12,10 +12,12 @@ import Authorization from '../Authorization/Authorization';
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server',
   EXISTING_EMAIL = 'Please either log in or use a different email address.',
+  INVALID_FIELDS = 'Please check the correctness of the filled in fields or try again later.',
 }
 
 enum ErrorCodes {
   DUPLICATE = 'DuplicateField',
+  INVALID_JSON = 'InvalidJsonInput',
 }
 
 export default class Registration {
@@ -73,6 +75,10 @@ export default class Registration {
 
     if (specificError.code === ErrorCodes.DUPLICATE && specificError.field === 'email') {
       return `${data.message} ${ErrorMessages.EXISTING_EMAIL}`;
+    }
+
+    if (specificError.code === ErrorCodes.INVALID_JSON) {
+      return `${data.message} ${ErrorMessages.INVALID_FIELDS}`;
     }
 
     return data.message;
