@@ -10,9 +10,10 @@ import { CustomerCredentials, ResponseInfo, RegErrorResponse } from '../../types
 import Authorization from '../Authorization/Authorization';
 
 enum ErrorMessages {
-  SERVER = 'Failed to connect to the server',
+  SERVER = 'Failed to connect to the server. Please check your network connection or try again later.',
   EXISTING_EMAIL = 'Please either log in or use a different email address.',
   INVALID_FIELDS = 'Please check the correctness of the filled in fields or try again later.',
+  TRY_AGAIN = 'Please try again later.',
 }
 
 enum ErrorCodes {
@@ -81,6 +82,6 @@ export default class Registration {
       return `${data.message} ${ErrorMessages.INVALID_FIELDS}`;
     }
 
-    return data.message;
+    return `${data.message} ${ErrorMessages.TRY_AGAIN}`;
   }
 }
