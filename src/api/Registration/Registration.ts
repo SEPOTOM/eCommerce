@@ -6,8 +6,7 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { CustomerCredentials } from '../../types';
-import { IClientLoginResponse } from '../Authorization/Types';
+import { CustomerCredentials, IClientLoginResponse } from '../../types';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server',
