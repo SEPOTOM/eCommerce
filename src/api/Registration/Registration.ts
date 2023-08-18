@@ -6,7 +6,8 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { CustomerCredentials, IClientLoginResponse } from '../../types';
+import { CustomerCredentials } from '../../types';
+import Authorization from '../Authorization/Authorization';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server',
@@ -47,21 +48,11 @@ export default class Registration {
   private async getBearerToken(): Promise<string> {
     const endpoint = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
     const basicToken = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
+    const data = await Authorization.loginClient(endpoint, basicToken);
 
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${basicToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-      const data: IClientLoginResponse = await response.json();
-
-      return data.access_token;
-    } catch (err) {
-      console.error(ErrorMessages.SERVER);
+    if ('message' in data) {
       return '';
     }
+    return data.access_token;
   }
 }
