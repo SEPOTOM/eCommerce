@@ -6,7 +6,7 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { CustomerCredentials } from '../../types';
+import { CustomerCredentials, ResponseInfo } from '../../types';
 import Authorization from '../Authorization/Authorization';
 
 enum ErrorMessages {
@@ -14,20 +14,23 @@ enum ErrorMessages {
 }
 
 export default class Registration {
-  public async register(credentials: CustomerCredentials): Promise<boolean> {
+  public async register(credentials: CustomerCredentials): Promise<ResponseInfo> {
+    const result: ResponseInfo = {
+      ok: false,
+      message: ErrorMessages.SERVER,
+    };
+
     const bearerToken = await this.getBearerToken();
 
     if (bearerToken === '') {
-      return false;
+      return result;
     }
 
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/customers?scope=${CTP_SCOPES}`;
     const body = JSON.stringify(credentials);
 
-    let response;
-
     try {
-      response = await fetch(endpoint, {
+      const response = await fetch(endpoint, {
         body,
         method: 'POST',
         headers: {
@@ -37,12 +40,16 @@ export default class Registration {
       });
       const data = await response.json();
 
-      console.log(data);
+      if ('message' in data) {
+        result.message = data.message;
+      } else {
+        result.ok = true;
+      }
     } catch (err) {
-      console.error(ErrorMessages.SERVER);
+      return result;
     }
 
-    return response?.ok || false;
+    return result;
   }
 
   private async getBearerToken(): Promise<string> {

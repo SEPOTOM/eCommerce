@@ -1,8 +1,25 @@
 export interface CustomerCredentials {
-  email: string;
+  email: string | number;
   firstName: string;
   lastName: string;
   password: string;
+}
+
+export interface RegErrorResponse {
+  errors: RegError[];
+  message: string;
+  statusCode: number;
+}
+
+export interface RegError {
+  code: string;
+  detailedErrorMessage: string;
+  message: string;
+}
+
+export interface ResponseInfo {
+  ok: boolean;
+  message: string;
 }
 
 interface IClientLoginResponse {

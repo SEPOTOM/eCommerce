@@ -133,12 +133,14 @@ export default class RegistrationView {
       this.hideErrorBlock();
 
       const credentials = this.collectCredentials();
-      const ok = await new Registration().register(credentials);
+      const response = await new Registration().register(credentials);
 
-      if (ok) {
+      if (response.ok) {
+        this.hideErrorBlock();
         form.dataset.registered = 'true';
       } else {
         form.dataset.registered = 'false';
+        this.showErrorBlock(response.message);
       }
     } else {
       clearTimeout(this.errorTimeoutId);
