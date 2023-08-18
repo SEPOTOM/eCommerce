@@ -1,5 +1,7 @@
 export interface InputOptions {
   type?: string;
   id?: string;
-  regExp: RegExp;
+  validationData: PatternAndMessage[];
 }
+
+export type PatternAndMessage = [RegExp, string];
