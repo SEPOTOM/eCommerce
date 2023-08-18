@@ -21,28 +21,32 @@ export default class GenericView {
   }
 
   public buildGenericView(): void {
+    const main = document.createElement('main');
+    main.className = 'flex flex-col flex-grow';
+
+    // Draw base content
+    this.header.init();
+    document.body.append(main);
+    this.footer.init();
+
     this.drawMainPage();
     // this.drawLoginPage();
     // this.drawPage404();
   }
 
   private drawMainPage(): void {
-    this.header.init();
     this.homepage.init();
-    this.footer.init();
   }
 
   // TODO: use it in "buildGenericView" for display [ Login ] page
   private drawLoginPage(): void {
-    this.header.init();
-    document.body.append(LoginView.showLoginView());
-    this.footer.init();
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(LoginView.showLoginView());
   }
 
   // TODO: use it in "buildGenericView" for display [ 404 ] page
   private drawPage404(): void {
-    this.header.init();
     this.page404.init();
-    this.footer.init();
   }
 }

@@ -1,4 +1,3 @@
-import Converter from '../../components/Converter/Converter';
 import HomepageViewHTML from './HomepageView.html';
 
 export default class HomepageView {
@@ -7,6 +6,7 @@ export default class HomepageView {
   }
 
   private draw(): void {
-    document.body.append(Converter.htmlToElement(HomepageViewHTML)!);
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = HomepageViewHTML;
   }
 }

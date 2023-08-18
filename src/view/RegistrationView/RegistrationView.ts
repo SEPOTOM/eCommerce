@@ -1,14 +1,17 @@
 import Converter from '../../components/Converter/Converter';
-import SimpleInputView from './InputView/SimpleInputView/SimpleInputView';
+import InputView from './InputView/InputView';
 import DateInputView from './InputView/DateInputView/DateInputView';
+import DynamicInputView from './InputView/DynamicInputView/DynamicInputView';
 import SelectView from './SelectView/SelectView';
 import { InputOptions } from './types';
-import { RegExps, Countries } from './data';
+import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps } from './data';
 import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
 
+const DEFAULT_COUNTRY = 'US';
 const BIRTH_DATE_INPUT_INDEX = 4;
+const POSTAL_CODE_INPUT_INDEX = 7;
 
 enum InputTypes {
   EMAIL = 'email',
@@ -23,25 +26,32 @@ enum ClassNames {
 }
 
 const inputOptions: InputOptions[] = [
-  { regExp: RegExps.EMAIL, type: InputTypes.EMAIL },
-  { regExp: RegExps.PASSWORD, type: InputTypes.PASSWORD },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.DATE },
-  { regExp: RegExps.STREET },
-  { regExp: RegExps.LETTERS },
-  { regExp: RegExps.POSTAL_CODES },
+  { validationData: ValidationData.EMAIL },
+  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
+  { validationData: ValidationData.FIRST_NAME },
+  { validationData: ValidationData.LAST_NAME },
+  { validationData: ValidationData.DATE },
+  { validationData: ValidationData.STREET },
+  { validationData: ValidationData.CITY },
+  { validationData: ValidationData.POSTAL_CODES },
 ];
 
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
+  private select: HTMLSelectElement | null = null;
+
+  private postalCodeInputObject: DynamicInputView | null = null;
+
+  private inputObjects: InputView[] = [];
+
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
 
-    RegistrationView.configureSelect(rows);
+    this.configureSelect(rows);
     this.configureInputs(rows);
     this.configureButton();
+    this.configureForm();
 
     return this.form;
   }
@@ -59,30 +69,48 @@ export default class RegistrationView {
         value: id,
       };
 
-      let input: HTMLInputElement | null = null;
+      let inputObject: InputView | null = null;
 
       if (index === BIRTH_DATE_INPUT_INDEX) {
-        input = new DateInputView().buildInputView(localInputOption);
+        inputObject = new DateInputView();
+      } else if (index === POSTAL_CODE_INPUT_INDEX) {
+        this.postalCodeInputObject = new DynamicInputView(
+          PostalCodeRegExps[DEFAULT_COUNTRY],
+          PostalCodeErrorMessages[DEFAULT_COUNTRY]
+        );
+        inputObject = this.postalCodeInputObject;
       } else {
-        input = new SimpleInputView().buildInputView(localInputOption);
+        inputObject = new InputView();
       }
 
-      rows[index].append(input);
+      this.inputObjects.push(inputObject);
+
+      const inputRow = inputObject.buildInputView(localInputOption);
+
+      rows[index].append(inputRow);
     });
   }
 
-  private static configureSelect(rows: NodeListOf<Element>): void {
+  private configureSelect(rows: NodeListOf<Element>): void {
     const lastRow = rows[rows.length - 1];
     const label = lastRow.querySelector(`.${ClassNames.LABEL}`);
     const id = label?.getAttribute('for') || '';
 
-    const select = new SelectView().buildSelectView(Countries, id);
-    lastRow.append(select);
+    this.select = new SelectView().buildSelectView(Countries, id);
+
+    this.select.addEventListener('change', this.changePostalCodeInputValidation.bind(this));
+
+    lastRow.append(this.select);
   }
 
   private configureButton(): void {
     const button = this.form.querySelector(`.${ClassNames.BUTTON}`);
     button?.addEventListener('click', this.sendForm.bind(this));
+  }
+
+  private configureForm(): void {
+    this.validateInputs = this.validateInputs.bind(this);
+    this.form.addEventListener('click', this.validateInputs);
   }
 
   private async sendForm(e: Event): Promise<void> {
@@ -103,6 +131,25 @@ export default class RegistrationView {
     } else {
       console.error('Form is invalid!');
     }
+  }
+
+  private changePostalCodeInputValidation(): void {
+    const countyCode = `${this.select?.value}`;
+
+    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
+    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
+
+    this.postalCodeInputObject?.validateInput();
+  }
+
+  private validateInputs(): void {
+    this.inputObjects.forEach((inputObject) => {
+      inputObject.validateInput();
+    });
+
+    this.inputObjects = [];
+
+    this.form.removeEventListener('click', this.validateInputs);
   }
 
   private collectCredentials(): CustomerCredentials {
