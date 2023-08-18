@@ -3,118 +3,38 @@ import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, IError } from '../../types';
 import Tokens from '../../components/Tokens/Tokens';
+import {
+  EMAIL_REGEX,
+  PASSWORD_REGEX,
+  EXCLAMATION_MARK,
+  UPPER_CASE_REGEX,
+  LOWER_CASE_REGEX,
+  NUMBERS_CASE_REGEX,
+  SPECIAL_CASE_REGEX,
+  DOMAIN_REGEX,
+  PASSWORD_MIN_LENGTH,
+  loginWindowStyles,
+  loginFormStyles,
+  formCaptionStyles,
+  inputStyles,
+  passwordContainerStyles,
+  passwordModeStyles,
+  buttonContainerStyles,
+  loginButtonStyles,
+  cancelButtonStyles,
+  registrationButtonStyles,
+  validationErrorStyles,
+  loginWindowAttributes,
+  loginFormAttributes,
+  loginInputAttributes,
+  passwordInputAttributes,
+  okButtonAttributes,
+  cancelButtonAttributes,
+  loginErrorAttributes,
+  passwordErrorAttributes,
+} from './data';
 
 export default class LoginView {
-  private static EMAIL_REGEX: RegExp = /^\S+@\S+\.\S+$/;
-
-  private static PASSWORD_REGEX: RegExp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*\s)(.{8,})$/;
-
-  private static EXCLAMATION_MARK =
-    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 inline text-amber-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>';
-
-  private static UPPER_CASE_REGEX: RegExp = /[A-Z]/;
-
-  private static LOWER_CASE_REGEX: RegExp = /[a-z]/;
-
-  private static NUMBERS_CASE_REGEX: RegExp = /[0-9]/;
-
-  private static SPECIAL_CASE_REGEX: RegExp = /[!@#$%^&*]/;
-
-  private static DOMAIN_REGEX: RegExp = /@[^\s@]+\.[^\s@]+$/;
-
-  private static PASSWORD_MIN_LENGTH: number = 8;
-
-  private static loginWindowStyles: string[] = [
-    'bg-white',
-    'w-3/4',
-    'h-2/4',
-    'text-center',
-    'm-auto',
-    'top-1/4',
-    'bottom-1/4',
-    'left-1/4',
-    'right-1/4',
-    'max-w-md',
-  ];
-
-  private static loginFormStyles: string[] = ['flex', 'flex-col', 'gap-8', 'py-12'];
-
-  private static formCaptionStyles: string[] = ['text-4xl', 'mb-8'];
-
-  private static inputStyles: string[] = ['bg-slate-300', 'w-full', 'h-12', 'px-2.5', 'pr-10'];
-
-  private static passwordContainerStyles: string[] = ['relative'];
-
-  private static passwordModeStyles: string[] = ['w-6', 'absolute', 'right-3', 'top-3'];
-
-  private static buttonContainerStyles: string[] = ['flex', 'flex-col', 'gap-6', 'mt-8'];
-
-  private static loginButtonStyles: string[] = [
-    'w-full',
-    'm-auto',
-    'bg-red-600',
-    'h-12',
-    'text-white',
-    'hover:bg-red-400',
-    'transition-all',
-    'duration-500',
-  ];
-
-  private static cancelButtonStyles: string[] = [
-    'w-full',
-    'm-auto',
-    'bg-orange-600',
-    'h-12',
-    'text-white',
-    'hover:bg-orange-400',
-    'transition-all',
-    'duration-500',
-  ];
-
-  private static registrationButtonStyles: string[] = [
-    'w-full',
-    'm-auto',
-    'h-12',
-    'border-2',
-    'border-blue-900',
-    'text-blue-900',
-    'hover:bg-blue-900',
-    'hover:text-white',
-    'transition-all',
-    'duration-500',
-  ];
-
-  private static validationErrorStyles: string[] = ['text-red-800', 'text-base', 'hidden', 'absolute'];
-
-  private static loginWindowAttributes: string[][] = [['id', 'login-form']];
-
-  private static loginFormAttributes: string[][] = [['autocomplete', 'off']];
-
-  private static loginInputAttributes: string[][] = [
-    ['placeholder', 'Login'],
-    ['type', 'text'],
-    ['id', 'login'],
-    ['oninvalid', 'this.setCustomValidity(" ")'],
-    ['required', 'true'],
-  ];
-
-  private static passwordInputAttributes: string[][] = [
-    ['placeholder', 'Password'],
-    ['type', 'password'],
-    ['id', 'password'],
-    ['pattern', '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*s)(.{8,})$'],
-    ['oninvalid', 'this.setCustomValidity(" ")'],
-    ['required', 'true'],
-  ];
-
-  private static okButtonAttributes: string[][] = [['id', 'ok-login']];
-
-  private static cancelButtonAttributes: string[][] = [['id', 'cancel-login']];
-
-  private static loginErrorAttributes: string[][] = [['id', 'login-error']];
-
-  private static passwordErrorAttributes: string[][] = [['id', 'password-error']];
-
   private static loginWindow: HTMLDivElement;
 
   private static loginValid: boolean = true;
@@ -127,11 +47,11 @@ export default class LoginView {
 
     LoginView.cleanLoginView();
 
-    LoginView.addStyles(LoginView.loginWindow, LoginView.loginWindowStyles);
-    LoginView.addStyles(loginForm, LoginView.loginFormStyles);
+    LoginView.addStyles(LoginView.loginWindow, loginWindowStyles);
+    LoginView.addStyles(loginForm, loginFormStyles);
 
-    LoginView.addAttributes(LoginView.loginWindow, LoginView.loginWindowAttributes);
-    LoginView.addAttributes(loginForm, LoginView.loginFormAttributes);
+    LoginView.addAttributes(LoginView.loginWindow, loginWindowAttributes);
+    LoginView.addAttributes(loginForm, loginFormAttributes);
 
     LoginView.addLoginForm(loginForm);
 
@@ -162,7 +82,7 @@ export default class LoginView {
 
   private static addLoginCaption(loginForm: HTMLFormElement): void {
     const caption = document.createElement('div');
-    LoginView.addStyles(caption, LoginView.formCaptionStyles);
+    LoginView.addStyles(caption, formCaptionStyles);
     caption.textContent = 'Welcome!';
 
     loginForm.appendChild(caption);
@@ -172,8 +92,8 @@ export default class LoginView {
     const container = document.createElement('div');
     const input = document.createElement('input');
 
-    LoginView.addStyles(input, LoginView.inputStyles);
-    LoginView.addAttributes(input, LoginView.loginInputAttributes);
+    LoginView.addStyles(input, inputStyles);
+    LoginView.addAttributes(input, loginInputAttributes);
 
     container.appendChild(input);
     loginForm.appendChild(container);
@@ -183,10 +103,10 @@ export default class LoginView {
     const container: HTMLDivElement = document.createElement('div');
     const input: HTMLInputElement = document.createElement('input');
 
-    LoginView.addStyles(container, LoginView.passwordContainerStyles);
+    LoginView.addStyles(container, passwordContainerStyles);
 
-    LoginView.addStyles(input, LoginView.inputStyles);
-    LoginView.addAttributes(input, LoginView.passwordInputAttributes);
+    LoginView.addStyles(input, inputStyles);
+    LoginView.addAttributes(input, passwordInputAttributes);
 
     container.appendChild(input);
     loginForm.appendChild(container);
@@ -198,7 +118,7 @@ export default class LoginView {
     const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
     const showPasswordMode = document.createElement('img');
     showPasswordMode.src = passwordHidden;
-    LoginView.addStyles(showPasswordMode, LoginView.passwordModeStyles);
+    LoginView.addStyles(showPasswordMode, passwordModeStyles);
     container.appendChild(showPasswordMode);
 
     showPasswordMode.addEventListener('click', () => {
@@ -218,17 +138,17 @@ export default class LoginView {
     const cancelButton = document.createElement('button');
     const registrationButton = document.createElement('button');
 
-    LoginView.addStyles(container, LoginView.buttonContainerStyles);
+    LoginView.addStyles(container, buttonContainerStyles);
 
-    LoginView.addStyles(okButton, LoginView.loginButtonStyles);
-    LoginView.addAttributes(okButton, LoginView.okButtonAttributes);
+    LoginView.addStyles(okButton, loginButtonStyles);
+    LoginView.addAttributes(okButton, okButtonAttributes);
     okButton.textContent = 'Login';
 
-    LoginView.addStyles(cancelButton, LoginView.cancelButtonStyles);
-    LoginView.addAttributes(cancelButton, LoginView.cancelButtonAttributes);
+    LoginView.addStyles(cancelButton, cancelButtonStyles);
+    LoginView.addAttributes(cancelButton, cancelButtonAttributes);
     cancelButton.textContent = 'Cancel';
 
-    LoginView.addStyles(registrationButton, LoginView.registrationButtonStyles);
+    LoginView.addStyles(registrationButton, registrationButtonStyles);
     registrationButton.textContent = 'Registration';
 
     container.appendChild(okButton);
@@ -244,11 +164,11 @@ export default class LoginView {
     const loginError = document.createElement('div');
     const passwordError = document.createElement('div');
 
-    LoginView.addStyles(loginError, LoginView.validationErrorStyles);
-    LoginView.addAttributes(loginError, LoginView.loginErrorAttributes);
+    LoginView.addStyles(loginError, validationErrorStyles);
+    LoginView.addAttributes(loginError, loginErrorAttributes);
 
-    LoginView.addStyles(passwordError, LoginView.validationErrorStyles);
-    LoginView.addAttributes(passwordError, LoginView.passwordErrorAttributes);
+    LoginView.addStyles(passwordError, validationErrorStyles);
+    LoginView.addAttributes(passwordError, passwordErrorAttributes);
 
     loginInputContainer.appendChild(loginError);
     passwordInput.appendChild(passwordError);
@@ -298,10 +218,10 @@ export default class LoginView {
     const authorizationError: HTMLDivElement = document.createElement('div');
     const parent: HTMLElement = document.getElementById('password-error')?.parentElement as HTMLElement;
 
-    LoginView.addStyles(authorizationError, LoginView.validationErrorStyles);
+    LoginView.addStyles(authorizationError, validationErrorStyles);
     authorizationError.classList.remove('hidden');
 
-    authorizationError.innerHTML = LoginView.EXCLAMATION_MARK + customerLogin.message;
+    authorizationError.innerHTML = EXCLAMATION_MARK + customerLogin.message;
 
     document.getElementById('password-error')?.nextElementSibling?.remove();
     parent.appendChild(authorizationError);
@@ -315,20 +235,19 @@ export default class LoginView {
   ): void {
     let loginInputError = '';
     let passwordInputError = '';
-    if (passwordInput.value.match(LoginView.PASSWORD_REGEX)) {
+    if (passwordInput.value.match(PASSWORD_REGEX)) {
       LoginView.passwordValid = true;
     } else {
       LoginView.passwordValid = false;
       passwordInputError = LoginView.getPasswordError(passwordInput);
-      (document.getElementById('password-error') as HTMLElement).innerHTML =
-        LoginView.EXCLAMATION_MARK + passwordInputError;
+      (document.getElementById('password-error') as HTMLElement).innerHTML = EXCLAMATION_MARK + passwordInputError;
     }
-    if (loginInput.value.match(LoginView.EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
+    if (loginInput.value.match(EMAIL_REGEX) && loginInput.value === loginInput.value.trim()) {
       LoginView.loginValid = true;
     } else {
       LoginView.loginValid = false;
       loginInputError = LoginView.getLoginError(loginInput);
-      (document.getElementById('login-error') as HTMLElement).innerHTML = LoginView.EXCLAMATION_MARK + loginInputError;
+      (document.getElementById('login-error') as HTMLElement).innerHTML = EXCLAMATION_MARK + loginInputError;
     }
     LoginView.toggleErrorMessages(passwordError, loginError);
   }
@@ -339,19 +258,19 @@ export default class LoginView {
     if (password.value[0] === ' ' || password.value[password.value.length - 1] === ' ') {
       error = 'Do not use whitespace';
     }
-    if (!password.value.match(LoginView.UPPER_CASE_REGEX)) {
+    if (!password.value.match(UPPER_CASE_REGEX)) {
       error = 'No letter, uppercase';
     }
-    if (!password.value.match(LoginView.LOWER_CASE_REGEX)) {
+    if (!password.value.match(LOWER_CASE_REGEX)) {
       error = 'No letter, lowercase';
     }
-    if (!password.value.match(LoginView.NUMBERS_CASE_REGEX)) {
+    if (!password.value.match(NUMBERS_CASE_REGEX)) {
       error = 'Need at least 1 digit';
     }
-    if (!password.value.match(LoginView.SPECIAL_CASE_REGEX)) {
+    if (!password.value.match(SPECIAL_CASE_REGEX)) {
       error = 'Add special character !@#$%^&*';
     }
-    if (password.value.length < LoginView.PASSWORD_MIN_LENGTH) {
+    if (password.value.length < PASSWORD_MIN_LENGTH) {
       error = 'Too short: at least 8 characters';
     }
     return error;
@@ -360,10 +279,10 @@ export default class LoginView {
   private static getLoginError(login: HTMLInputElement): string {
     let error: string = '';
     const loginArray = login.value.split('');
-    if (!login.value.match(LoginView.EMAIL_REGEX)) {
+    if (!login.value.match(EMAIL_REGEX)) {
       error = 'Incorrect format (e.g., user@example.com)';
     }
-    if (!login.value.match(LoginView.DOMAIN_REGEX)) {
+    if (!login.value.match(DOMAIN_REGEX)) {
       error = 'Wrong domain (e.g., example.com)';
     }
     if (login.value[0] === ' ' || login.value[login.value.length - 1] === ' ') {
