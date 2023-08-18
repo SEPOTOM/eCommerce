@@ -6,11 +6,16 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { CustomerCredentials, ResponseInfo } from '../../types';
+import { CustomerCredentials, ResponseInfo, RegErrorResponse } from '../../types';
 import Authorization from '../Authorization/Authorization';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server',
+  EXISTING_EMAIL = 'Please either log in or use a different email address.',
+}
+
+enum ErrorCodes {
+  DUPLICATE = 'DuplicateField',
 }
 
 export default class Registration {
@@ -41,7 +46,7 @@ export default class Registration {
       const data = await response.json();
 
       if ('message' in data) {
-        result.message = data.message;
+        result.message = this.getMessage(data);
       } else {
         result.ok = true;
       }
@@ -61,5 +66,15 @@ export default class Registration {
       return '';
     }
     return data.access_token;
+  }
+
+  private getMessage(data: RegErrorResponse): string {
+    const specificError = data.errors[0];
+
+    if (specificError.code === ErrorCodes.DUPLICATE && specificError.field === 'email') {
+      return `${data.message} ${ErrorMessages.EXISTING_EMAIL}`;
+    }
+
+    return data.message;
   }
 }

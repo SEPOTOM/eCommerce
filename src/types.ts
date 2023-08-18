@@ -13,8 +13,9 @@ export interface RegErrorResponse {
 
 export interface RegError {
   code: string;
-  detailedErrorMessage: string;
   message: string;
+  detailedErrorMessage?: string;
+  field?: string;
 }
 
 export interface ResponseInfo {
