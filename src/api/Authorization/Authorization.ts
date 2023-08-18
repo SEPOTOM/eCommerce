@@ -9,15 +9,17 @@ import {
 import { IClientLoginResponse, ICustomerLoginResponse, IError } from '../../types';
 
 export default class Authorization {
-  public static async loginClient(): Promise<IClientLoginResponse | IError | Error> {
-    const queryString: string = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
+  public static async loginClient(
+    queryString: string,
+    basicToken: string
+  ): Promise<IClientLoginResponse | IError | Error> {
     let responseJSON: ICustomerLoginResponse | IError | Error;
 
     try {
       const response: Response = await fetch(queryString, {
         method: 'POST',
         headers: {
-          Authorization: `Basic ${btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`)}`,
+          Authorization: `Basic ${basicToken}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
