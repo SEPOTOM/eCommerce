@@ -4,6 +4,7 @@ import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
 import { DataAttrs } from './data';
 import BillingAddressView from './AddressView/BillingAddressView/BillingAddressView';
+import ShippingAddressView from './AddressView/ShippingAddressView/ShippingAddressView';
 import UserInfoView from './UserInfoView/UserInfoView';
 
 export default class RegistrationView {
@@ -12,6 +13,8 @@ export default class RegistrationView {
   private select: HTMLSelectElement | null = null;
 
   private billingAddressObject = new BillingAddressView();
+
+  private shippingAddressObject = new ShippingAddressView();
 
   private userInfoObject = new UserInfoView();
 
@@ -26,6 +29,7 @@ export default class RegistrationView {
   }
 
   private configureAddresses(): void {
+    this.form.prepend(this.shippingAddressObject.buildAddressBlockView());
     this.form.prepend(this.billingAddressObject.buildAddressBlockView());
   }
 
@@ -71,6 +75,7 @@ export default class RegistrationView {
   private changePostalCodeInputsValidation(): void {
     const countyCode = `${this.select?.value}`;
     this.billingAddressObject.changePostalCodeInputValidation(countyCode);
+    this.shippingAddressObject.changePostalCodeInputValidation(countyCode);
   }
 
   private collectCredentials(): CustomerCredentials {
@@ -105,6 +110,7 @@ export default class RegistrationView {
   private validateInputs(): void {
     this.userInfoObject.validateInputs();
     this.billingAddressObject.validateInputs();
+    this.shippingAddressObject.validateInputs();
 
     this.form.removeEventListener('click', this.validateInputs);
   }
