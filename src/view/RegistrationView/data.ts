@@ -112,4 +112,5 @@ export enum DataAttrs {
   TITLE = 'data-title-reg',
   ROW = 'data-row-reg',
   LABEL = 'data-label-reg',
+  BUTTON = 'data-button-reg',
 }

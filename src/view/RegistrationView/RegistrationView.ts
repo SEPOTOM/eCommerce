@@ -2,13 +2,7 @@ import Converter from '../../components/Converter/Converter';
 import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
-
-enum ClassNames {
-  FORM = 'reg-form',
-  LABEL = 'reg-form__label',
-  BUTTON = 'reg-form__button',
-  ROW = 'reg-form__row',
-}
+import { DataAttrs } from './data';
 
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
@@ -21,7 +15,7 @@ export default class RegistrationView {
   }
 
   private configureButton(): void {
-    const button = this.form.querySelector(`.${ClassNames.BUTTON}`);
+    const button = this.form.querySelector(`[${DataAttrs.BUTTON}]`);
     button?.addEventListener('click', this.sendForm.bind(this));
   }
 
