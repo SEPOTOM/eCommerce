@@ -3,15 +3,30 @@ import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
 import { DataAttrs } from './data';
+import UserInfoView from './UserInfoView/UserInfoView';
 
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
+  private select: HTMLSelectElement | null = null;
+
+  private userInfoObject = new UserInfoView();
+
   public buildRegistrationView(): HTMLFormElement {
+    this.configureUserInfo();
+    this.configureSelect();
     this.configureButton();
     this.configureForm();
 
     return this.form;
+  }
+
+  private configureUserInfo(): void {
+    this.form.prepend(this.userInfoObject.buildView());
+  }
+
+  private configureSelect(): void {
+    this.select = this.userInfoObject.getSelect();
   }
 
   private configureButton(): void {
@@ -74,6 +89,8 @@ export default class RegistrationView {
   }
 
   private validateInputs(): void {
+    this.userInfoObject.validateInputs();
+
     this.form.removeEventListener('click', this.validateInputs);
   }
 
