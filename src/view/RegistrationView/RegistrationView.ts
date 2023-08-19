@@ -112,30 +112,29 @@ export default class RegistrationView {
   }
 
   private collectCredentials(): CustomerCredentials {
+    const userInfoCredentials = this.userInfoObject.collectCredentials();
+    const billingAddressCredentials = this.billingAddressObject.collectCredentials();
+    const shippingAddressCredentials = this.shippingAddressObject.collectCredentials();
+    const countryCode = this.userInfoObject.getSelect()?.value;
+
     const credentials: CustomerCredentials = {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
+      ...userInfoCredentials,
+      addresses: [],
+      shippingAddresses: [],
+      billingAddresses: [],
     };
 
-    const inputs = this.form.querySelectorAll('input');
-    inputs.forEach((input) => {
-      const inputType = `${input.dataset.type}`;
-
-      if (inputType === 'email') {
-        credentials.email = input.value;
-      }
-      if (inputType === 'password') {
-        credentials.password = input.value;
-      }
-      if (inputType === 'first-name') {
-        credentials.firstName = input.value;
-      }
-      if (inputType === 'last-name') {
-        credentials.lastName = input.value;
-      }
+    credentials.addresses.push({
+      ...billingAddressCredentials,
+      country: countryCode || '',
     });
+    credentials.billingAddresses.push(credentials.addresses.length - 1);
+
+    credentials.addresses.push({
+      ...shippingAddressCredentials,
+      country: countryCode || '',
+    });
+    credentials.shippingAddresses.push(credentials.addresses.length - 1);
 
     return credentials;
   }

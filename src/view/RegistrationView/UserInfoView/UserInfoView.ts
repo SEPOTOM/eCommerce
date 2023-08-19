@@ -3,6 +3,7 @@ import HTML from './UserInfoView.html';
 import InputView from '../InputView/InputView';
 import DateInputView from '../InputView/DateInputView/DateInputView';
 import SelectView from '../SelectView/SelectView';
+import { UserInfoCredentials } from '../types';
 import { UserInfoInputsOptions, DataAttrs, Countries } from '../data';
 
 const BIRTH_DATE_INPUT_INDEX = 4;
@@ -32,6 +33,35 @@ export default class UserInfoView {
     this.inputObjects.forEach((inputObject) => {
       inputObject.validateInput();
     });
+  }
+
+  public collectCredentials(): UserInfoCredentials {
+    const credentials: UserInfoCredentials = {
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+    };
+
+    const inputs = this.view.querySelectorAll('input');
+    inputs.forEach((input) => {
+      const inputType = `${input.dataset.type}`;
+
+      if (inputType === 'email') {
+        credentials.email = input.value;
+      }
+      if (inputType === 'password') {
+        credentials.password = input.value;
+      }
+      if (inputType === 'first-name') {
+        credentials.firstName = input.value;
+      }
+      if (inputType === 'last-name') {
+        credentials.lastName = input.value;
+      }
+    });
+
+    return credentials;
   }
 
   private configureInputs(rows: NodeListOf<Element>): void {

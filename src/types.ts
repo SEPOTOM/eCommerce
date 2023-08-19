@@ -3,6 +3,16 @@ export interface CustomerCredentials {
   firstName: string;
   lastName: string;
   password: string;
+  addresses: Address[];
+  shippingAddresses: number[];
+  billingAddresses: number[];
+}
+
+export interface Address {
+  country: string;
+  streetName: string;
+  postalCode: string;
+  city: string;
 }
 
 interface IClientLoginResponse {

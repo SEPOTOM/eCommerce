@@ -2,7 +2,7 @@ import Converter from '../../../components/Converter/Converter';
 import HTML from './AddressView.html';
 import InputView from '../InputView/InputView';
 import DynamicInputView from '../InputView/DynamicInputView/DynamicInputView';
-import { EventCallback } from '../../../types';
+import { EventCallback, Address } from '../../../types';
 import { PostalCodeRegExps, PostalCodeErrorMessages, DEFAULT_COUNTRY, AddressInputsOptions, DataAttrs } from '../data';
 
 const POSTAL_CODE_INPUT_INDEX = 2;
@@ -90,6 +90,32 @@ export default abstract class AddressView {
 
       localInput.disabled = false;
     });
+  }
+
+  public collectCredentials(ids: string[]): Omit<Address, 'country'> {
+    const credentials: Omit<Address, 'country'> = {
+      streetName: '',
+      postalCode: '',
+      city: '',
+    };
+
+    const textFields = this.getTextFields();
+
+    textFields.forEach((textField) => {
+      if (textField.id === ids[0]) {
+        credentials.streetName = textField.value;
+      }
+
+      if (textField.id === ids[1]) {
+        credentials.city = textField.value;
+      }
+
+      if (textField.id === ids[2]) {
+        credentials.postalCode = textField.value;
+      }
+    });
+
+    return credentials;
   }
 
   private trackTextField(textField: HTMLInputElement, e: Event): void {
