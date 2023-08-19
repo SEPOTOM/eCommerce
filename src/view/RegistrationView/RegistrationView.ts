@@ -3,6 +3,7 @@ import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
 import { DataAttrs } from './data';
+import BillingAddressView from './AddressView/BillingAddressView/BillingAddressView';
 import UserInfoView from './UserInfoView/UserInfoView';
 
 export default class RegistrationView {
@@ -10,9 +11,12 @@ export default class RegistrationView {
 
   private select: HTMLSelectElement | null = null;
 
+  private billingAddressObject = new BillingAddressView();
+
   private userInfoObject = new UserInfoView();
 
   public buildRegistrationView(): HTMLFormElement {
+    this.configureAddresses();
     this.configureUserInfo();
     this.configureSelect();
     this.configureButton();
@@ -21,12 +25,17 @@ export default class RegistrationView {
     return this.form;
   }
 
+  private configureAddresses(): void {
+    this.form.prepend(this.billingAddressObject.buildAddressBlockView());
+  }
+
   private configureUserInfo(): void {
     this.form.prepend(this.userInfoObject.buildView());
   }
 
   private configureSelect(): void {
     this.select = this.userInfoObject.getSelect();
+    this.select?.addEventListener('change', this.changePostalCodeInputsValidation.bind(this));
   }
 
   private configureButton(): void {
@@ -57,6 +66,11 @@ export default class RegistrationView {
     } else {
       console.error('Form is invalid!');
     }
+  }
+
+  private changePostalCodeInputsValidation(): void {
+    const countyCode = `${this.select?.value}`;
+    this.billingAddressObject.changePostalCodeInputValidation(countyCode);
   }
 
   private collectCredentials(): CustomerCredentials {
@@ -90,6 +104,7 @@ export default class RegistrationView {
 
   private validateInputs(): void {
     this.userInfoObject.validateInputs();
+    this.billingAddressObject.validateInputs();
 
     this.form.removeEventListener('click', this.validateInputs);
   }
