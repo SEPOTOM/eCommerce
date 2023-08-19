@@ -1,4 +1,4 @@
-import Routers from '../Routers/Routers';
+import Routers from '../Router/Router';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse } from '../../types';
 

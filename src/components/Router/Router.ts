@@ -1,10 +1,10 @@
 import Alpine from 'alpinejs';
-import RoutersAlpine from './Alpine/RoutersAlpine';
+import RouterAlpine from './Alpine/RouterAlpine';
 
-export default class Routers {
+export default class Router {
   public initRoute(): void {
-    document.body.setAttribute('x-data', 'Routers()');
-    Alpine.data('Routers', RoutersAlpine);
+    document.body.setAttribute('x-data', 'Router()');
+    Alpine.data('Router', RouterAlpine);
   }
 
   public static checkCustomerLogin(): void {

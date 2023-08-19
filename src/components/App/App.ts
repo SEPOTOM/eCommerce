@@ -1,5 +1,5 @@
 import HomepageView from '../../view/HomepageView/HomepageView';
-import Routers from '../Routers/Routers';
+import Routers from '../Router/Router';
 
 export default class App {
   public loadDefaultPage(): void {
