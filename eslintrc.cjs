@@ -46,6 +46,7 @@ module.exports = {
       'prettier/prettier': 'error',
       'class-methods-use-this': 'off',
       'import/no-extraneous-dependencies': ['error', {'devDependencies': true}],
+      "import/no-cycle": "off",
     },
     'ignorePatterns': ['.eslintrc.js'],
 };
