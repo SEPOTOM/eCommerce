@@ -60,18 +60,10 @@ export default class LoginView {
     'duration-500',
   ];
 
-  private static cancelButtonStyles: string[] = [
-    'w-full',
-    'm-auto',
-    'bg-orange-600',
-    'h-12',
-    'text-white',
-    'hover:bg-orange-400',
-    'transition-all',
-    'duration-500',
-  ];
-
   private static registrationButtonStyles: string[] = [
+    'flex',
+    'items-center',
+    'justify-center',
     'w-full',
     'm-auto',
     'h-12',
@@ -107,9 +99,12 @@ export default class LoginView {
     ['required', 'true'],
   ];
 
-  private static okButtonAttributes: string[][] = [['id', 'ok-login']];
+  private static registrationButtonAttributes: string[][] = [
+    ['href', '/registration'],
+    ['x-on:click', 'route($event)'],
+  ];
 
-  private static cancelButtonAttributes: string[][] = [['id', 'cancel-login']];
+  private static okButtonAttributes: string[][] = [['id', 'ok-login']];
 
   private static loginErrorAttributes: string[][] = [['id', 'login-error']];
 
@@ -137,6 +132,12 @@ export default class LoginView {
 
     LoginView.loginWindow.appendChild(loginForm);
     return LoginView.loginWindow;
+  }
+
+  public draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(LoginView.showLoginView());
   }
 
   public static addStyles(htmlElement: HTMLElement, styles: string[]): void {
@@ -215,8 +216,7 @@ export default class LoginView {
   private static addLoginButtons(loginForm: HTMLFormElement): void {
     const container = document.createElement('div');
     const okButton = document.createElement('button');
-    const cancelButton = document.createElement('button');
-    const registrationButton = document.createElement('button');
+    const registrationButton = document.createElement('a');
 
     LoginView.addStyles(container, LoginView.buttonContainerStyles);
 
@@ -224,15 +224,11 @@ export default class LoginView {
     LoginView.addAttributes(okButton, LoginView.okButtonAttributes);
     okButton.textContent = 'Login';
 
-    LoginView.addStyles(cancelButton, LoginView.cancelButtonStyles);
-    LoginView.addAttributes(cancelButton, LoginView.cancelButtonAttributes);
-    cancelButton.textContent = 'Cancel';
-
     LoginView.addStyles(registrationButton, LoginView.registrationButtonStyles);
+    LoginView.addAttributes(registrationButton, LoginView.registrationButtonAttributes);
     registrationButton.textContent = 'Registration';
 
     container.appendChild(okButton);
-    container.appendChild(cancelButton);
     container.appendChild(registrationButton);
     loginForm.appendChild(container);
   }
@@ -260,7 +256,6 @@ export default class LoginView {
     const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
     const passwordError: HTMLElement = document.getElementById('password-error') as HTMLElement;
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
-    const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
     submitButton.addEventListener('click', async () => {
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
@@ -287,10 +282,6 @@ export default class LoginView {
     loginInput.addEventListener('input', () => {
       loginError.classList.add('hidden');
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
-    });
-
-    cancelButton.addEventListener('click', () => {
-      LoginView.cleanLoginView();
     });
   }
 

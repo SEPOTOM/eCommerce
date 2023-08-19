@@ -4,16 +4,8 @@ import FooterViewAlpine from './Alpine/FooterViewAlpine';
 import FooterViewHTML from './FooterView.html';
 
 export default class FooterView {
-  public init(): void {
-    this.draw();
-    this.initAlpine();
-  }
-
-  private initAlpine() {
+  public draw(): void {
     Alpine.data('Footer', FooterViewAlpine);
-  }
-
-  private draw(): void {
     document.body.append(Converter.htmlToElement(FooterViewHTML)!);
   }
 }

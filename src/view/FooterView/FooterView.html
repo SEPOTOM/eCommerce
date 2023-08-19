@@ -74,8 +74,8 @@
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0">
                 <a
                   class="text-red-600 font-medium hover:text-blue-500 duration-300"
-                  href="/logout"
-                  @click="route($event)"
+                  href="/"
+                  @click="($event) => { logout(); route($event); }"
                 >
                   Log out</a
                 >

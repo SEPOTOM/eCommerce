@@ -17,7 +17,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </span>
-      <a class="text-xl font-bold tracking-widest md:text-2xl" href="/" @click="route($event)"
+      <a
+        class="text-xl font-bold tracking-widest md:text-2xl"
+        data-element="header-logo"
+        href="/"
+        @click="route($event)"
         >True<span class="text-red-600">Car</span>
       </a>
     </div>
@@ -72,8 +76,8 @@
             >
             <a
               class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
-              href="/logout"
-              @click="route($event)"
+              href="/"
+              @click="($event) => { logout(); route($event); }"
               >Log out</a
             >
           </div>
@@ -164,8 +168,8 @@
               >
               <a
                 class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4 text-red-500"
-                href="/logout"
-                @click="route($event)"
+                href="/"
+                @click="($event) => { logout(); route($event); }"
                 >Log out</a
               >
             </div>

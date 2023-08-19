@@ -54,6 +54,12 @@ export default class RegistrationView {
     return this.form;
   }
 
+  public draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(new RegistrationView().buildRegistrationView());
+  }
+
   private configureInputs(rows: NodeListOf<Element>): void {
     const labels = this.form.querySelectorAll(`.${ClassNames.LABEL}`);
 
