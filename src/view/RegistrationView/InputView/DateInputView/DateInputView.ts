@@ -1,36 +1,61 @@
 import InputView from '../InputView';
 
 const MONTHS_IN_YEAR = 12;
-const MAX_DAYS_IN_MONTH = 31;
 const MIN_USER_AGE = 18;
-const MS_IN_YEAR = 31536000000;
+const MAX_DAYS_IN_MONTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const ErrorMessages = {
+  MONTH: 'Incorrect month number (MM/DD/YYYY)',
+  DAY: 'Incorrect day for the specified month (MM/DD/YYYY)',
+  AGE: `Your age must be over ${MIN_USER_AGE} years old`,
+};
 
 export default class DateInputView extends InputView {
-  protected validateInput(regExp: RegExp): void {
-    if (!this.isValid(regExp)) {
-      this.input.dataset.valid = 'false';
-      console.error(`${this.input.id} must be in the format MM/DD/YYYY!`);
-      return;
+  public validateInput(): void {
+    super.validateInput();
+
+    if (!this.errorBlock.textContent) {
+      const [month, day, year] = this.input.value.split('/').map((str: string) => Number(str));
+
+      if (month > MONTHS_IN_YEAR || month < 1) {
+        this.makeInputInvalid(ErrorMessages.MONTH);
+        return;
+      }
+
+      const formattedMonth = month - 1;
+
+      if (day > MAX_DAYS_IN_MONTHS[formattedMonth]) {
+        this.makeInputInvalid(ErrorMessages.DAY);
+        return;
+      }
+
+      if (DateInputView.isOverMinAge(formattedMonth, day, year)) {
+        this.makeInputValid();
+      } else {
+        this.makeInputInvalid(ErrorMessages.AGE);
+      }
+    }
+  }
+
+  private static isOverMinAge(userMonth: number, userDay: number, userYear: number): boolean {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+
+    if (currentYear - userYear > MIN_USER_AGE) {
+      return true;
     }
 
-    const [month, day, year] = this.input.value.split('/').map((str: string) => Number(str));
+    if (currentYear - userYear === MIN_USER_AGE) {
+      if (currentMonth > userMonth) {
+        return true;
+      }
 
-    if (month > MONTHS_IN_YEAR || day > MAX_DAYS_IN_MONTH) {
-      this.input.dataset.valid = 'false';
-      console.error(`${this.input.id} is invalid!`);
-      return;
+      if (currentMonth === userMonth && currentDay >= userDay) {
+        return true;
+      }
     }
 
-    const userBirthDateTimestamp = new Date(year, month, day).getTime();
-    const currentDateTimestamp = Date.now();
-    const userAge = (currentDateTimestamp - userBirthDateTimestamp) / MS_IN_YEAR;
-
-    if (userAge > MIN_USER_AGE) {
-      this.input.dataset.valid = 'true';
-      console.log(`${this.input.id} is valid!`);
-    } else {
-      this.input.dataset.valid = 'false';
-      console.error(`Your age must be over ${MIN_USER_AGE} years old`);
-    }
+    return false;
   }
 }

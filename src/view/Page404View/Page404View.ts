@@ -1,12 +1,12 @@
-import HomepageViewHTML from './HomepageView.html';
+import Page404ViewHTML from './Page404View.html';
 
-export default class HomepageView {
+export default class Page404View {
   public init(): void {
     this.draw();
   }
 
   private draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
-    main.innerHTML = HomepageViewHTML;
+    main.innerHTML = Page404ViewHTML;
   }
 }
