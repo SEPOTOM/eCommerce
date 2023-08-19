@@ -59,6 +59,8 @@ export default abstract class AddressView {
 
       const currentTextField = currentTextFields[index];
       currentTextField.addEventListener('input', handler);
+
+      this.syncValues(textField, currentTextField);
     });
   }
 
@@ -116,6 +118,13 @@ export default abstract class AddressView {
     });
 
     return credentials;
+  }
+
+  private syncValues(textField: HTMLInputElement, currentTextField: HTMLInputElement): void {
+    const localTextField = textField;
+
+    localTextField.value = currentTextField.value;
+    localTextField.dispatchEvent(new InputEvent('input'));
   }
 
   private trackTextField(textField: HTMLInputElement, e: Event): void {
