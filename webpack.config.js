@@ -54,6 +54,10 @@ export default {
         maxAssetSize: 512000
     },
 
+    devServer: { 
+        historyApiFallback: true, 
+    },
+
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
