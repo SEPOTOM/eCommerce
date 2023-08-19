@@ -23,6 +23,7 @@ export default class RegistrationView {
     this.configureUserInfo();
     this.configureSelect();
     this.configureButton();
+    this.configureCheckboxes();
     this.configureForm();
 
     return this.form;
@@ -45,6 +46,38 @@ export default class RegistrationView {
   private configureButton(): void {
     const button = this.form.querySelector(`[${DataAttrs.BUTTON}]`);
     button?.addEventListener('click', this.sendForm.bind(this));
+  }
+
+  private configureCheckboxes(): void {
+    const billingCheckbox = this.billingAddressObject.getUseAsCheckbox();
+    billingCheckbox.addEventListener('change', () => {
+      if (billingCheckbox.checked) {
+        const shippingTextFields = this.shippingAddressObject.getTextFields();
+
+        this.shippingAddressObject.disable();
+
+        this.billingAddressObject.trackTextFields(shippingTextFields);
+      } else {
+        this.billingAddressObject.untrackTextFields();
+
+        this.shippingAddressObject.enable();
+      }
+    });
+
+    const shippingCheckbox = this.shippingAddressObject.getUseAsCheckbox();
+    shippingCheckbox.addEventListener('change', () => {
+      if (shippingCheckbox.checked) {
+        const billingTextFields = this.billingAddressObject.getTextFields();
+
+        this.billingAddressObject.disable();
+
+        this.shippingAddressObject.trackTextFields(billingTextFields);
+      } else {
+        this.shippingAddressObject.untrackTextFields();
+
+        this.billingAddressObject.enable();
+      }
+    });
   }
 
   private configureForm(): void {

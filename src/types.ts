@@ -41,3 +41,5 @@ enum TokenPayload {
 }
 
 export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload };
+
+export type EventCallback = (e: Event) => void;
