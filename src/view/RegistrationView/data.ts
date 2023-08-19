@@ -36,6 +36,8 @@ enum InputTypes {
   PASSWORD = 'password',
 }
 
+export const DEFAULT_COUNTRY = 'US';
+
 export const Countries = {
   US: 'The United States',
   UK: 'The United Kingdom',
@@ -98,6 +100,12 @@ export const UserInfoInputsOptions: InputOptions[] = [
   { validationData: ValidationData.FIRST_NAME },
   { validationData: ValidationData.LAST_NAME },
   { validationData: ValidationData.DATE },
+];
+
+export const AddressInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.STREET },
+  { validationData: ValidationData.CITY },
+  { validationData: ValidationData.POSTAL_CODES },
 ];
 
 export enum DataAttrs {
