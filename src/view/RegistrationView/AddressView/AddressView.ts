@@ -29,12 +29,17 @@ export default abstract class AddressView {
 
   private trackingHandlers: EventCallback[] = [];
 
-  public buildAddressBlockView(titleText: string, ids: string[], checkboxesIds: string[]): HTMLDivElement {
+  public buildAddressBlockView(
+    titleText: string,
+    ids: string[],
+    checkboxesIds: string[],
+    oppositeTitle: string
+  ): HTMLDivElement {
     this.configureTitle(titleText);
     this.configureLabels(ids);
     this.configureInputs();
     this.configureSelect();
-    this.configureCheckboxes(titleText, checkboxesIds);
+    this.configureCheckboxes(oppositeTitle, checkboxesIds);
 
     return this.view;
   }
