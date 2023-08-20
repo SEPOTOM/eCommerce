@@ -16,7 +16,7 @@ export default class Tokens {
 
     // Starting verification that the user is logged in
     Routers.checkCustomerLogin();
-    if (tokens.expires_in) Routers.toHomePage();
+    if (tokens.refresh_token) Routers.toHomePage();
   }
 
   public static async getCustomerTokens(): Promise<ICustomerLoginResponse> {

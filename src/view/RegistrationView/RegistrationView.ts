@@ -8,6 +8,8 @@ import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps, 
 import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
+/* eslint-disable import/no-cycle */
+import Router from '../../components/Router/Router';
 
 const DEFAULT_COUNTRY = 'US';
 const BIRTH_DATE_INPUT_INDEX = 4;
@@ -132,6 +134,7 @@ export default class RegistrationView {
   private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
+    const delay = 1000;
     const { form } = this;
     const formValid = RegistrationView.validateForm(form);
 
@@ -144,6 +147,12 @@ export default class RegistrationView {
       if (response.ok) {
         this.hideErrorBlock();
         form.dataset.registered = 'true';
+
+        // Redirect to Login page
+        // TODO: Need to trigger after show sucess message
+        setTimeout(() => {
+          Router.toLoginPage();
+        }, delay);
       } else {
         form.dataset.registered = 'false';
         this.showErrorBlock(response.message);
