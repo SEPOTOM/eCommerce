@@ -53,18 +53,10 @@ const loginButtonStyles: string[] = [
   'duration-500',
 ];
 
-const cancelButtonStyles: string[] = [
-  'w-full',
-  'm-auto',
-  'bg-orange-600',
-  'h-12',
-  'text-white',
-  'hover:bg-orange-400',
-  'transition-all',
-  'duration-500',
-];
-
 const registrationButtonStyles: string[] = [
+  'flex',
+  'items-center',
+  'justify-center',
   'w-full',
   'm-auto',
   'h-12',
@@ -100,9 +92,12 @@ const passwordInputAttributes: string[][] = [
   ['required', 'true'],
 ];
 
-const okButtonAttributes: string[][] = [['id', 'ok-login']];
+const registrationButtonAttributes: string[][] = [
+    ['href', '/registration'],
+    ['x-on:click', 'route($event)'],
+  ];
 
-const cancelButtonAttributes: string[][] = [['id', 'cancel-login']];
+const okButtonAttributes: string[][] = [['id', 'ok-login']];
 
 const loginErrorAttributes: string[][] = [['id', 'login-error']];
 
@@ -126,7 +121,6 @@ export {
   passwordModeStyles,
   buttonContainerStyles,
   loginButtonStyles,
-  cancelButtonStyles,
   registrationButtonStyles,
   validationErrorStyles,
   loginWindowAttributes,
@@ -134,7 +128,7 @@ export {
   loginInputAttributes,
   passwordInputAttributes,
   okButtonAttributes,
-  cancelButtonAttributes,
   loginErrorAttributes,
   passwordErrorAttributes,
+  registrationButtonAttributes,
 };

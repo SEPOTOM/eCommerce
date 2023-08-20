@@ -4,7 +4,11 @@
   >
     <div class="grid max-w-6xl px-5 mx-auto mb-4 relative md:grid md:grid-cols-2 md:gap-12 md:px-7 md:mb-0">
       <div class="mb-7 pb-3 border-b border-gray-300 md:border-b-0">
-        <a class="inline-block mb-2 text-2xl font-bold tracking-widest text-gray-600 md:mb-4" href="/">
+        <a
+          class="inline-block mb-2 text-2xl font-bold tracking-widest text-gray-600 md:mb-4"
+          href="/"
+          @click="route($event)"
+        >
           True<span class="text-red-600">Car</span>
         </a>
         <div class="text-13 opacity-80 tracking-widest">
@@ -36,10 +40,22 @@
           <template x-if="!isCustomerLogin">
             <div class="grid p-4 md:text-right md:!grid md:pr-0 md:pb-0" x-show="show">
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0 md:border-b-0 lg:pb-0">
-                <a class="text-gray-600 font-medium hover:text-blue-500 duration-300" href="#">Log in</a>
+                <a
+                  class="text-gray-600 font-medium hover:text-blue-500 duration-300"
+                  href="/login"
+                  @click="route($event)"
+                >
+                  Log in</a
+                >
               </div>
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0">
-                <a class="text-gray-600 font-medium hover:text-blue-500 duration-300" href="#">Registration</a>
+                <a
+                  class="text-gray-600 font-medium hover:text-blue-500 duration-300"
+                  href="/registration"
+                  @click="route($event)"
+                >
+                  Registration</a
+                >
               </div>
             </div>
           </template>
@@ -47,10 +63,22 @@
           <template x-if="isCustomerLogin">
             <div class="grid p-4 md:text-right md:!grid md:pr-0 md:pb-0" x-show="show">
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0 md:border-b-0 lg:pb-0">
-                <a class="text-gray-600 font-medium hover:text-blue-500 duration-300" href="#">Profile</a>
+                <a
+                  class="text-gray-600 font-medium hover:text-blue-500 duration-300"
+                  href="/profile"
+                  @click="route($event)"
+                >
+                  Profile</a
+                >
               </div>
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0">
-                <a class="text-red-600 font-medium hover:text-blue-500 duration-300" href="#">Log out</a>
+                <a
+                  class="text-red-600 font-medium hover:text-blue-500 duration-300"
+                  href="/"
+                  @click="($event) => { logout(); route($event); }"
+                >
+                  Log out</a
+                >
               </div>
             </div>
           </template>
@@ -81,6 +109,7 @@
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   x-text="item.text"
                   :href="item.link"
+                  @click="route($event)"
                 ></a>
               </div>
             </template>
@@ -95,6 +124,7 @@
       <a
         class="underline underline-offset-2 transition-colors duration-300 hover:text-blue-300"
         href="https://rs.school/js/"
+        @click="route($event)"
         >RSschool</a
       >
       <span>|</span>

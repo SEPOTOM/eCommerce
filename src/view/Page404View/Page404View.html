@@ -1,10 +1,14 @@
 <section class="flex flex-col justify-center flex-grow mx-auto py-12 px-5 max-w-6xl w-full md:px-7 md:py-28">
-  <div class="grid text-center">
-    <h2 class="flex gap-1 justify-center mb-3 font-semibold text-red-600 text-7xl animate-bounce md:text-9xl">
-      <span>4</span>
-      <span class="text-gray-400">0</span>
-      <span>4</span>
-    </h2>
-    <div class="text-lg tracking-wide opacity-80">Something went wrong, the page was not found.</div>
-  </div>
-</section>
+    <div class="grid text-center">
+      <h2 class="flex gap-1 justify-center mb-3 font-semibold text-red-600 text-7xl animate-bounce md:text-9xl">
+        <span>4</span>
+        <span class="text-gray-400">0</span>
+        <span>4</span>
+      </h2>
+      <div class="text-lg tracking-wide opacity-80">Something went wrong, the page was not found.</div>
+      <a
+      class="max-w-xs px-6 pt-1 pb-2 mt-6 mx-auto bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
+      href="/"
+      @click="route($event)">Back to home page</a>
+    </div>
+  </section>

@@ -17,7 +17,13 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </span>
-      <a class="text-xl font-bold tracking-widest md:text-2xl" href="/"> True<span class="text-red-600">Car</span> </a>
+      <a
+        class="text-xl font-bold tracking-widest md:text-2xl"
+        data-element="header-logo"
+        href="/"
+        @click="route($event)"
+        >True<span class="text-red-600">Car</span>
+      </a>
     </div>
 
     <nav
@@ -36,6 +42,7 @@
             class="relative py-3 border-gray-200 [&+a]:border-t font-medium transition-colors duration-300 hover:text-blue-500 before:absolute before:top-0 before:-right-5 before:bottom-0 before:-left-5 before:-z-10 before:bg-blue-100/50 before:opacity-0 before:transition-colors before:duration-300 hover:before:opacity-100 md:before:hidden md:[&+a]:border-t-0 md:top-0.5 md:pb-2 md:after:absolute md:after:bottom-0 md:after:left-0 md:right-0 md:after:w-0 md:after:border-blue-500 md:hover:after:border-b md:hover:after:w-full md:after:transition-all md:after:duration-300"
             x-text="item.text"
             :href="item.link"
+            @click="route($event)"
           >
           </a>
         </template>
@@ -46,12 +53,14 @@
           <div class="grid gap-3">
             <a
               class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
-              href="#"
+              href="/login"
+              @click="route($event)"
               >Log in</a
             >
             <a
               class="px-3 pt-1 pb-2 border-2 border-red-600 rounded-lg font-medium text-center transition-colors duration-300 hover:bg-red-700 hover:text-white hover:border-red-700"
-              href="#"
+              href="/registration"
+              @click="route($event)"
               >Registration</a
             >
           </div>
@@ -61,12 +70,14 @@
           <div class="grid gap-3">
             <a
               class="px-3 pt-1 pb-2 bg-gray-100 rounded-lg font-medium text-center transition-colors duration-300 hover:bg-gray-200"
-              href="#"
+              href="/profile"
+              @click="route($event)"
               >Profile</a
             >
             <a
               class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
-              href="#"
+              href="/"
+              @click="($event) => { logout(); route($event); }"
               >Log out</a
             >
           </div>
@@ -132,15 +143,33 @@
         >
           <template x-if="!isCustomerLogin">
             <div class="grid py-2 whitespace-nowrap">
-              <a class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4" href="#">Log in</a>
-              <a class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4" href="#">Registration</a>
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/login"
+                @click="route($event)"
+                >Log in</a
+              >
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/registration"
+                @click="route($event)"
+                >Registration</a
+              >
             </div>
           </template>
 
           <template x-if="isCustomerLogin">
             <div class="grid py-2 whitespace-nowrap">
-              <a class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4" href="#">Profile</a>
-              <a class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4 text-red-500" href="#"
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/profile"
+                @click="route($event)"
+                >Profile</a
+              >
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4 text-red-500"
+                href="/"
+                @click="($event) => { logout(); route($event); }"
                 >Log out</a
               >
             </div>
@@ -151,7 +180,8 @@
       <span class="relative">
         <a
           class="flex items-center gap-3 transition-colors duration-300 hover:text-blue-600 md:relative md:hover:text-white md:[&>span+span]:hover:bg-blue-600 md:[&>span+span]:hover:border-blue-600 md:duration-0 md:transition-none"
-          href="#"
+          href="/cart"
+          @click="route($event)"
           data-element="header-cart"
         >
           <span class="md:absolute md:-right-1 md:-bottom-[18px] md:text-[11px] md:whitespace-nowrap md:!text-gray-600">
