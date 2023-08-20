@@ -4,7 +4,7 @@ import DateInputView from './InputView/DateInputView/DateInputView';
 import DynamicInputView from './InputView/DynamicInputView/DynamicInputView';
 import SelectView from './SelectView/SelectView';
 import { InputOptions } from './types';
-import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps } from './data';
+import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps, FormErrorMessages } from './data';
 import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
 import { CustomerCredentials } from '../../types';
@@ -12,6 +12,7 @@ import { CustomerCredentials } from '../../types';
 const DEFAULT_COUNTRY = 'US';
 const BIRTH_DATE_INPUT_INDEX = 4;
 const POSTAL_CODE_INPUT_INDEX = 7;
+const ERROR_DISPLAY_TIME_MS = 3000;
 
 enum InputTypes {
   EMAIL = 'email',
@@ -43,7 +44,11 @@ export default class RegistrationView {
 
   private postalCodeInputObject: DynamicInputView | null = null;
 
+  private errorBlock: HTMLDivElement | null = null;
+
   private inputObjects: InputView[] = [];
+
+  private errorTimeoutId = 0;
 
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
@@ -51,6 +56,7 @@ export default class RegistrationView {
     this.configureSelect(rows);
     this.configureInputs(rows);
     this.configureButton();
+    this.configureErrorBlock();
     this.configureForm();
 
     return this.form;
@@ -113,6 +119,10 @@ export default class RegistrationView {
     this.form.addEventListener('click', this.validateInputs);
   }
 
+  private configureErrorBlock(): void {
+    this.errorBlock = this.form.querySelector('[data-error-reg]');
+  }
+
   private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
@@ -120,16 +130,24 @@ export default class RegistrationView {
     const formValid = RegistrationView.validateForm(form);
 
     if (formValid) {
-      const credentials = this.collectCredentials();
-      const ok = await new Registration().register(credentials);
+      this.hideErrorBlock();
 
-      if (ok) {
+      const credentials = this.collectCredentials();
+      const response = await new Registration().register(credentials);
+
+      if (response.ok) {
+        this.hideErrorBlock();
         form.dataset.registered = 'true';
       } else {
         form.dataset.registered = 'false';
+        this.showErrorBlock(response.message);
       }
     } else {
-      console.error('Form is invalid!');
+      clearTimeout(this.errorTimeoutId);
+
+      this.showErrorBlock(FormErrorMessages.INVALID);
+
+      this.errorTimeoutId = window.setTimeout(this.hideErrorBlock.bind(this), ERROR_DISPLAY_TIME_MS);
     }
   }
 
@@ -192,5 +210,18 @@ export default class RegistrationView {
     });
 
     return valid;
+  }
+
+  private showErrorBlock(message: string): void {
+    if (this.errorBlock) {
+      this.errorBlock.textContent = message;
+      this.errorBlock.hidden = false;
+    }
+  }
+
+  private hideErrorBlock(): void {
+    if (this.errorBlock) {
+      this.errorBlock.hidden = true;
+    }
   }
 }
