@@ -11,7 +11,7 @@ export default class InputView {
 
   protected validationData: PatternAndMessage[] | null = null;
 
-  public buildInputView({ validationData, id, type }: InputOptions): HTMLDivElement {
+  public buildInputView({ validationData, id, type, dataAttr }: InputOptions): HTMLDivElement {
     this.input.addEventListener('input', this.validateInput.bind(this));
 
     this.validationData = validationData;
@@ -22,6 +22,10 @@ export default class InputView {
 
     if (type) {
       this.input.type = type;
+    }
+
+    if (dataAttr) {
+      this.input.dataset[dataAttr.name] = dataAttr.value;
     }
 
     return this.view;
