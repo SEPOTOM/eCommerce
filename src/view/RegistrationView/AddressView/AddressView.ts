@@ -29,6 +29,8 @@ export default abstract class AddressView {
 
   private trackingHandlers: EventCallback[] = [];
 
+  private selectHandler: EventCallback | null = null;
+
   public buildAddressBlockView(
     titleText: string,
     ids: string[],
@@ -63,10 +65,7 @@ export default abstract class AddressView {
     return inputs;
   }
 
-  public trackTextFields(
-    textFields: NodeListOf<HTMLInputElement> | HTMLInputElement[],
-    select: HTMLSelectElement
-  ): void {
+  public trackTextFields(textFields: NodeListOf<HTMLInputElement> | HTMLInputElement[]): void {
     const currentTextFields = this.getTextFields();
 
     textFields.forEach((textField, index) => {
@@ -77,8 +76,16 @@ export default abstract class AddressView {
       currentTextField.addEventListener('input', handler);
 
       this.syncTextFields(textField, currentTextField);
-      this.syncSelects(select);
     });
+  }
+
+  public trackSelect(select: HTMLSelectElement): void {
+    const localSelect = select;
+    localSelect.value = this.select?.value || '';
+
+    this.selectHandler = this.syncSelect.bind(this, select);
+
+    this.select?.addEventListener('change', this.selectHandler);
   }
 
   public untrackTextFields(): void {
@@ -91,6 +98,12 @@ export default abstract class AddressView {
     });
 
     this.trackingHandlers = [];
+  }
+
+  public untrackSelect(): void {
+    if (this.selectHandler) {
+      this.select?.removeEventListener('change', this.selectHandler);
+    }
   }
 
   public disable(): void {
@@ -153,7 +166,7 @@ export default abstract class AddressView {
     localTextField.dispatchEvent(new InputEvent('input'));
   }
 
-  private syncSelects(select: HTMLSelectElement): void {
+  private syncSelect(select: HTMLSelectElement): void {
     const localSelect = select;
     const currentSelect = this.select;
 

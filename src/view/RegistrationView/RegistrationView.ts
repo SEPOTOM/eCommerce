@@ -49,9 +49,11 @@ export default class RegistrationView {
 
         this.shippingAddressObject.disable();
 
-        this.billingAddressObject.trackTextFields(shippingTextFields, shippingSelect);
+        this.billingAddressObject.trackTextFields(shippingTextFields);
+        this.billingAddressObject.trackSelect(shippingSelect);
       } else {
         this.billingAddressObject.untrackTextFields();
+        this.billingAddressObject.untrackSelect();
 
         this.shippingAddressObject.enable();
       }
@@ -65,9 +67,11 @@ export default class RegistrationView {
 
         this.billingAddressObject.disable();
 
-        this.shippingAddressObject.trackTextFields(billingTextFields, billingSelect);
+        this.shippingAddressObject.trackTextFields(billingTextFields);
+        this.shippingAddressObject.trackSelect(billingSelect);
       } else {
         this.shippingAddressObject.untrackTextFields();
+        this.shippingAddressObject.untrackSelect();
 
         this.billingAddressObject.enable();
       }
