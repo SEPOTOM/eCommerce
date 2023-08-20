@@ -6,6 +6,8 @@ export interface CustomerCredentials {
   addresses: Address[];
   shippingAddresses: number[];
   billingAddresses: number[];
+  defaultShippingAddress?: number;
+  defaultBillingAddress?: number;
 }
 
 export interface Address {

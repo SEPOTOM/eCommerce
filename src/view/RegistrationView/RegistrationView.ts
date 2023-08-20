@@ -141,6 +141,8 @@ export default class RegistrationView {
     const userInfoCredentials = this.userInfoObject.collectCredentials();
     const billingAddressCredentials = this.billingAddressObject.collectCredentials();
     const shippingAddressCredentials = this.shippingAddressObject.collectCredentials();
+    const useBillingAsDefault = this.billingAddressObject.getDefaultCheckbox().checked;
+    const useShippingAsDefault = this.shippingAddressObject.getDefaultCheckbox().checked;
 
     const credentials: CustomerCredentials = {
       ...userInfoCredentials,
@@ -154,10 +156,18 @@ export default class RegistrationView {
     });
     credentials.billingAddresses.push(credentials.addresses.length - 1);
 
+    if (useBillingAsDefault) {
+      credentials.defaultBillingAddress = credentials.addresses.length - 1;
+    }
+
     credentials.addresses.push({
       ...shippingAddressCredentials,
     });
     credentials.shippingAddresses.push(credentials.addresses.length - 1);
+
+    if (useShippingAsDefault) {
+      credentials.defaultShippingAddress = credentials.addresses.length - 1;
+    }
 
     return credentials;
   }
