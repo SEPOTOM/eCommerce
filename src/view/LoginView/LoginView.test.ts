@@ -13,3 +13,12 @@ describe('Class elements existence check', () => {
     expect(LoginView.addStyles).toBeDefined();
   });
 });
+
+describe('addStyles and addAttributes method should work properly', () => {
+  it('Method addStyles should assign styles', () => {
+    const elem = document.createElement('div');
+    const className = 'testclass';
+    LoginView.addStyles(elem, [className]);
+    expect(elem.classList.contains(className)).toBeTruthy();
+  });
+});
