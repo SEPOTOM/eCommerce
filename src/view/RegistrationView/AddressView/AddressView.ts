@@ -35,12 +35,13 @@ export default abstract class AddressView {
     titleText: string,
     ids: string[],
     checkboxesIds: string[],
-    oppositeTitle: string
+    oppositeTitle: string,
+    selectId: string,
   ): HTMLDivElement {
     this.configureTitle(titleText);
     this.configureLabels(ids);
     this.configureInputs();
-    this.configureSelect();
+    this.configureSelect(selectId);
     this.configureCheckboxes(oppositeTitle, checkboxesIds);
 
     return this.view;
@@ -233,10 +234,10 @@ export default abstract class AddressView {
     });
   }
 
-  private configureSelect(): void {
+  private configureSelect(id: string): void {
     const countriesRow = this.view.querySelector(`[${DataAttrs.COUNTRIES_ROW}]`);
     const label = countriesRow?.querySelector(`[${DataAttrs.LABEL}]`);
-    const id = label?.getAttribute('for') || '';
+  label?.setAttribute('for', id);
 
     this.select = new SelectView().buildSelectView(Countries, id);
 
