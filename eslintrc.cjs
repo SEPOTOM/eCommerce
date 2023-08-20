@@ -42,7 +42,7 @@ module.exports = {
         'always',
       ],
   
-      'max-lines-per-function': ['warn', 40],
+      'max-lines-per-function': ['warn', 60],
       'prettier/prettier': 'error',
       'class-methods-use-this': 'off',
       'import/no-extraneous-dependencies': ['error', {'devDependencies': true}],
