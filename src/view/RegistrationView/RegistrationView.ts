@@ -151,7 +151,7 @@ export default class RegistrationView {
         // Redirect to Login page
         // TODO: Need to trigger after show sucess message
         setTimeout(() => {
-          Router.toLoginPage();
+          Router.toHomePage();
         }, delay);
       } else {
         form.dataset.registered = 'false';

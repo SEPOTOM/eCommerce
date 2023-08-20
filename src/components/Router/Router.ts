@@ -18,8 +18,4 @@ export default class Router {
   public static toHomePage(): void {
     (document.querySelector('[data-element="header-logo"]') as HTMLElement).click();
   }
-
-  public static toLoginPage(): void {
-    (document.querySelector('[data-element="header-to-login-page"]') as HTMLElement).click();
-  }
 }
