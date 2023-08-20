@@ -8,14 +8,13 @@ export default class Router {
     Alpine.data('Router', RouterAlpine);
   }
 
-  public static checkCustomerLogin(): void {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const component = Alpine.$data(document.body);
-    component.checkCustomerLogin();
+  public static isCustomerLogin(): void {
+    // TODO: It is necessary to leave such a decision for consideration in the future.
+    // Alpine.$data(document.body).checkCustomerLogin();
+    RouterAlpine().checkCustomerLogin();
   }
 
   public static toHomePage(): void {
-    (document.querySelector('[data-element="header-logo"]') as HTMLElement).click();
+    (document.querySelector('[data-element="header-logo"]') as HTMLElement)?.click();
   }
 }

@@ -64,7 +64,7 @@ export default class RegistrationView {
     return this.form;
   }
 
-  public draw(): void {
+  public static draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
     main.append(new RegistrationView().buildRegistrationView());

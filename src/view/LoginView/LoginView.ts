@@ -59,7 +59,7 @@ export default class LoginView {
     return LoginView.loginWindow;
   }
 
-  public draw(): void {
+  public static draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
     main.append(LoginView.showLoginView());
