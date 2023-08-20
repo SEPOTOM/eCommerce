@@ -677,16 +677,16 @@ video {
   margin-top: 0.125rem;
 }
 
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
 }
 
 .block {
@@ -1021,18 +1021,6 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-main-banner-img {
-  background-image: url('https://cdn03.carsforsale.com/content/images/homepage/hero-2000-may-2021.jpg');
-}
-
-.bg-main-banner-img2 {
-  background-image: url('https://67cdn.co.uk/131/6/167180041463a5a65e7c881_adobestock-437903717.jpeg?width=414&height=414&crop=auto');
-}
-
-.bg-main-banner-img3 {
-  background-image: url('https://media.product.which.co.uk/prod/images/900_450/gm-b49a2cfe-b8ab-4424-988e-c711af8461c7-how-to-sell-a-car.jpg');
-}
-
 .bg-cover {
   background-size: cover;
 }
@@ -1296,6 +1284,10 @@ video {
   opacity: 0.8;
 }
 
+.opacity-10 {
+  opacity: 0.1;
+}
+
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1487,7 +1479,7 @@ video {
   opacity: 1;
 }
 
-.group\/reg[data-registered='true'] .group-data-\[registered\=true\]\/reg\:block {
+.group\/reg[data-registered=true] .group-data-\[registered\=true\]\/reg\:block {
   display: block;
 }
 
@@ -1781,11 +1773,6 @@ video {
   .md\:before\:hidden::before {
     content: var(--tw-content);
     display: none;
-  }
-
-  .md\:before\:bg-footer-img::before {
-    content: var(--tw-content);
-    background-image: url('https://cdn03.carsforsale.com/content/images/homepage/alert.jpg');
   }
 
   .md\:before\:bg-cover::before {
