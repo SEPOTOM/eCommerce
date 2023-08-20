@@ -44,7 +44,7 @@
                 <a
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   href="/login"
-                  @click="route($event)"
+                  @click="() => { show = false; route($event); }"
                 >
                   Log in</a
                 >
@@ -53,7 +53,7 @@
                 <a
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   href="/registration"
-                  @click="route($event)"
+                  @click="() => { show = false; route($event); }"
                 >
                   Registration</a
                 >
@@ -67,7 +67,7 @@
                 <a
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   href="/profile"
-                  @click="route($event)"
+                  @click="() => { show = false; route($event); }"
                 >
                   Profile</a
                 >
@@ -76,7 +76,7 @@
                 <a
                   class="text-red-600 font-medium hover:text-blue-500 duration-300"
                   href="/"
-                  @click="($event) => { logout(); route($event); }"
+                  @click="($event) => { show = false; logout(); route($event); }"
                 >
                   Log out</a
                 >
@@ -110,7 +110,7 @@
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   x-text="item.text"
                   :href="item.link"
-                  @click="route($event)"
+                  @click="() => { show = false; route($event); }"
                 ></a>
               </div>
             </template>
