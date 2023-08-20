@@ -1,3 +1,10 @@
+export interface CustomerCredentials {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
 interface IClientLoginResponse {
   access_token: string;
   expires_in: number;
