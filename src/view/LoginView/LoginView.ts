@@ -273,6 +273,9 @@ export default class LoginView {
     if (password.value.length < PASSWORD_MIN_LENGTH) {
       error = 'Too short: at least 8 characters';
     }
+    if (password.value.length === 0) {
+      error = 'Password field required';
+    }
     return error;
   }
 
@@ -290,6 +293,9 @@ export default class LoginView {
     }
     if (!loginArray.includes('@')) {
       error = 'Missed "@" symbol';
+    }
+    if (loginArray.length === 0) {
+      error = 'Login field required';
     }
     return error;
   }
