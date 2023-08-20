@@ -4,7 +4,7 @@ import { Address } from '../../../../types';
 const TITLE = 'Billing Address';
 const OPPOSITE_TITLE = 'Shipping Address';
 const INPUTS_IDS = ['bill-street', 'bill-city', 'bill-postal-code'];
-const CHECKBOXES_IDES = ['bill-use-as'];
+const CHECKBOXES_IDES = ['bill-use-as', 'bill-default-address'];
 const SELECT_ID = 'bill-countries';
 
 export default class BillingAddressView extends AddressView {
