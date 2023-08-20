@@ -46,6 +46,8 @@ export default () => ({
   },
 
   checkCustomerLogin(): void {
-    this.isCustomerLogin = !!localStorage.getItem('refresh_token');
+    Tokens.getCustomerTokens().then((data) => {
+        this.isCustomerLogin = data?.access_token ? true : false
+    })
   },
 });
