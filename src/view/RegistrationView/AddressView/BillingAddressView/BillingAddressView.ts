@@ -10,7 +10,7 @@ export default class BillingAddressView extends AddressView {
     return super.buildAddressBlockView(TITLE, INPUTS_IDS, CHECKBOXES_IDES);
   }
 
-  public collectCredentials(): Omit<Address, 'country'> {
+  public collectCredentials(): Address {
     return super.collectCredentials(INPUTS_IDS);
   }
 }

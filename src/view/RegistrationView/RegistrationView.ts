@@ -10,8 +10,6 @@ import UserInfoView from './UserInfoView/UserInfoView';
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
-  private select: HTMLSelectElement | null = null;
-
   private billingAddressObject = new BillingAddressView();
 
   private shippingAddressObject = new ShippingAddressView();
@@ -21,7 +19,6 @@ export default class RegistrationView {
   public buildRegistrationView(): HTMLFormElement {
     this.configureAddresses();
     this.configureUserInfo();
-    this.configureSelect();
     this.configureButton();
     this.configureCheckboxes();
     this.configureForm();
@@ -38,11 +35,6 @@ export default class RegistrationView {
     this.form.prepend(this.userInfoObject.buildView());
   }
 
-  private configureSelect(): void {
-    this.select = this.userInfoObject.getSelect();
-    this.select?.addEventListener('change', this.changePostalCodeInputsValidation.bind(this));
-  }
-
   private configureButton(): void {
     const button = this.form.querySelector(`[${DataAttrs.BUTTON}]`);
     button?.addEventListener('click', this.sendForm.bind(this));
@@ -53,10 +45,11 @@ export default class RegistrationView {
     billingCheckbox.addEventListener('change', () => {
       if (billingCheckbox.checked) {
         const shippingTextFields = this.shippingAddressObject.getTextFields();
+        const shippingSelect = this.shippingAddressObject.getSelect();
 
         this.shippingAddressObject.disable();
 
-        this.billingAddressObject.trackTextFields(shippingTextFields);
+        this.billingAddressObject.trackTextFields(shippingTextFields, shippingSelect);
       } else {
         this.billingAddressObject.untrackTextFields();
 
@@ -68,10 +61,11 @@ export default class RegistrationView {
     shippingCheckbox.addEventListener('change', () => {
       if (shippingCheckbox.checked) {
         const billingTextFields = this.billingAddressObject.getTextFields();
+        const billingSelect = this.billingAddressObject.getSelect();
 
         this.billingAddressObject.disable();
 
-        this.shippingAddressObject.trackTextFields(billingTextFields);
+        this.shippingAddressObject.trackTextFields(billingTextFields, billingSelect);
       } else {
         this.shippingAddressObject.untrackTextFields();
 
@@ -105,17 +99,10 @@ export default class RegistrationView {
     }
   }
 
-  private changePostalCodeInputsValidation(): void {
-    const countyCode = `${this.select?.value}`;
-    this.billingAddressObject.changePostalCodeInputValidation(countyCode);
-    this.shippingAddressObject.changePostalCodeInputValidation(countyCode);
-  }
-
   private collectCredentials(): CustomerCredentials {
     const userInfoCredentials = this.userInfoObject.collectCredentials();
     const billingAddressCredentials = this.billingAddressObject.collectCredentials();
     const shippingAddressCredentials = this.shippingAddressObject.collectCredentials();
-    const countryCode = this.userInfoObject.getSelect()?.value;
 
     const credentials: CustomerCredentials = {
       ...userInfoCredentials,
@@ -126,13 +113,11 @@ export default class RegistrationView {
 
     credentials.addresses.push({
       ...billingAddressCredentials,
-      country: countryCode || '',
     });
     credentials.billingAddresses.push(credentials.addresses.length - 1);
 
     credentials.addresses.push({
       ...shippingAddressCredentials,
-      country: countryCode || '',
     });
     credentials.shippingAddresses.push(credentials.addresses.length - 1);
 

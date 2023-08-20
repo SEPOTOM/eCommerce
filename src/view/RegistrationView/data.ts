@@ -113,4 +113,5 @@ export enum DataAttrs {
   ROW = 'data-row-reg',
   LABEL = 'data-label-reg',
   BUTTON = 'data-button-reg',
+  COUNTRIES_ROW = 'data-countries-row-reg',
 }

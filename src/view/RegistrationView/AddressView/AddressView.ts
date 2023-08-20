@@ -2,8 +2,16 @@ import Converter from '../../../components/Converter/Converter';
 import HTML from './AddressView.html';
 import InputView from '../InputView/InputView';
 import DynamicInputView from '../InputView/DynamicInputView/DynamicInputView';
+import SelectView from '../SelectView/SelectView';
 import { EventCallback, Address } from '../../../types';
-import { PostalCodeRegExps, PostalCodeErrorMessages, DEFAULT_COUNTRY, AddressInputsOptions, DataAttrs } from '../data';
+import {
+  PostalCodeRegExps,
+  PostalCodeErrorMessages,
+  DEFAULT_COUNTRY,
+  AddressInputsOptions,
+  DataAttrs,
+  Countries,
+} from '../data';
 
 const POSTAL_CODE_INPUT_INDEX = 2;
 const USE_AS_CHECKBOX_INDEX = 0;
@@ -12,6 +20,8 @@ export default abstract class AddressView {
   private view: HTMLDivElement = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
   private useAsCheckbox: HTMLInputElement | null = null;
+
+  private select: HTMLSelectElement | null = null;
 
   private postalCodeInputObject: DynamicInputView | null = null;
 
@@ -23,6 +33,7 @@ export default abstract class AddressView {
     this.configureTitle(titleText);
     this.configureLabels(ids);
     this.configureInputs();
+    this.configureSelect();
     this.configureCheckboxes(titleText, checkboxesIds);
 
     return this.view;
@@ -34,15 +45,12 @@ export default abstract class AddressView {
     });
   }
 
-  public changePostalCodeInputValidation(countyCode: string): void {
-    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
-    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
-
-    this.postalCodeInputObject?.validateInput();
-  }
-
   public getUseAsCheckbox(): HTMLInputElement {
     return this.useAsCheckbox || document.createElement('input');
+  }
+
+  public getSelect(): HTMLSelectElement {
+    return this.select || document.createElement('select');
   }
 
   public getTextFields(): NodeListOf<HTMLInputElement> {
@@ -50,7 +58,10 @@ export default abstract class AddressView {
     return inputs;
   }
 
-  public trackTextFields(textFields: NodeListOf<HTMLInputElement> | HTMLInputElement[]): void {
+  public trackTextFields(
+    textFields: NodeListOf<HTMLInputElement> | HTMLInputElement[],
+    select: HTMLSelectElement
+  ): void {
     const currentTextFields = this.getTextFields();
 
     textFields.forEach((textField, index) => {
@@ -60,7 +71,8 @@ export default abstract class AddressView {
       const currentTextField = currentTextFields[index];
       currentTextField.addEventListener('input', handler);
 
-      this.syncValues(textField, currentTextField);
+      this.syncTextFields(textField, currentTextField);
+      this.syncSelects(select);
     });
   }
 
@@ -83,6 +95,10 @@ export default abstract class AddressView {
 
       localInput.disabled = true;
     });
+
+    if (this.select) {
+      this.select.disabled = true;
+    }
   }
 
   public enable(): void {
@@ -92,13 +108,18 @@ export default abstract class AddressView {
 
       localInput.disabled = false;
     });
+
+    if (this.select) {
+      this.select.disabled = false;
+    }
   }
 
-  public collectCredentials(ids: string[]): Omit<Address, 'country'> {
-    const credentials: Omit<Address, 'country'> = {
+  public collectCredentials(ids: string[]): Address {
+    const credentials: Address = {
       streetName: '',
       postalCode: '',
       city: '',
+      country: this.select?.value || '',
     };
 
     const textFields = this.getTextFields();
@@ -120,11 +141,19 @@ export default abstract class AddressView {
     return credentials;
   }
 
-  private syncValues(textField: HTMLInputElement, currentTextField: HTMLInputElement): void {
+  private syncTextFields(textField: HTMLInputElement, currentTextField: HTMLInputElement): void {
     const localTextField = textField;
 
     localTextField.value = currentTextField.value;
     localTextField.dispatchEvent(new InputEvent('input'));
+  }
+
+  private syncSelects(select: HTMLSelectElement): void {
+    const localSelect = select;
+    const currentSelect = this.select;
+
+    localSelect.value = currentSelect?.value || '';
+    localSelect.dispatchEvent(new Event('change'));
   }
 
   private trackTextField(textField: HTMLInputElement, e: Event): void {
@@ -186,6 +215,18 @@ export default abstract class AddressView {
     });
   }
 
+  private configureSelect(): void {
+    const countriesRow = this.view.querySelector(`[${DataAttrs.COUNTRIES_ROW}]`);
+    const label = countriesRow?.querySelector(`[${DataAttrs.LABEL}]`);
+    const id = label?.getAttribute('for') || '';
+
+    this.select = new SelectView().buildSelectView(Countries, id);
+
+    this.select?.addEventListener('change', this.changePostalCodeInputValidation.bind(this));
+
+    countriesRow?.append(this.select);
+  }
+
   private configureCheckboxes(titleText: string, checkboxesIds: string[]): void {
     const checkboxes: NodeListOf<HTMLInputElement> = this.view.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox, index) => {
@@ -205,5 +246,14 @@ export default abstract class AddressView {
         this.useAsCheckbox = localCheckbox;
       }
     });
+  }
+
+  private changePostalCodeInputValidation(): void {
+    const countryCode = this.select?.value || '';
+
+    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countryCode]);
+    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countryCode]);
+
+    this.postalCodeInputObject?.validateInput();
   }
 }
