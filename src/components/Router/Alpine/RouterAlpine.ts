@@ -1,6 +1,7 @@
+/* eslint-disable import/no-cycle */
 import routers from '../../../data/routers';
 import Tokens from '../../Tokens/Tokens';
-import Router from './../Router';
+import Router from '../Router';
 
 export default () => ({
   isCustomerLogin: false,
@@ -36,11 +37,11 @@ export default () => ({
 
     // Added a redirect check if the user is already logged in.
     // TODO: In the future, there will be a redirect to the "Profile" page
-    if(this.isCustomerLogin && (path === '/login' || path === '/registration')) {
-        Router.toHomePage();
+    if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
+      Router.toHomePage();
     } else {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        routers[path] ? routers[path]() : routers['404']();
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      routers[path] ? routers[path]() : routers['404']();
     }
   },
 

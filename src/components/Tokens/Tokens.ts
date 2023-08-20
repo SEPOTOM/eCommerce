@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import Routers from '../Router/Router';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, TokenPayload } from '../../types';

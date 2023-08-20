@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import Alpine from 'alpinejs';
 import RouterAlpine from './Alpine/RouterAlpine';
 

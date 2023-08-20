@@ -4,7 +4,7 @@ import FooterViewAlpine from './Alpine/FooterViewAlpine';
 import FooterViewHTML from './FooterView.html';
 
 // Import images to Home page
-import imgFooterBackground from './../../assets/footer-background.jpg';
+import imgFooterBackground from '../../assets/footer-background.jpg';
 
 export default class FooterView {
   public draw(): void {
