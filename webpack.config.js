@@ -25,6 +25,9 @@ export default {
             {
                 test: /\.(jpe?g|png|gif|svg)$/i, 
                 loader: 'file-loader',
+                options: {
+                  name: 'assets/[name].[ext]'
+                }
             },
             {
                 test: /\.ts?$/,
