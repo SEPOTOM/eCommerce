@@ -86,3 +86,7 @@ export const PostalCodeErrorMessages: Record<string, string> = {
   US: 'Incorrect format (e.g., 90210)',
   UK: 'Incorrect format (e.g., SW1 2AA)',
 };
+
+export enum FormErrorMessages {
+  INVALID = 'Form is invalid!',
+}

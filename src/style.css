@@ -1021,6 +1021,23 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-red-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+}
+
+.bg-main-banner-img {
+  background-image: url('https://cdn03.carsforsale.com/content/images/homepage/hero-2000-may-2021.jpg');
+}
+
+.bg-main-banner-img2 {
+  background-image: url('https://67cdn.co.uk/131/6/167180041463a5a65e7c881_adobestock-437903717.jpeg?width=414&height=414&crop=auto');
+}
+
+.bg-main-banner-img3 {
+  background-image: url('https://media.product.which.co.uk/prod/images/900_450/gm-b49a2cfe-b8ab-4424-988e-c711af8461c7-how-to-sell-a-car.jpg');
+}
+
 .bg-cover {
   background-size: cover;
 }
