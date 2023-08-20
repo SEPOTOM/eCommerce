@@ -37,7 +37,7 @@ export default () => ({
     // TODO: In the future, there will be a redirect to the "Profile" page
     if(this.isCustomerLogin && (path === '/login' || path === '/registration')) {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        routers['404']();
+        routers['/']();
     } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         routers[path] ? routers[path]() : routers['404']();
