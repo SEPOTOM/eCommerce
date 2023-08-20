@@ -33,21 +33,25 @@ export default () => ({
 
   handleLocation(): void {
     const path: string = window.location.pathname;
-    this.checkCustomerLogin();
+    // this.checkCustomerLogin();
 
     // Added a redirect check if the user is already logged in.
     // TODO: In the future, there will be a redirect to the "Profile" page
-    if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
-      Router.toHomePage();
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      routers[path] ? routers[path]() : routers['404']();
-    }
+    Tokens.getCustomerTokens().then((data) => {
+      this.isCustomerLogin = !!data?.access_token;
+
+      if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
+        Router.toHomePage();
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        routers[path] ? routers[path]() : routers['404']();
+      }
+    });
   },
 
   checkCustomerLogin(): void {
     Tokens.getCustomerTokens().then((data) => {
-        this.isCustomerLogin = data?.access_token ? true : false
-    })
+      this.isCustomerLogin = !!data?.access_token;
+    });
   },
 });
