@@ -15,6 +15,36 @@ export interface Address {
   streetName: string;
   postalCode: string;
   city: string;
+  id?: string;
+}
+
+export interface CustomerResponse {
+  customer: {
+    addresses: Address[];
+    authenticationMode: string;
+    billingAddressIds: string[];
+    createdAt: string;
+    createdBy: {
+      clientId: string;
+      isPlatformClient: boolean;
+    };
+    email: string;
+    firstName: string;
+    id: string;
+    isEmailVerified: boolean;
+    lastMessageSequenceNumber: number;
+    lastModifiedAt: string;
+    lastModifiedBy: {
+      clientId: string;
+      isPlatformClient: boolean;
+    };
+    lastName: string;
+    password: string;
+    shippingAddressIds: string[];
+    stores: [];
+    version: number;
+    versionModifiedAt: string;
+  };
 }
 
 export interface RegErrorResponse {
@@ -33,6 +63,15 @@ export interface RegError {
 export interface ResponseInfo {
   ok: boolean;
   message: string;
+}
+
+export interface AlpineRouter {
+  isCustomerLogin: boolean;
+  init(): void;
+  route(event: Event): void;
+  logout(): void;
+  handleLocation(): void;
+  checkCustomerLogin(): void;
 }
 
 interface IClientLoginResponse {
