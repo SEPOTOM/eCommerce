@@ -1,13 +1,12 @@
 import Converter from '../../components/Converter/Converter';
 import HTML from './RegistrationView.html';
-import Registration from '../../api/Registration/Registration';
 import { FormErrorMessages, DataAttrs } from './data';
 import { CustomerCredentials } from '../../types';
 import BillingAddressView from './AddressView/BillingAddressView/BillingAddressView';
 import ShippingAddressView from './AddressView/ShippingAddressView/ShippingAddressView';
 import UserInfoView from './UserInfoView/UserInfoView';
 /* eslint-disable import/no-cycle */
-import Router from '../../components/Router/Router';
+import Registration from '../../api/Registration/Registration';
 
 const ERROR_DISPLAY_TIME_MS = 3000;
 
@@ -112,8 +111,10 @@ export default class RegistrationView {
     if (formValid) {
       this.hideErrorBlock();
 
+      const regObject = new Registration();
+
       const credentials = this.collectCredentials();
-      const response = await new Registration().register(credentials);
+      const response = await regObject.register(credentials);
 
       if (response.ok) {
         this.hideErrorBlock();
@@ -121,8 +122,8 @@ export default class RegistrationView {
 
         // Redirect to Login page
         // TODO: Need to trigger after show sucess message
-        setTimeout(() => {
-          Router.toHomePage();
+        setTimeout(async () => {
+          await regObject.login(credentials.email, credentials.password);
         }, delay);
       } else {
         form.dataset.registered = 'false';
