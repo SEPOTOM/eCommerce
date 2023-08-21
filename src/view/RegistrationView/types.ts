@@ -8,4 +8,11 @@ export interface InputOptions {
   };
 }
 
+export interface UserInfoCredentials {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
 export type PatternAndMessage = [RegExp, string];
