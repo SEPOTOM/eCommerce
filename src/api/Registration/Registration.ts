@@ -8,6 +8,8 @@ import {
 } from '../APIClients/JSNinjas-custom';
 import { CustomerCredentials, ResponseInfo, RegErrorResponse } from '../../types';
 import Authorization from '../Authorization/Authorization';
+/* eslint-disable import/no-cycle */
+import Tokens from '../../components/Tokens/Tokens';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please check your network connection or try again later.',
@@ -58,6 +60,16 @@ export default class Registration {
     }
 
     return result;
+  }
+
+  public async login(login: string, password: string): Promise<void> {
+    const loginResponse = await Authorization.loginBasicAuth(login, password);
+
+    if ('message' in loginResponse) {
+      return;
+    }
+
+    Tokens.setCustomerTokens(loginResponse);
   }
 
   private async getBearerToken(): Promise<string> {
