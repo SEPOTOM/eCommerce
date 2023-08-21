@@ -3,6 +3,18 @@ export interface CustomerCredentials {
   firstName: string;
   lastName: string;
   password: string;
+  addresses: Address[];
+  shippingAddresses: number[];
+  billingAddresses: number[];
+  defaultShippingAddress?: number;
+  defaultBillingAddress?: number;
+}
+
+export interface Address {
+  country: string;
+  streetName: string;
+  postalCode: string;
+  city: string;
 }
 
 export interface RegErrorResponse {
@@ -59,3 +71,5 @@ enum TokenPayload {
 }
 
 export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload };
+
+export type EventCallback = (e: Event) => void;

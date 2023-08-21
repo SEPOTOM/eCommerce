@@ -1,4 +1,4 @@
-import { PatternAndMessage } from './types';
+import { PatternAndMessage, InputOptions } from './types';
 
 const ErrorMessages = {
   EMAIL: 'Incorrect format (e.g., user@example.com)',
@@ -30,6 +30,13 @@ const RegExps = {
   DOMAIN: /@[^\s@]+\.[^\s@]+/,
   ONE_SYMBOL: /.+/,
 };
+
+enum InputTypes {
+  EMAIL = 'email',
+  PASSWORD = 'password',
+}
+
+export const DEFAULT_COUNTRY = 'US';
 
 export const Countries = {
   US: 'The United States',
@@ -86,6 +93,29 @@ export const PostalCodeErrorMessages: Record<string, string> = {
   US: 'Incorrect format (e.g., 90210)',
   UK: 'Incorrect format (e.g., SW1 2AA)',
 };
+
+export const UserInfoInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.EMAIL },
+  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
+  { validationData: ValidationData.FIRST_NAME },
+  { validationData: ValidationData.LAST_NAME },
+  { validationData: ValidationData.DATE },
+];
+
+export const AddressInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.STREET },
+  { validationData: ValidationData.CITY },
+  { validationData: ValidationData.POSTAL_CODES },
+];
+
+export enum DataAttrs {
+  TITLE = 'data-title-reg',
+  ROW = 'data-row-reg',
+  LABEL = 'data-label-reg',
+  BUTTON = 'data-button-reg',
+  COUNTRIES_ROW = 'data-countries-row-reg',
+  DEFAULT_ADDRESS = 'data-default-address-reg',
+}
 
 export enum FormErrorMessages {
   INVALID = 'Form is invalid!',
