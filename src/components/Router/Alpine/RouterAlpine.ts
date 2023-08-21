@@ -2,9 +2,9 @@
 import routers from '../../../data/routers';
 import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
+import { AlpineRouter } from '../../../types';
 
-/* eslint-disable max-lines-per-function */
-export default () => ({
+const RouterAlpine: AlpineRouter = {
   isCustomerLogin: false,
 
   init(): void {
@@ -55,4 +55,7 @@ export default () => ({
       this.isCustomerLogin = !!data?.access_token;
     });
   },
-});
+};
+
+/* eslint-disable max-lines-per-function */
+export default () => (RouterAlpine);

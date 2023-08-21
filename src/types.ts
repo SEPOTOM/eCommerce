@@ -65,6 +65,15 @@ export interface ResponseInfo {
   message: string;
 }
 
+export interface AlpineRouter {
+  isCustomerLogin: boolean;
+  init(): void;
+  route(event: Event): void;
+  logout(): void;
+  handleLocation(): void;
+  checkCustomerLogin(): void;
+}
+
 interface IClientLoginResponse {
   access_token: string;
   expires_in: number;
