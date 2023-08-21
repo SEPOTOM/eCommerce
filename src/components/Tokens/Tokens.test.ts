@@ -5,23 +5,18 @@ describe('Class elements existence check', () => {
     expect(Tokens).toBeDefined();
   });
 
-  it('Method setCustomerTokens should be defined', () => {
+  it('-- сlass "Tokens", check methods existing', () => {
     expect(Tokens.setCustomerTokens).toBeDefined();
-  });
-
-  it('Method getCustomerTokens should be defined', () => {
     expect(Tokens.getCustomerTokens).toBeDefined();
-  });
-
-  it('Method deleteCustomerTokens should be defined', () => {
     expect(Tokens.deleteCustomerTokens).toBeDefined();
   });
 });
 
+const testString = 'Jest_test';
+const testNumber = 911;
+
 describe('Verify that methods work as expected', () => {
   it('Method setCustomerTokens should set correct access token, refresh token and other properties', async () => {
-    const testString = 'Jest_test';
-    const testNumber = 911;
     Tokens.setCustomerTokens({
       access_token: testString,
       expires_in: testNumber,
