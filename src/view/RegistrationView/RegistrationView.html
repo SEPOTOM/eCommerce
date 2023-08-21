@@ -1,11 +1,21 @@
-<form class="group/reg flex flex-col gap-y-6 w-full max-w-2xl mx-auto my-0" action="#" data-registered="false">
+<form
+  class="group/reg flex flex-col gap-y-6 w-full max-w-2xl mx-auto my-0 pt-10 pb-10 pl-5 pr-5"
+  action="#"
+  data-registered="false"
+>
   <div class="hidden p-2 font-bold text-lime-600 bg-lime-200 group-data-[registered=true]/reg:block">
     Successfully registered!
   </div>
   <div class="p-2 font-bold text-red-600 bg-red-200" hidden data-error-reg></div>
-  <button class="p-1.5 text-white bg-black" type="submit" data-button-reg>Sign Up</button>
+  <button
+    class="h-12 p-1.5 text-lg text-white bg-blue-900 hover:bg-blue-400 transition-all duration-500"
+    type="submit"
+    data-button-reg
+  >
+    Sign Up
+  </button>
   <a
-    class="reg-form__button reg-form__button p-1.5 border-2 border-solid border-black"
+    class="flex justify-center items-center h-12 p-1.5 text-lg text-red-600 border-2 border-solid border-red-600 transition-all duration-500 hover:bg-red-600 hover:text-white"
     href="/login"
     @click="route($event)"
     >Already have an account? Login!</a
