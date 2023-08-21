@@ -1,11 +1,15 @@
 import Converter from '../../components/Converter/Converter';
 import HTML from './RegistrationView.html';
 import Registration from '../../api/Registration/Registration';
+import { FormErrorMessages, DataAttrs } from './data';
 import { CustomerCredentials } from '../../types';
-import { DataAttrs } from './data';
 import BillingAddressView from './AddressView/BillingAddressView/BillingAddressView';
 import ShippingAddressView from './AddressView/ShippingAddressView/ShippingAddressView';
 import UserInfoView from './UserInfoView/UserInfoView';
+/* eslint-disable import/no-cycle */
+import Router from '../../components/Router/Router';
+
+const ERROR_DISPLAY_TIME_MS = 3000;
 
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
@@ -16,14 +20,25 @@ export default class RegistrationView {
 
   private userInfoObject = new UserInfoView();
 
+  private errorBlock: HTMLDivElement | null = null;
+
+  private errorTimeoutId = 0;
+
   public buildRegistrationView(): HTMLFormElement {
     this.configureAddresses();
     this.configureUserInfo();
     this.configureButton();
+    this.configureErrorBlock();
     this.configureCheckboxes();
     this.configureForm();
 
     return this.form;
+  }
+
+  public static draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(new RegistrationView().buildRegistrationView());
   }
 
   private configureAddresses(): void {
@@ -83,23 +98,42 @@ export default class RegistrationView {
     this.form.addEventListener('click', this.validateInputs);
   }
 
+  private configureErrorBlock(): void {
+    this.errorBlock = this.form.querySelector('[data-error-reg]');
+  }
+
   private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
+    const delay = 1000;
     const { form } = this;
     const formValid = RegistrationView.validateForm(form);
 
     if (formValid) {
-      const credentials = this.collectCredentials();
-      const ok = await new Registration().register(credentials);
+      this.hideErrorBlock();
 
-      if (ok) {
+      const credentials = this.collectCredentials();
+      const response = await new Registration().register(credentials);
+
+      if (response.ok) {
+        this.hideErrorBlock();
         form.dataset.registered = 'true';
+
+        // Redirect to Login page
+        // TODO: Need to trigger after show sucess message
+        setTimeout(() => {
+          Router.toHomePage();
+        }, delay);
       } else {
         form.dataset.registered = 'false';
+        this.showErrorBlock(response.message);
       }
     } else {
-      console.error('Form is invalid!');
+      clearTimeout(this.errorTimeoutId);
+
+      this.showErrorBlock(FormErrorMessages.INVALID);
+
+      this.errorTimeoutId = window.setTimeout(this.hideErrorBlock.bind(this), ERROR_DISPLAY_TIME_MS);
     }
   }
 
@@ -147,5 +181,18 @@ export default class RegistrationView {
     });
 
     return valid;
+  }
+
+  private showErrorBlock(message: string): void {
+    if (this.errorBlock) {
+      this.errorBlock.textContent = message;
+      this.errorBlock.hidden = false;
+    }
+  }
+
+  private hideErrorBlock(): void {
+    if (this.errorBlock) {
+      this.errorBlock.hidden = true;
+    }
   }
 }

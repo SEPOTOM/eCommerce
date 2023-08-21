@@ -36,7 +36,7 @@ export default abstract class AddressView {
     ids: string[],
     checkboxesIds: string[],
     oppositeTitle: string,
-    selectId: string,
+    selectId: string
   ): HTMLDivElement {
     this.configureTitle(titleText);
     this.configureLabels(ids);
@@ -83,6 +83,7 @@ export default abstract class AddressView {
   public trackSelect(select: HTMLSelectElement): void {
     const localSelect = select;
     localSelect.value = this.select?.value || '';
+    localSelect.dispatchEvent(new Event('change'));
 
     this.selectHandler = this.syncSelect.bind(this, select);
 
@@ -237,7 +238,7 @@ export default abstract class AddressView {
   private configureSelect(id: string): void {
     const countriesRow = this.view.querySelector(`[${DataAttrs.COUNTRIES_ROW}]`);
     const label = countriesRow?.querySelector(`[${DataAttrs.LABEL}]`);
-  label?.setAttribute('for', id);
+    label?.setAttribute('for', id);
 
     this.select = new SelectView().buildSelectView(Countries, id);
 

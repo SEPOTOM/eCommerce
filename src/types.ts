@@ -15,6 +15,24 @@ export interface Address {
   city: string;
 }
 
+export interface RegErrorResponse {
+  errors: RegError[];
+  message: string;
+  statusCode: number;
+}
+
+export interface RegError {
+  code: string;
+  message: string;
+  detailedErrorMessage?: string;
+  field?: string;
+}
+
+export interface ResponseInfo {
+  ok: boolean;
+  message: string;
+}
+
 interface IClientLoginResponse {
   access_token: string;
   expires_in: number;

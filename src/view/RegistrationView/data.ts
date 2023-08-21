@@ -115,3 +115,7 @@ export enum DataAttrs {
   BUTTON = 'data-button-reg',
   COUNTRIES_ROW = 'data-countries-row-reg',
 }
+
+export enum FormErrorMessages {
+  INVALID = 'Form is invalid!',
+}
