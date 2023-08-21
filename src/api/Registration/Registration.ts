@@ -6,7 +6,7 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { CustomerCredentials, ResponseInfo, RegErrorResponse } from '../../types';
+import { CustomerCredentials, ResponseInfo, RegErrorResponse, CustomerResponse } from '../../types';
 import Authorization from '../Authorization/Authorization';
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
@@ -48,7 +48,7 @@ export default class Registration {
           'Content-Type': 'application/json',
         },
       });
-      const data = await response.json();
+      const data: RegErrorResponse | CustomerResponse = await response.json();
 
       if ('message' in data) {
         result.message = this.getMessage(data);
