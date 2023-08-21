@@ -93,9 +93,9 @@ const passwordInputAttributes: string[][] = [
 ];
 
 const registrationButtonAttributes: string[][] = [
-    ['href', '/registration'],
-    ['x-on:click', 'route($event)'],
-  ];
+  ['href', '/registration'],
+  ['x-on:click', 'route($event)'],
+];
 
 const okButtonAttributes: string[][] = [['id', 'ok-login']];
 

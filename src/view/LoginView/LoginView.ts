@@ -1,8 +1,9 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
+/* eslint-disable import/no-cycle */
+import Tokens from '../../components/Tokens/Tokens';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, IError } from '../../types';
-import Tokens from '../../components/Tokens/Tokens';
 import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
@@ -58,7 +59,7 @@ export default class LoginView {
     return LoginView.loginWindow;
   }
 
-  public draw(): void {
+  public static draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
     main.append(LoginView.showLoginView());

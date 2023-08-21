@@ -1,5 +1,5 @@
 import HomepageView from '../../view/HomepageView/HomepageView';
-import Routers from '../Router/Router';
+import Router from '../Router/Router';
 
 export default class App {
   public loadDefaultPage(): void {
@@ -7,6 +7,6 @@ export default class App {
   }
 
   public runRoute(): void {
-    new Routers().initRoute();
+    new Router().initRoute();
   }
 }

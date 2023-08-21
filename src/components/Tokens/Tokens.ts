@@ -1,4 +1,5 @@
-import Routers from '../Router/Router';
+/* eslint-disable import/no-cycle */
+import Router from '../Router/Router';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, TokenPayload } from '../../types';
 
@@ -14,8 +15,8 @@ export default class Tokens {
     localStorage.setItem(TokenPayload.TOKEN_TYPE, `${Tokens.customerTokens.token_type}`);
 
     // Starting verification that the user is logged in
-    Routers.checkCustomerLogin();
-    if (tokens.expires_in) Routers.toHomePage();
+    Router.isCustomerLogin();
+    if (tokens.access_token) Router.toHomePage();
   }
 
   public static async getCustomerTokens(): Promise<ICustomerLoginResponse> {
