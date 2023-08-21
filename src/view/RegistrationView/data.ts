@@ -13,11 +13,13 @@ const ErrorMessages = {
   DOMAIN: 'Wrong domain (e.g., example.com)',
   ONE_SYMBOL: 'Too short: at least 1 characters',
   LETTERS: 'Use only Latin letters',
+  WORDS: 'Use only Latin letters or whitespace',
 };
 
 const RegExps = {
   EMAIL: /^\S+@\S+\.\S+$/,
   LETTERS: /^[^\W\d_]+$/,
+  WORDS: /^[\w ]+$/,
   DATE: /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4,}$/,
   STREET: /^.+$/,
   MIN_LENGTH: /.{8,}/,
@@ -26,6 +28,7 @@ const RegExps = {
   ONE_DIGIT: /\d/,
   ONE_SPECIAL: /[!@#$%^&*]/,
   NO_EDGE_WHITESPACE: /^(?!\s).*(?<!\s)$/,
+  NO_UNDERSCORE: /^[^_]+$/,
   AT_SYMBOL: /@/,
   DOMAIN: /@[^\s@]+\.[^\s@]+/,
   ONE_SYMBOL: /.+/,
@@ -79,7 +82,8 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
   CITY: [
     [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
-    [RegExps.LETTERS, ErrorMessages.LETTERS],
+    [RegExps.NO_UNDERSCORE, ErrorMessages.WORDS],
+    [RegExps.WORDS, ErrorMessages.WORDS],
   ],
   POSTAL_CODES: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
 };
