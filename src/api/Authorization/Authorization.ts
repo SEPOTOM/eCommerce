@@ -25,7 +25,7 @@ export default class Authorization {
       });
       responseJSON = await response.json();
     } catch (error) {
-      responseJSON = new Error('Please check your network connection or try again.');
+      responseJSON = new Error('Please check your network connection and try again.');
     }
 
     return responseJSON;
@@ -48,7 +48,7 @@ export default class Authorization {
       });
       responseJSON = await responsePromise.json();
     } catch (error) {
-      responseJSON = new Error('Please check your network connection or try again.');
+      responseJSON = new Error('Please check your network connection and try again.');
     }
     return responseJSON;
   }

@@ -32,16 +32,12 @@ describe('Verify that methods work as expected', () => {
     const tokens = await Tokens.getCustomerTokens();
     expect(tokens).toHaveProperty('access_token');
     expect(tokens.access_token).toBe(testString);
-
     expect(tokens).toHaveProperty('expires_in');
     expect(tokens.expires_in).toBe(testNumber);
-
     expect(tokens).toHaveProperty('scope');
     expect(tokens.scope).toBe(testString);
-
     expect(tokens).toHaveProperty('refresh_token');
     expect(tokens.refresh_token).toBe(testString);
-
     expect(tokens).toHaveProperty('token_type');
     expect(tokens.token_type).toBe(testString);
   });
