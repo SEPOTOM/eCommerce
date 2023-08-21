@@ -6,6 +6,7 @@ import RegistrationView from '../view/RegistrationView/RegistrationView';
 
 const routers: { [key: string]: () => void } = {
   '404': new Page404View().draw,
+  '/eCommerce/dist/index.html': new HomepageView().draw,
   '/': new HomepageView().draw,
   '/login': () => LoginView.draw(),
   '/registration': () => RegistrationView.draw(),

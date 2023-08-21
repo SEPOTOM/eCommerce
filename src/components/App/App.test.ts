@@ -7,7 +7,11 @@ describe('App general test', (): void => {
     expect(App).toBeDefined();
   });
 
-  it('Class App should have "build" method', (): void => {
-    expect(newApp.build).toBeDefined();
+  it('Class App should have "loadDefaultPage" method', (): void => {
+    expect(newApp.loadDefaultPage).toBeDefined();
+  });
+
+  it('Class App should have "runRoute" method', (): void => {
+    expect(newApp.runRoute).toBeDefined();
   });
 });
