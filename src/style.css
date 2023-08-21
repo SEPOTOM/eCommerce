@@ -694,6 +694,10 @@ video {
   margin-top: 0.125rem;
 }
 
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
@@ -804,6 +808,10 @@ video {
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-xs {
+  max-width: 20rem;
 }
 
 .flex-grow {
@@ -1007,9 +1015,19 @@ video {
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
+.bg-lime-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(217 249 157 / var(--tw-bg-opacity));
+}
+
 .bg-orange-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(234 88 12 / var(--tw-bg-opacity));
+}
+
+.bg-red-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
 }
 
 .bg-red-500 {
@@ -1030,18 +1048,6 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-main-banner-img {
-  background-image: url('https://cdn03.carsforsale.com/content/images/homepage/hero-2000-may-2021.jpg');
-}
-
-.bg-main-banner-img2 {
-  background-image: url('https://67cdn.co.uk/131/6/167180041463a5a65e7c881_adobestock-437903717.jpeg?width=414&height=414&crop=auto');
-}
-
-.bg-main-banner-img3 {
-  background-image: url('https://media.product.which.co.uk/prod/images/900_450/gm-b49a2cfe-b8ab-4424-988e-c711af8461c7-how-to-sell-a-car.jpg');
 }
 
 .bg-cover {
@@ -1066,6 +1072,10 @@ video {
 
 .p-10 {
   padding: 2.5rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .p-4 {
@@ -1099,6 +1109,11 @@ video {
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .py-12 {
@@ -1253,6 +1268,11 @@ video {
   color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
+.text-lime-600 {
+  --tw-text-opacity: 1;
+  color: rgb(101 163 13 / var(--tw-text-opacity));
+}
+
 .text-red-500 {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
@@ -1283,6 +1303,10 @@ video {
 
 .opacity-0 {
   opacity: 0;
+}
+
+.opacity-10 {
+  opacity: 0.1;
 }
 
 .opacity-100 {
@@ -1506,6 +1530,10 @@ video {
 .hover\:before\:opacity-100:hover::before {
   content: var(--tw-content);
   opacity: 1;
+}
+
+.group\/reg[data-registered='true'] .group-data-\[registered\=true\]\/reg\:block {
+  display: block;
 }
 
 @media (min-width: 768px) {
@@ -1770,59 +1798,9 @@ video {
     transition-duration: 0s;
   }
 
-  .md\:before\:absolute::before {
-    content: var(--tw-content);
-    position: absolute;
-  }
-
-  .md\:before\:bottom-0::before {
-    content: var(--tw-content);
-    bottom: 0px;
-  }
-
-  .md\:before\:left-0::before {
-    content: var(--tw-content);
-    left: 0px;
-  }
-
-  .md\:before\:right-0::before {
-    content: var(--tw-content);
-    right: 0px;
-  }
-
-  .md\:before\:top-0::before {
-    content: var(--tw-content);
-    top: 0px;
-  }
-
   .md\:before\:hidden::before {
     content: var(--tw-content);
     display: none;
-  }
-
-  .md\:before\:bg-footer-img::before {
-    content: var(--tw-content);
-    background-image: url('https://cdn03.carsforsale.com/content/images/homepage/alert.jpg');
-  }
-
-  .md\:before\:bg-cover::before {
-    content: var(--tw-content);
-    background-size: cover;
-  }
-
-  .md\:before\:bg-center::before {
-    content: var(--tw-content);
-    background-position: center;
-  }
-
-  .md\:before\:bg-no-repeat::before {
-    content: var(--tw-content);
-    background-repeat: no-repeat;
-  }
-
-  .md\:before\:opacity-10::before {
-    content: var(--tw-content);
-    opacity: 0.1;
   }
 
   .md\:after\:absolute::after {

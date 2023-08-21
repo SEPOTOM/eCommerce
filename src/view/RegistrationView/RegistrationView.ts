@@ -4,12 +4,17 @@ import DateInputView from './InputView/DateInputView/DateInputView';
 import DynamicInputView from './InputView/DynamicInputView/DynamicInputView';
 import SelectView from './SelectView/SelectView';
 import { InputOptions } from './types';
-import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps } from './data';
+import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps, FormErrorMessages } from './data';
 import HTML from './RegistrationView.html';
+import Registration from '../../api/Registration/Registration';
+import { CustomerCredentials } from '../../types';
+/* eslint-disable import/no-cycle */
+import Router from '../../components/Router/Router';
 
 const DEFAULT_COUNTRY = 'US';
 const BIRTH_DATE_INPUT_INDEX = 4;
 const POSTAL_CODE_INPUT_INDEX = 7;
+const ERROR_DISPLAY_TIME_MS = 3000;
 
 enum InputTypes {
   EMAIL = 'email',
@@ -41,7 +46,11 @@ export default class RegistrationView {
 
   private postalCodeInputObject: DynamicInputView | null = null;
 
+  private errorBlock: HTMLDivElement | null = null;
+
   private inputObjects: InputView[] = [];
+
+  private errorTimeoutId = 0;
 
   public buildRegistrationView(): HTMLFormElement {
     const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
@@ -49,9 +58,16 @@ export default class RegistrationView {
     this.configureSelect(rows);
     this.configureInputs(rows);
     this.configureButton();
+    this.configureErrorBlock();
     this.configureForm();
 
     return this.form;
+  }
+
+  public static draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(new RegistrationView().buildRegistrationView());
   }
 
   private configureInputs(rows: NodeListOf<Element>): void {
@@ -59,8 +75,13 @@ export default class RegistrationView {
 
     inputOptions.forEach((inputOption, index) => {
       const localInputOption = inputOption;
+      const id = labels[index].getAttribute('for') || '';
 
-      localInputOption.id = labels[index].getAttribute('for') || '';
+      localInputOption.id = id;
+      localInputOption.dataAttr = {
+        name: 'type',
+        value: id,
+      };
 
       let inputObject: InputView | null = null;
 
@@ -98,7 +119,7 @@ export default class RegistrationView {
 
   private configureButton(): void {
     const button = this.form.querySelector(`.${ClassNames.BUTTON}`);
-    button?.addEventListener('click', this.sendForm);
+    button?.addEventListener('click', this.sendForm.bind(this));
   }
 
   private configureForm(): void {
@@ -106,16 +127,42 @@ export default class RegistrationView {
     this.form.addEventListener('click', this.validateInputs);
   }
 
-  private sendForm(e: Event): void {
+  private configureErrorBlock(): void {
+    this.errorBlock = this.form.querySelector('[data-error-reg]');
+  }
+
+  private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
+    const delay = 1000;
     const { form } = this;
     const formValid = RegistrationView.validateForm(form);
 
     if (formValid) {
-      console.log('Sending form...');
+      this.hideErrorBlock();
+
+      const credentials = this.collectCredentials();
+      const response = await new Registration().register(credentials);
+
+      if (response.ok) {
+        this.hideErrorBlock();
+        form.dataset.registered = 'true';
+
+        // Redirect to Login page
+        // TODO: Need to trigger after show sucess message
+        setTimeout(() => {
+          Router.toHomePage();
+        }, delay);
+      } else {
+        form.dataset.registered = 'false';
+        this.showErrorBlock(response.message);
+      }
     } else {
-      console.error('Form is invalid!');
+      clearTimeout(this.errorTimeoutId);
+
+      this.showErrorBlock(FormErrorMessages.INVALID);
+
+      this.errorTimeoutId = window.setTimeout(this.hideErrorBlock.bind(this), ERROR_DISPLAY_TIME_MS);
     }
   }
 
@@ -138,6 +185,35 @@ export default class RegistrationView {
     this.form.removeEventListener('click', this.validateInputs);
   }
 
+  private collectCredentials(): CustomerCredentials {
+    const credentials: CustomerCredentials = {
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+    };
+
+    const inputs = this.form.querySelectorAll('input');
+    inputs.forEach((input) => {
+      const inputType = `${input.dataset.type}`;
+
+      if (inputType === 'email') {
+        credentials.email = input.value;
+      }
+      if (inputType === 'password') {
+        credentials.password = input.value;
+      }
+      if (inputType === 'first-name') {
+        credentials.firstName = input.value;
+      }
+      if (inputType === 'last-name') {
+        credentials.lastName = input.value;
+      }
+    });
+
+    return credentials;
+  }
+
   private static validateForm(form: HTMLElement): boolean {
     let valid = true;
 
@@ -149,5 +225,18 @@ export default class RegistrationView {
     });
 
     return valid;
+  }
+
+  private showErrorBlock(message: string): void {
+    if (this.errorBlock) {
+      this.errorBlock.textContent = message;
+      this.errorBlock.hidden = false;
+    }
+  }
+
+  private hideErrorBlock(): void {
+    if (this.errorBlock) {
+      this.errorBlock.hidden = true;
+    }
   }
 }
