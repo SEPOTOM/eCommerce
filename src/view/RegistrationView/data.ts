@@ -114,6 +114,7 @@ export enum DataAttrs {
   LABEL = 'data-label-reg',
   BUTTON = 'data-button-reg',
   COUNTRIES_ROW = 'data-countries-row-reg',
+  DEFAULT_ADDRESS = 'data-default-address-reg',
 }
 
 export enum FormErrorMessages {

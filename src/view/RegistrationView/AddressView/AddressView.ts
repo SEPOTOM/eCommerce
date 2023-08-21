@@ -15,11 +15,14 @@ import {
 
 const POSTAL_CODE_INPUT_INDEX = 2;
 const USE_AS_CHECKBOX_INDEX = 0;
+const DEFAULT_CHECKBOX_INDEX = 1;
 
 export default abstract class AddressView {
   private view: HTMLDivElement = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
   private useAsCheckbox: HTMLInputElement | null = null;
+
+  private defaultCheckbox: HTMLInputElement | null = null;
 
   private select: HTMLSelectElement | null = null;
 
@@ -57,13 +60,17 @@ export default abstract class AddressView {
     return this.useAsCheckbox || document.createElement('input');
   }
 
-  public getSelect(): HTMLSelectElement {
-    return this.select || document.createElement('select');
+  public getDefaultCheckbox(): HTMLInputElement {
+    return this.defaultCheckbox || document.createElement('input');
   }
 
   public getTextFields(): NodeListOf<HTMLInputElement> {
     const inputs = this.view.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
     return inputs;
+  }
+
+  public getSelect(): HTMLSelectElement {
+    return this.select || document.createElement('select');
   }
 
   public trackTextFields(textFields: NodeListOf<HTMLInputElement> | HTMLInputElement[]): void {
@@ -112,6 +119,10 @@ export default abstract class AddressView {
     const inputs = this.view.querySelectorAll('input');
     inputs.forEach((input) => {
       const localInput = input;
+
+      if (localInput.hasAttribute(`${DataAttrs.DEFAULT_ADDRESS}`)) {
+        return;
+      }
 
       localInput.disabled = true;
     });
@@ -264,6 +275,10 @@ export default abstract class AddressView {
         }
 
         this.useAsCheckbox = localCheckbox;
+      }
+
+      if (index === DEFAULT_CHECKBOX_INDEX) {
+        this.defaultCheckbox = checkbox;
       }
     });
   }
