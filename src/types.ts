@@ -109,6 +109,65 @@ enum TokenPayload {
   TOKEN_TYPE = 'token_type',
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload };
+interface IProduct {
+  id: string;
+  version: number;
+  key: string;
+  productType: IProductTypeReference;
+  masterData: IProductCatalogData;
+  taxCategory: ITaxCategoryReference;
+  state: object;
+  reviewRatingStatistics: object;
+  priceMode: string;
+  createdAt: Date;
+  createdBy: object;
+  lastModifiedAt: Date;
+  lastModifiedBy: object;
+}
+
+interface IProductTypeReference {
+  id: string;
+  typeId: string;
+  obj: object;
+}
+
+interface IProductCatalogData {
+  published: boolean;
+  current: IProductData;​
+  staged: IProductData;​
+  hasStagedChanges: boolean;
+}
+
+interface IProductData {
+  name: ILocalizedString;
+  categories: ICategoryReference[];
+  categoryOrderHints: object;
+  description: ILocalizedString;
+  slug: ILocalizedString;
+  metaTitle: ILocalizedString;
+  metaDescription: ILocalizedString;
+  metaKeywords: ILocalizedString;
+  masterVariant: object;
+  variants: object[];
+  searchKeywords: object;
+}
+
+interface ILocalizedString {
+  "en-US": string;
+}
+
+interface ICategoryReference {
+  id: string;
+  typeId: string;
+  obj: object;
+}
+
+interface ITaxCategoryReference {
+  id: string;
+  typeId: string;
+  obj?:object;
+}
+
+export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload, IProduct };
 
 export type EventCallback = (e: Event) => void;
