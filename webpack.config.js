@@ -23,8 +23,11 @@ export default {
                 use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
             {
-                test: /\.(jpe?g|png|gif|svg)$/i,
+                test: /\.(jpe?g|png|gif|svg)$/i, 
                 loader: 'file-loader',
+                options: {
+                  name: 'assets/[name].[ext]'
+                }
             },
             {
                 test: /\.ts?$/,
@@ -49,13 +52,20 @@ export default {
     },
 
     performance: {
-        maxAssetSize: 1500000,
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
+
+    devServer: { 
+        historyApiFallback: true, 
     },
 
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
+            favicon: './src/assets/favicon.jpg'
         }),
         new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),

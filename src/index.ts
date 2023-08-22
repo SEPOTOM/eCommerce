@@ -1,9 +1,11 @@
 import './style.css';
+import Alpine from 'alpinejs';
+import App from './components/App/App';
 
-function sum(a: number, b: number): number {
-  return a + b;
-}
+// Alpine.js connection
+window.Alpine = Alpine;
+Alpine.start();
 
-it('sum function works', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+const app = new App();
+app.loadDefaultPage();
+app.runRoute();

@@ -1,0 +1,217 @@
+<header class="sticky top-0 py-4 bg-white text-gray-600 shadow z-40" data-element="header" x-data="Header()">
+  <div class="flex gap-6 justify-between mx-auto px-5 max-w-6xl md:px-7">
+    <div class="flex items-center gap-4">
+      <span
+        class="cursor-pointer mt-0.5 transition-colors duration-300 hover:text-blue-600 md:hidden"
+        data-element="toggle-menu"
+        @click="showMobileMenu = !showMobileMenu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </span>
+      <a
+        class="text-xl font-bold tracking-widest md:text-2xl"
+        data-element="header-logo"
+        href="/"
+        @click="route($event)"
+        >True<span class="text-red-600">Car</span>
+      </a>
+    </div>
+
+    <nav
+      class="fixed top-0 bottom-0 left-0 z-20 flex flex-col w-full max-w-[280px] p-5 bg-white text-sm md:!flex md:static md:max-w-none md:p-0"
+      x-show="showMobileMenu"
+      x-transition:enter="transform transition ease-in-out duration-300"
+      x-transition:enter-start="-translate-x-full"
+      x-transition:enter-end="translate-x-0"
+      x-transition:leave="transform transition ease-in-out duration-300"
+      x-transition:leave-start="translate-x-0"
+      x-transition:leave-end="-translate-x-full"
+    >
+      <div class="flex flex-col md:flex-row md:gap-4 lg:justify-center">
+        <template x-for="item in menu">
+          <a
+            class="relative py-3 border-gray-200 [&+a]:border-t font-medium transition-colors duration-300 hover:text-blue-500 before:absolute before:top-0 before:-right-5 before:bottom-0 before:-left-5 before:-z-10 before:bg-blue-100/50 before:opacity-0 before:transition-colors before:duration-300 hover:before:opacity-100 md:before:hidden md:[&+a]:border-t-0 md:top-0.5 md:pb-2 md:after:absolute md:after:bottom-0 md:after:left-0 md:right-0 md:after:w-0 md:after:border-blue-500 md:hover:after:border-b md:hover:after:w-full md:after:transition-all md:after:duration-300"
+            x-text="item.text"
+            :href="item.link"
+            @click="() => { showMobileMenu = false; route($event); }"
+          >
+          </a>
+        </template>
+      </div>
+
+      <div class="mt-auto pt-5 border-t border-gray-200 md:hidden" data-element="menu-registration">
+        <template x-if="!isCustomerLogin">
+          <div class="grid gap-3">
+            <a
+              class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
+              href="/login"
+              @click="() => { showMobileMenu = false; route($event); }"
+              >Log in</a
+            >
+            <a
+              class="px-3 pt-1 pb-2 border-2 border-red-600 rounded-lg font-medium text-center transition-colors duration-300 hover:bg-red-700 hover:text-white hover:border-red-700"
+              href="/registration"
+              @click="() => { showMobileMenu = false; route($event); }"
+              >Registration</a
+            >
+          </div>
+        </template>
+
+        <template x-if="isCustomerLogin">
+          <div class="grid gap-3">
+            <a
+              class="px-3 pt-1 pb-2 bg-gray-100 rounded-lg font-medium text-center transition-colors duration-300 hover:bg-gray-200"
+              href="/profile"
+              @click="() => { showMobileMenu = false; route($event); }"
+              >Profile</a
+            >
+            <a
+              class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
+              href="/"
+              @click="($event) => { showMobileMenu = false; logout(); route($event); }"
+              >Log out</a
+            >
+          </div>
+        </template>
+      </div>
+    </nav>
+
+    <span
+      class="fixed top-0 right-0 bottom-0 left-0 z-10 bg-black/40 cursor-pointer md:hidden"
+      @click="showMobileMenu = !showMobileMenu"
+      x-show="showMobileMenu"
+      x-transition:enter="ease-in-out duration-300"
+      x-transition:enter-start="opacity-0 invisible"
+      x-transition:enter-end="opacity-100 visible"
+      x-transition:leave="ease-in-out duration-300"
+      x-transition:leave-start="opacity-100 visible"
+      x-transition:leave-end="opacity-0 invisible"
+      data-element="navigation-overlay"
+    >
+    </span>
+
+    <div class="flex gap-6 items-center text-sm">
+      <div class="hidden md:inline-block relative">
+        <span
+          class="flex items-center gap-3 transition-colors duration-300 hover:text-blue-600 md:relative md:hover:text-white md:[&>span+span]:hover:bg-blue-600 md:[&>span+span]:hover:border-blue-600 md:duration-0 md:transition-none cursor-pointer"
+          data-element="header-my-account"
+          @click="showAccountDropdown = !showAccountDropdown"
+        >
+          <span class="md:absolute md:-right-1 md:-bottom-[18px] md:text-[11px] md:whitespace-nowrap md:!text-gray-600">
+            Account
+          </span>
+          <span
+            class="md:flex md:items-center md:justify-center md:w-8 md:h-8 md:border md:border-gray-600 md:rounded-full md:transition-colors duration-300"
+          >
+            <svg
+              class="w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
+            </svg>
+          </span>
+        </span>
+
+        <div
+          class="absolute top-[52px] right-0 z-20 bg-white min-w-[110px] border border-gray-200 text-center rounded-b-lg"
+          x-show="showAccountDropdown"
+          x-transition:enter="transform transition ease-in-out duration-300"
+          x-transition:enter-start="translate-y-4 opacity-0 invisible"
+          x-transition:enter-end="translate-y-0 opacity-100 visible"
+          x-transition:leave="transform transition ease-in-out duration-300"
+          x-transition:leave-start="translate-y-0 opacity-100 visible"
+          x-transition:leave-end="translate-y-4 opacity-0 invisible"
+          @click.outside="showAccountDropdown = false"
+          data-element="header-account-dropdown"
+        >
+          <template x-if="!isCustomerLogin">
+            <div class="grid py-2 whitespace-nowrap">
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/login"
+                @click="() => { showAccountDropdown = false; route($event); }"
+                >Log in</a
+              >
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/registration"
+                @click="() => { showAccountDropdown = false; route($event); }"
+                >Registration</a
+              >
+            </div>
+          </template>
+
+          <template x-if="isCustomerLogin">
+            <div class="grid py-2 whitespace-nowrap">
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4"
+                href="/profile"
+                @click="() => { showAccountDropdown = false; route($event); }"
+                >Profile</a
+              >
+              <a
+                class="transition-colors duration-300 hover:bg-blue-100/50 pt-1 pb-1.5 px-4 text-red-500"
+                href="/"
+                @click="($event) => { showAccountDropdown = false; logout(); route($event); }"
+                >Log out</a
+              >
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <span class="relative">
+        <a
+          class="flex items-center gap-3 transition-colors duration-300 hover:text-blue-600 md:relative md:hover:text-white md:[&>span+span]:hover:bg-blue-600 md:[&>span+span]:hover:border-blue-600 md:duration-0 md:transition-none"
+          href="/cart"
+          @click="route($event)"
+          data-element="header-cart"
+        >
+          <span class="md:absolute md:-right-1 md:-bottom-[18px] md:text-[11px] md:whitespace-nowrap md:!text-gray-600">
+            My Cart
+          </span>
+          <span
+            class="md:flex md:items-center md:justify-center md:w-8 md:h-8 md:border md:border-gray-600 md:rounded-full md:transition-colors duration-300"
+          >
+            <svg
+              class="w-6 h-6 md:w-5 md:h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+              />
+            </svg>
+          </span>
+        </a>
+        <span
+          class="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-red-500 rounded-full text-xs font-medium text-white md:w-5 md:h-5 md:-top-2 md:-right-2"
+          data-element="cart-count"
+          >0
+        </span>
+      </span>
+    </div>
+  </div>
+</header>
