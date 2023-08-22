@@ -102,13 +102,6 @@ interface IError {
   error_description: string;
 }
 
-enum TokenPayload {
-  EXPIRES_IN = 'expires_in',
-  REFRESH_TOKEN = 'refresh_token',
-  SCOPE = 'scope',
-  TOKEN_TYPE = 'token_type',
-}
-
 interface IProduct {
   id: string;
   version: number;
@@ -168,6 +161,22 @@ interface ITaxCategoryReference {
   obj?:object;
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, TokenPayload, IProduct };
+enum TokenPayload {
+  EXPIRES_IN = 'expires_in',
+  REFRESH_TOKEN = 'refresh_token',
+  SCOPE = 'scope',
+  TOKEN_TYPE = 'token_type',
+}
+
+enum ProductElements {
+  PRODUCT_NAME = 'product-name',
+  PRODUCT_PICTURES = 'product-pictures',
+  PRODUCT_CATEGORY = 'product-category',
+  PRODUCT_DESCRIPTION = 'product-description',
+  PRODUCT_PRICE = 'product-price',
+  PRODUCT_DETAILS = 'product-details',
+}
+
+export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, TokenPayload, ProductElements };
 
 export type EventCallback = (e: Event) => void;

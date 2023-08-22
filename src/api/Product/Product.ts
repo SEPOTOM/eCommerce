@@ -6,18 +6,18 @@ import {
   CTP_API_URL,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas';
-import { IProduct } from '../../types';
+import { IProduct, IError } from '../../types';
 
 export default class Product {
-  public async getProductByID(id: string, clientToken: string) {
+  public async getProductByID(id: string, clientToken: string): Promise<IProduct | IError | Error> {
     const queryString: string = `${CTP_API_URL}/${CTP_PROJECT_KEY}/products/${id}`;
-    let responseJSON: IProduct | Error;
+    let responseJSON: IProduct | IError | Error;
 
     try {
       const response: Response = await fetch(queryString, {
         method: 'GET',
         headers: {
-          Authorization: `Basic ${clientToken}`,
+          Authorization: `Bearer ${clientToken}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
