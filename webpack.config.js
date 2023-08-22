@@ -50,7 +50,6 @@ export default {
 
     performance: {
         maxAssetSize: 1500000,
-        maxEntrypointSize: 1500000,
     },
 
     plugins: [
