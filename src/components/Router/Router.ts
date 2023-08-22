@@ -9,9 +9,8 @@ export default class Router {
   }
 
   public static isCustomerLogin(): void {
-    // TODO: It is necessary to leave such a decision for consideration in the future.
-    // Alpine.$data(document.body).checkCustomerLogin();
-    RouterAlpine().checkCustomerLogin();
+    //  @ts-ignore
+    Alpine.$data(document.body).checkCustomerLogin();
   }
 
   public static toHomePage(): void {
