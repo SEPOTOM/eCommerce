@@ -140,7 +140,7 @@ interface IProductData {
   metaTitle: ILocalizedString;
   metaDescription: ILocalizedString;
   metaKeywords: ILocalizedString;
-  masterVariant: object;
+  masterVariant: IMasterVariant;
   variants: object[];
   searchKeywords: object;
 }
@@ -161,6 +161,57 @@ interface ITaxCategoryReference {
   obj?:object;
 }
 
+interface IMasterVariant {
+  id: number;
+  sku?: string;
+  prices: IPrices[];
+  images?: IImages[];
+  attributes?: IAttributes[];
+  assets?: object[];
+}
+
+interface IPrices {
+  id: string;
+  key?: string;
+  value: ITypedMoney;
+  country?: object;
+  customerGroup?: object;
+  channel?: object;
+  validFrom?: Date;
+  validUntil?: Date;
+  discounted?: object;
+  tiers?: object[];
+  custom?: object;
+}
+
+interface ITypedMoney {
+  centAmount: number;
+  currencyCode: string;
+  type: string;
+  fractionDigits: number;
+}
+
+interface IImages {
+  url:string;
+  dimensions: IDimensions;
+  label?: string;
+}
+
+interface IDimensions {
+  w: number;
+  h: number;
+}
+
+interface IAttributes {
+  name: string;
+  value: boolean | string | number | Date | IEnum;
+}
+
+interface IEnum {
+  key: string;
+  label: string;
+}
+
 enum TokenPayload {
   EXPIRES_IN = 'expires_in',
   REFRESH_TOKEN = 'refresh_token',
@@ -177,6 +228,6 @@ enum ProductElements {
   PRODUCT_DETAILS = 'product-details',
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, TokenPayload, ProductElements };
+export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload, ProductElements };
 
 export type EventCallback = (e: Event) => void;

@@ -10,11 +10,12 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
-import { IProduct, IClientLoginResponse, IError, ProductElements } from '../../types';
+import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements } from '../../types';
+import { currencySymbol, currencyName } from './data';
 
 const accessToken = 'access_token';
 
-
+const centsPerDollar = 100;
 
 export default class ProductView {
   public draw(): void {
@@ -41,6 +42,9 @@ export default class ProductView {
   }
 
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
+    // Put picture
+    this.addProductPictureSlider(productDetails, productHTML);
+
     // Put product name
     const productName = productHTML.querySelector(`#${ProductElements.PRODUCT_NAME}`) as HTMLElement;
     productName.textContent = productDetails.masterData.current.name['en-US'];
@@ -50,9 +54,38 @@ export default class ProductView {
     // Put product description
     const productDescription = productHTML.querySelector(`#${ProductElements.PRODUCT_DESCRIPTION}`) as HTMLElement;
     productDescription.textContent = productDetails.masterData.current.description['en-US'];
-    // Put price here
+    // Put price
     const productPrice = productHTML.querySelector(`#${ProductElements.PRODUCT_PRICE}`) as HTMLElement;
-    // productPrice.textContent = productDetails.masterData.current.masterVariant.prices.;
+    const productCurrency = productDetails.masterData.current.masterVariant.prices[0].value.currencyCode;
+    const productPriceAmount = productDetails.masterData.current.masterVariant.prices[0].value.centAmount / centsPerDollar;
+
+    if (productCurrency === currencyName.USD) {
+      productPrice.textContent = `${currencySymbol.USD}${productPriceAmount}`;
+    }
+    if (productCurrency === currencyName.GBP) {
+      productPrice.textContent = `${currencySymbol.GBP}${productPriceAmount}`;
+    }
+
+    // Put details
+    const productCharacteristics = productHTML.querySelector(`#${ProductElements.PRODUCT_DETAILS}`) as HTMLElement;
+    const characteristics = productDetails.masterData.current.masterVariant.attributes as IAttributes[];
+    characteristics.forEach(element => {
+      if (typeof element.value === 'object' && 'label' in element.value){
+        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${element.value.label}<br>`;
+      } else {
+        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${element.value}<br>`;
+      }
+    });
+  }
+
+  private addProductPictureSlider(productDetails: IProduct, productHTML: HTMLElement): void {
+    const productPicture = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
+    const pictureContainer = document.createElement('img');
+    const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
+    if ('url' in imagesArray[0]) {
+      pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
+      productPicture.appendChild(pictureContainer);
+    }
   }
 
   private getProductView(id: string): HTMLElement {
