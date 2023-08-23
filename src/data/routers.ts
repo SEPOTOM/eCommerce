@@ -9,6 +9,14 @@ const routers: { [key: string]: () => void } = {
   '/': new HomepageView().draw,
   '/login': () => LoginView.draw(),
   '/registration': () => RegistrationView.draw(),
+  '/catalog': () => {
+    const main = document.querySelector('main');
+
+    if (main) {
+      main.innerHTML =
+        '<div class="flex justify-center items-center flex-grow h-full text-center text-2xl">catalog page placeholder</div>';
+    }
+  },
 };
 
 export default routers;
