@@ -60,10 +60,10 @@ export default class ProductView {
     const productPriceAmount = productDetails.masterData.current.masterVariant.prices[0].value.centAmount / centsPerDollar;
 
     if (productCurrency === currencyName.USD) {
-      productPrice.textContent = `${currencySymbol.USD}${productPriceAmount}`;
+      productPrice.textContent = `Price: ${currencySymbol.USD}${productPriceAmount}`;
     }
     if (productCurrency === currencyName.GBP) {
-      productPrice.textContent = `${currencySymbol.GBP}${productPriceAmount}`;
+      productPrice.textContent = `Price: ${currencySymbol.GBP}${productPriceAmount}`;
     }
 
     // Put details
