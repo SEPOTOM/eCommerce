@@ -1,5 +1,9 @@
 const Links = [
   {
+    text: 'Catalog',
+    link: './catalog',
+  },
+  {
     text: 'Category 1',
     link: './category1',
   },
