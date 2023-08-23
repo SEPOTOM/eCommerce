@@ -182,7 +182,8 @@ export default class LoginView {
     const passwordError: HTMLElement = document.getElementById('password-error') as HTMLElement;
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
 
-    submitButton.addEventListener('click', async () => {
+    submitButton.addEventListener('click', async (event) => {
+      event.preventDefault();
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
       if (LoginView.passwordValid && LoginView.loginValid) {
         const customerLogin: ICustomerLoginResponse | IError | Error = await Authorization.loginBasicAuth(
