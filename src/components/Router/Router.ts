@@ -8,7 +8,9 @@ export default class Router {
   }
 
   public static isCustomerLogin(): void {
-    Alpine.$data(document.body).checkCustomerLogin();
+    if (Alpine.$data) {
+      Alpine.$data(document.body).checkCustomerLogin();
+    }
   }
 
   public static toHomePage(): void {
