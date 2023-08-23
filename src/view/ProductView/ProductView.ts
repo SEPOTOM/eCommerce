@@ -1,5 +1,5 @@
 import ProductHTML from './ProductView.html';
-import Converter from "../../components/Converter/Converter";
+import Converter from '../../components/Converter/Converter';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
 import {
@@ -49,7 +49,7 @@ export default class ProductView {
     const productName = productHTML.querySelector(`#${ProductElements.PRODUCT_NAME}`) as HTMLElement;
     productName.textContent = productDetails.masterData.current.name['en-US'];
     // Put category
-    const categoryName = productHTML.querySelector(`#${ProductElements.PRODUCT_CATEGORY}`) as HTMLElement;
+    // const categoryName = productHTML.querySelector(`#${ProductElements.PRODUCT_CATEGORY}`) as HTMLElement;
     // TODO: To fetch categories by IDs ant to put it on html
     // Put product description
     const productDescription = productHTML.querySelector(`#${ProductElements.PRODUCT_DESCRIPTION}`) as HTMLElement;
@@ -57,7 +57,8 @@ export default class ProductView {
     // Put price
     const productPrice = productHTML.querySelector(`#${ProductElements.PRODUCT_PRICE}`) as HTMLElement;
     const productCurrency = productDetails.masterData.current.masterVariant.prices[0].value.currencyCode;
-    const productPriceAmount = productDetails.masterData.current.masterVariant.prices[0].value.centAmount / centsPerDollar;
+    const productPriceAmount =
+      productDetails.masterData.current.masterVariant.prices[0].value.centAmount / centsPerDollar;
 
     if (productCurrency === currencyName.USD) {
       productPrice.textContent = `Price: ${currencySymbol.USD}${productPriceAmount}`;
@@ -69,11 +70,15 @@ export default class ProductView {
     // Put details
     const productCharacteristics = productHTML.querySelector(`#${ProductElements.PRODUCT_DETAILS}`) as HTMLElement;
     const characteristics = productDetails.masterData.current.masterVariant.attributes as IAttributes[];
-    characteristics.forEach(element => {
-      if (typeof element.value === 'object' && 'label' in element.value){
-        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${element.value.label}<br>`;
+    characteristics.forEach((element) => {
+      if (typeof element.value === 'object' && 'label' in element.value) {
+        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${
+          element.value.label
+        }<br>`;
       } else {
-        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${element.value}<br>`;
+        productCharacteristics.innerHTML += `${element.name.charAt(0).toUpperCase()}${element.name.slice(1)}: ${
+          element.value
+        }<br>`;
       }
     });
   }

@@ -58,4 +58,4 @@ const RouterAlpine: AlpineRouter = {
 };
 
 /* eslint-disable max-lines-per-function */
-export default () => (RouterAlpine);
+export default () => RouterAlpine;

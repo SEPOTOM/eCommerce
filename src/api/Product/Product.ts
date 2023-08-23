@@ -1,10 +1,10 @@
 import {
   CTP_PROJECT_KEY,
-  CTP_CLIENT_SECRET,
+  /* CTP_CLIENT_SECRET,
   CTP_CLIENT_ID,
-  CTP_AUTH_URL,
+  CTP_AUTH_URL, */
   CTP_API_URL,
-  CTP_SCOPES,
+  /* CTP_SCOPES, */
 } from '../APIClients/JSNinjas';
 import { IProduct, IError } from '../../types';
 

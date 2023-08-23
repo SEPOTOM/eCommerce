@@ -126,8 +126,8 @@ interface IProductTypeReference {
 
 interface IProductCatalogData {
   published: boolean;
-  current: IProductData;​
-  staged: IProductData;​
+  current: IProductData;
+  staged: IProductData;
   hasStagedChanges: boolean;
 }
 
@@ -146,7 +146,7 @@ interface IProductData {
 }
 
 interface ILocalizedString {
-  "en-US": string;
+  'en-US': string;
 }
 
 interface ICategoryReference {
@@ -158,7 +158,7 @@ interface ICategoryReference {
 interface ITaxCategoryReference {
   id: string;
   typeId: string;
-  obj?:object;
+  obj?: object;
 }
 
 interface IMasterVariant {
@@ -192,7 +192,7 @@ interface ITypedMoney {
 }
 
 interface IImages {
-  url:string;
+  url: string;
   dimensions: IDimensions;
   label?: string;
 }
@@ -228,6 +228,15 @@ enum ProductElements {
   PRODUCT_DETAILS = 'product-details',
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload, ProductElements };
+export {
+  IClientLoginResponse,
+  ICustomerLoginResponse,
+  IError,
+  IProduct,
+  IAttributes,
+  IImages,
+  TokenPayload,
+  ProductElements,
+};
 
 export type EventCallback = (e: Event) => void;
