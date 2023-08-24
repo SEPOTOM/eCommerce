@@ -212,6 +212,28 @@ interface IEnum {
   label: string;
 }
 
+export interface ICategory {
+  id: string;
+  version: number;
+  key?: string;
+  externalId?: string;
+  name: ILocalizedString;
+  slug: ILocalizedString;
+  description?: ILocalizedString;
+  ancestors: ICategoryReference[];
+  parent?: ICategoryReference;
+  orderHint: string;
+  metaTitle?: ILocalizedString;
+  metaDescription?: ILocalizedString;
+  metaKeywords?: ILocalizedString;
+  assets?: object[];
+  custom?: object;
+  createdAt: Date;
+  createdBy?: object;
+  lastModifiedAt: Date;
+  lastModifiedBy?: object;
+}
+
 enum TokenPayload {
   EXPIRES_IN = 'expires_in',
   REFRESH_TOKEN = 'refresh_token',

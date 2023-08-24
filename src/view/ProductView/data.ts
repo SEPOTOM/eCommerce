@@ -8,4 +8,6 @@ const currencyName = {
   GBP: 'GBP',
 };
 
-export { currencySymbol, currencyName };
+const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3'];
+
+export { currencySymbol, currencyName, categoryStyles };
