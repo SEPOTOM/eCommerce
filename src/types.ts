@@ -244,6 +244,7 @@ enum TokenPayload {
 enum ProductElements {
   PRODUCT_NAME = 'product-name',
   PRODUCT_PICTURES = 'product-pictures',
+  PRODUCT_PICTURES_ALL = 'pictures-small',
   PRODUCT_CATEGORY = 'product-category',
   PRODUCT_DESCRIPTION = 'product-description',
   PRODUCT_PRICE = 'product-price',

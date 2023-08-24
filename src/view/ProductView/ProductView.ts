@@ -12,7 +12,7 @@ import {
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
 import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
-import { currencySymbol, currencyName, categoryStyles } from './data';
+import { currencySymbol, currencyName, categoryStyles, smallPictureStyles } from './data';
 
 const accessToken = 'access_token';
 
@@ -48,6 +48,7 @@ export default class ProductView {
 
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
     this.addProductPictureSlider(productDetails, productHTML);
+    this.addAllProductPictures(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
     this.addProductCategories(productDetails, productHTML);
     this.addProductDescription(productDetails, productHTML);
@@ -63,6 +64,31 @@ export default class ProductView {
       pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
       productPicture.appendChild(pictureContainer);
     }
+  }
+
+  private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
+    const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
+    const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
+
+    imagesArray.forEach(element => {
+      // const pictureContainer = document.createElement('img');
+      // pictureContainer.setAttribute('src', `${element.url}`);
+
+      const blockContainer = document.createElement('div');
+      blockContainer.style.backgroundImage = `url(${element.url})`;
+      blockContainer.style.width = '150px';
+      blockContainer.style.height = '100px';
+      blockContainer.style.backgroundSize = 'contain';
+      blockContainer.style.backgroundRepeat = 'no-repeat';
+      blockContainer.style.backgroundPosition = 'center center';
+      // blockContainer.appendChild(pictureContainer);
+
+      smallPictureStyles.forEach(element => {
+        blockContainer.classList.add(element);
+      });
+
+      allPictures.appendChild(blockContainer);
+    });
   }
 
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
