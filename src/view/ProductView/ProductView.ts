@@ -33,7 +33,6 @@ export default class ProductView {
 
     if (accessToken in clientTokens) {
       productDetails = await product.getProductByID(id, clientTokens.access_token);
-      console.log(productDetails);
       this.putProductDataToPage(productDetails as IProduct, productHTML);
     } else {
       productDetails = new Error(`${clientTokens.message}`);
