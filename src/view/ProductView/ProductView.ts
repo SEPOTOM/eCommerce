@@ -70,7 +70,7 @@ export default class ProductView {
     const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
     const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
 
-    imagesArray.forEach(element => {
+    imagesArray.forEach((element) => {
       // const pictureContainer = document.createElement('img');
       // pictureContainer.setAttribute('src', `${element.url}`);
 
@@ -83,8 +83,8 @@ export default class ProductView {
       blockContainer.style.backgroundPosition = 'center center';
       // blockContainer.appendChild(pictureContainer);
 
-      smallPictureStyles.forEach(element => {
-        blockContainer.classList.add(element);
+      smallPictureStyles.forEach((elem) => {
+        blockContainer.classList.add(elem);
       });
 
       allPictures.appendChild(blockContainer);
