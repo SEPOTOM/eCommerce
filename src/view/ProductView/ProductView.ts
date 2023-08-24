@@ -76,7 +76,7 @@ export default class ProductView {
     const categoriesArray = productDetails.masterData.current.categories;
     const clientTokens: IClientLoginResponse | IError | Error = await this.getClientToken();
 
-    categoriesArray.forEach(async element => {
+    categoriesArray.forEach(async (element) => {
       const category = new Category();
       if ('access_token' in clientTokens) {
         const categoryDetails = await category.getCategoryByID(element.id, clientTokens.access_token);
@@ -88,7 +88,7 @@ export default class ProductView {
   private getCategoryShortcut(categoryName: string): HTMLElement {
     const shortcut = document.createElement('span');
     shortcut.textContent = categoryName;
-    categoryStyles.forEach(element => {
+    categoryStyles.forEach((element) => {
       shortcut.classList.add(element);
     });
     return shortcut;

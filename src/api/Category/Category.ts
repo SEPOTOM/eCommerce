@@ -6,7 +6,7 @@ import {
   CTP_API_URL,
   // CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
-import { ICategory, IError, IClientLoginResponse } from '../../types';
+import { ICategory, IError } from '../../types';
 
 export default class Category {
   public async getCategoryByID(id: string, clientToken: string): Promise<ICategory | IError | Error> {
