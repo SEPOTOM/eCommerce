@@ -104,7 +104,12 @@ export default class ProductView {
     (activeImage as HTMLElement).classList.remove('opacity-30');
     (activeImage as HTMLElement).classList.add('opacity-100');
 
-    (productPicture.lastChild as HTMLImageElement).setAttribute('src', activeImageURL);
+    // the following block makes smooth change of the main product image
+    (productPicture.lastChild as HTMLImageElement).classList.add('opacity-0');
+    setTimeout(() => {
+      (productPicture.lastChild as HTMLImageElement).setAttribute('src', activeImageURL);
+      (productPicture.lastChild as HTMLImageElement).classList.remove('opacity-0');
+    }, 500);
   }
 
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
