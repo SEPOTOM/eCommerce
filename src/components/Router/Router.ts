@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import Alpine from 'alpinejs';
 import RouterAlpine from './Alpine/RouterAlpine';
+import { AlpineRouter } from '../../types';
 
 export default class Router {
   public initRoute(): void {
@@ -9,8 +10,14 @@ export default class Router {
   }
 
   public static isCustomerLogin(): void {
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
     //  @ts-ignore
-    Alpine.$data(document.body).checkCustomerLogin();
+    const router: AlpineRouter = Alpine.$data(document.body);
+    try {
+      router.checkCustomerLogin();
+    } catch (e) {
+      /* eslint-disable no-empty */
+    }
   }
 
   public static toHomePage(): void {
