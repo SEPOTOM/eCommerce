@@ -6,6 +6,7 @@ import { UserInfoCredentials } from '../types';
 import { UserInfoInputsOptions, DataAttrs } from '../data';
 
 const BIRTH_DATE_INPUT_INDEX = 4;
+const DATE_SEPARATOR = '/';
 
 export default class UserInfoView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -32,6 +33,7 @@ export default class UserInfoView {
       password: '',
       firstName: '',
       lastName: '',
+      dateOfBirth: '',
     };
 
     const inputs = this.view.querySelectorAll('input');
@@ -49,6 +51,10 @@ export default class UserInfoView {
       }
       if (inputType === 'last-name') {
         credentials.lastName = input.value;
+      }
+      if (inputType === 'birth-date') {
+        const [month, day, year] = input.value.split(DATE_SEPARATOR);
+        credentials.dateOfBirth = `${year}-${month}-${day}`;
       }
     });
 
