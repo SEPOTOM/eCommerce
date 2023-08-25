@@ -24,26 +24,32 @@ export interface CustomerResponse {
     authenticationMode: string;
     billingAddressIds: string[];
     createdAt: string;
-    createdBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
+    createdBy: CreatedOrModifiedBy;
     email: string;
     firstName: string;
     id: string;
     isEmailVerified: boolean;
     lastMessageSequenceNumber: number;
     lastModifiedAt: string;
-    lastModifiedBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
+    lastModifiedBy: CreatedOrModifiedBy;
     lastName: string;
+    middleName: string;
     password: string;
     shippingAddressIds: string[];
     stores: [];
+    title: string;
     version: number;
     versionModifiedAt: string;
+    dateOfBirth?: string;
+  };
+}
+
+export interface CreatedOrModifiedBy {
+  isPlatformClient: boolean;
+  clientId?: string;
+  user?: {
+    id: string;
+    typeId: string;
   };
 }
 
