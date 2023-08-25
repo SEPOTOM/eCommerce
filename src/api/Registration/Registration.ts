@@ -10,6 +10,7 @@ import { CustomerCredentials, ResponseInfo, RegErrorResponse, CustomerResponse }
 import Authorization from '../Authorization/Authorization';
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
+import Customer from '../Customer/Customer';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please check your network connection or try again later.',
@@ -54,6 +55,7 @@ export default class Registration {
         result.message = this.getMessage(data);
       } else {
         result.ok = true;
+        Customer.setId(data.customer.id);
       }
     } catch (err) {
       return result;
