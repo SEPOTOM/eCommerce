@@ -1,4 +1,6 @@
 import ProductHTML from './ProductView.html';
+import ProductPicture from './ProductPicture/ProductPicture.html';
+import MainPicture from './MainPicture/MainPicture.html';
 import Converter from '../../components/Converter/Converter';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
@@ -12,13 +14,23 @@ import {
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
 import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
-import { currencySymbol, currencyName, categoryStyles, smallPictureStyles } from './data';
+import { currencySymbol, currencyName, categoryStyles } from './data';
 
 const accessToken = 'access_token';
 
 const centsPerDollar = 100;
 
+const hiddenPictureOpacity = '30%';
+
+const visiblePictureOpacity = '100%';
+
+const urlStartPosition = 5;
+
+const urlEndShift = -2;
+
 export default class ProductView {
+  private static activeImage: number = 0;
+
   public draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
@@ -47,8 +59,9 @@ export default class ProductView {
   }
 
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
-    this.addProductPictureSlider(productDetails, productHTML);
+    this.addMainPicture(productDetails, productHTML);
     this.addAllProductPictures(productDetails, productHTML);
+    this.addSlider(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
     this.addProductCategories(productDetails, productHTML);
     this.addProductDescription(productDetails, productHTML);
@@ -56,9 +69,11 @@ export default class ProductView {
     this.addProductCharacteristics(productDetails, productHTML);
   }
 
-  private addProductPictureSlider(productDetails: IProduct, productHTML: HTMLElement): void {
+  private addMainPicture(productDetails: IProduct, productHTML: HTMLElement): void {
     const productPicture = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
-    const pictureContainer = document.createElement('img');
+
+    const pictureContainer = Converter.htmlToElement(MainPicture) as HTMLElement;
+
     const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
     if ('url' in imagesArray[0]) {
       pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
@@ -70,24 +85,51 @@ export default class ProductView {
     const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
     const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
 
-    imagesArray.forEach((element) => {
-      // const pictureContainer = document.createElement('img');
-      // pictureContainer.setAttribute('src', `${element.url}`);
-
-      const blockContainer = document.createElement('div');
-      blockContainer.style.backgroundImage = `url(${element.url})`;
-      blockContainer.style.width = '150px';
-      blockContainer.style.height = '100px';
-      blockContainer.style.backgroundSize = 'contain';
-      blockContainer.style.backgroundRepeat = 'no-repeat';
-      blockContainer.style.backgroundPosition = 'center center';
-      // blockContainer.appendChild(pictureContainer);
-
-      smallPictureStyles.forEach((elem) => {
-        blockContainer.classList.add(elem);
-      });
-
+    for (let i = 0; i < imagesArray.length; i += 1) {
+      const blockContainer = Converter.htmlToElement(ProductPicture) as HTMLElement;
+      blockContainer.style.backgroundImage = `url(${imagesArray[i].url})`;
+      ProductView.activeImage = 0;
       allPictures.appendChild(blockContainer);
+    }
+    this.setActiveImage();
+  }
+
+  private setActiveImage(): void {
+    const pictureContainers = document.getElementById('pictures-small')?.childNodes as NodeListOf<ChildNode>;
+    const productPicture = document.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
+    const activeImage = pictureContainers[ProductView.activeImage] as HTMLElement;
+    const activeImageURL = activeImage.style.backgroundImage.slice(urlStartPosition, urlEndShift);
+
+    pictureContainers.forEach((element) => {
+      (element as HTMLElement).style.opacity = hiddenPictureOpacity;
+    });
+
+    activeImage.style.opacity = visiblePictureOpacity;
+    console.log(activeImageURL);
+
+    (productPicture.lastChild as HTMLImageElement).setAttribute('src', activeImageURL);
+  }
+
+  private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
+    const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
+    const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
+    const minIndex = 0;
+    const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
+
+    rightArrow.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (ProductView.activeImage + 1 <= maxIndex) {
+        ProductView.activeImage += 1;
+        this.setActiveImage();
+      }
+    });
+
+    leftArrow.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (ProductView.activeImage - 1 >= minIndex) {
+        ProductView.activeImage -= 1;
+        this.setActiveImage();
+      }
     });
   }
 

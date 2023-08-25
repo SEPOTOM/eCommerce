@@ -10,6 +10,4 @@ const currencyName = {
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3'];
 
-const smallPictureStyles = ['relative', 'w-1/8', 'border-2'];
-
-export { currencySymbol, currencyName, categoryStyles, smallPictureStyles };
+export { currencySymbol, currencyName, categoryStyles };
