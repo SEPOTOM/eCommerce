@@ -1,9 +1,9 @@
 import {
-  CTP_AUTH_URL,
+  // CTP_AUTH_URL,
   CTP_API_URL,
   CTP_PROJECT_KEY,
-  CTP_CLIENT_ID,
-  CTP_CLIENT_SECRET,
+  // CTP_CLIENT_ID,
+  // CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../APIClients/JSNinjas-custom';
 import { CustomerCredentials, ResponseInfo, RegErrorResponse, CustomerResponse } from '../../types';
@@ -30,7 +30,7 @@ export default class Registration {
       message: ErrorMessages.SERVER,
     };
 
-    const bearerToken = await this.getBearerToken();
+    const bearerToken = await Tokens.getClientAccessToken();
 
     if (bearerToken === '') {
       return result;
@@ -70,17 +70,6 @@ export default class Registration {
     }
 
     Tokens.setCustomerTokens(loginResponse);
-  }
-
-  private async getBearerToken(): Promise<string> {
-    const endpoint = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
-    const basicToken = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
-    const data = await Authorization.loginClient(endpoint, basicToken);
-
-    if ('message' in data) {
-      return '';
-    }
-    return data.access_token;
   }
 
   private getMessage(data: RegErrorResponse): string {

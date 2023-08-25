@@ -3,6 +3,7 @@ export interface CustomerCredentials {
   firstName: string;
   lastName: string;
   password: string;
+  dateOfBirth: string;
   addresses: Address[];
   shippingAddresses: number[];
   billingAddresses: number[];
