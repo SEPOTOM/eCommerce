@@ -20,10 +20,6 @@ const accessToken = 'access_token';
 
 const centsPerDollar = 100;
 
-const hiddenPictureOpacity = '30%';
-
-const visiblePictureOpacity = '100%';
-
 const urlStartPosition = 5;
 
 const urlEndShift = -2;
@@ -101,11 +97,12 @@ export default class ProductView {
     const activeImageURL = activeImage.style.backgroundImage.slice(urlStartPosition, urlEndShift);
 
     pictureContainers.forEach((element) => {
-      (element as HTMLElement).style.opacity = hiddenPictureOpacity;
+      (element as HTMLElement).classList.remove('opacity-100');
+      (element as HTMLElement).classList.add('opacity-30');
     });
 
-    activeImage.style.opacity = visiblePictureOpacity;
-    console.log(activeImageURL);
+    (activeImage as HTMLElement).classList.remove('opacity-30');
+    (activeImage as HTMLElement).classList.add('opacity-100');
 
     (productPicture.lastChild as HTMLImageElement).setAttribute('src', activeImageURL);
   }

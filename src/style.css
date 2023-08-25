@@ -1019,6 +1019,10 @@ video {
   flex-wrap: wrap;
 }
 
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
 .items-start {
   align-items: flex-start;
 }
@@ -1096,6 +1100,10 @@ video {
 
 .self-center {
   align-self: center;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .whitespace-nowrap {
@@ -1514,6 +1522,10 @@ video {
 
 .opacity-80 {
   opacity: 0.8;
+}
+
+.opacity-30 {
+  opacity: 0.3;
 }
 
 .shadow {
