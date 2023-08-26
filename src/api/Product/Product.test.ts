@@ -1,4 +1,4 @@
-import Product from "./Product";
+import Product from './Product';
 
 describe('Class "Product"', () => {
   const product = new Product();

@@ -1,4 +1,4 @@
-import ProductView from "./ProductView";
+import ProductView from './ProductView';
 
 describe('Class "ProductView"', (): void => {
   const product = new ProductView();
