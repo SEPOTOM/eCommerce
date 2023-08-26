@@ -27,13 +27,13 @@ const urlEndShift = -2;
 export default class ProductView {
   private static activeImage: number = 0;
 
-  public draw(): void {
+  public draw(id: string = 'ab39b246-c292-4e50-94d6-3b2b61ee2e28'): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
-    main.append(this.getProductView('ab39b246-c292-4e50-94d6-3b2b61ee2e28'));
+    main.append(this.getProductView(id));
   }
 
-  public async displayProductByID(id: string, productHTML: HTMLElement): Promise<void> {
+  private async displayProductByID(id: string, productHTML: HTMLElement): Promise<void> {
     const clientTokens: IClientLoginResponse | IError | Error = await this.getClientToken();
 
     const product = new Product();
