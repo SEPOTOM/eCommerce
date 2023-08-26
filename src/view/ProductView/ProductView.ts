@@ -85,6 +85,12 @@ export default class ProductView {
       const blockContainer = Converter.htmlToElement(ProductPicture) as HTMLElement;
       blockContainer.style.backgroundImage = `url(${imagesArray[i].url})`;
       ProductView.activeImage = 0;
+
+      blockContainer.addEventListener('click', () => {
+        ProductView.activeImage = i;
+        this.setActiveImage();
+      });
+
       allPictures.appendChild(blockContainer);
     }
     this.setActiveImage();
