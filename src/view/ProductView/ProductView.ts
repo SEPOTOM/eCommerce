@@ -27,10 +27,10 @@ const urlEndShift = -2;
 export default class ProductView {
   private static activeImage: number = 0;
 
-  public draw(id: string = 'ab39b246-c292-4e50-94d6-3b2b61ee2e28'): void {
+  public draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
-    main.append(this.getProductView(id));
+    main.append(this.getProductView('ab39b246-c292-4e50-94d6-3b2b61ee2e28'));
   }
 
   private async displayProductByID(id: string, productHTML: HTMLElement): Promise<void> {
@@ -94,6 +94,10 @@ export default class ProductView {
       allPictures.appendChild(blockContainer);
     }
     this.setActiveImage();
+
+    if (imagesArray.length < 2) {
+      this.removeImageNavigation();
+    }
   }
 
   private setActiveImage(): void {
@@ -118,27 +122,37 @@ export default class ProductView {
     }, 500);
   }
 
+  private removeImageNavigation(): void {
+    const leftArrow = document.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`);
+    const rightArrow = document.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`);
+
+    leftArrow?.remove();
+    rightArrow?.remove();
+  }
+
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
     const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
     const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
     const minIndex = 0;
     const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
 
-    rightArrow.addEventListener('click', (event) => {
-      event.preventDefault();
-      if (ProductView.activeImage + 1 <= maxIndex) {
-        ProductView.activeImage += 1;
-        this.setActiveImage();
-      }
-    });
+    if (maxIndex > 0) {
+      rightArrow.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (ProductView.activeImage + 1 <= maxIndex) {
+          ProductView.activeImage += 1;
+          this.setActiveImage();
+        }
+      });
 
-    leftArrow.addEventListener('click', (event) => {
-      event.preventDefault();
-      if (ProductView.activeImage - 1 >= minIndex) {
-        ProductView.activeImage -= 1;
-        this.setActiveImage();
-      }
-    });
+      leftArrow.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (ProductView.activeImage - 1 >= minIndex) {
+          ProductView.activeImage -= 1;
+          this.setActiveImage();
+        }
+      });
+    }
   }
 
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
