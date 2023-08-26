@@ -24,6 +24,8 @@ const urlStartPosition = 5;
 
 const urlEndShift = -2;
 
+const numberOfDecimals = 2;
+
 export default class ProductView {
   private static activeImage: number = 0;
 
@@ -190,9 +192,18 @@ export default class ProductView {
 
   private addProductPrice(productDetails: IProduct, productHTML: HTMLElement): void {
     const productPrice = productHTML.querySelector(`#${ProductElements.PRODUCT_PRICE}`) as HTMLElement;
+    const productOldPrice = productHTML.querySelector(`#${ProductElements.PRODUCT_PRICE_ORIGINAL}`) as HTMLElement;
     const productCurrency = productDetails.masterData.current.masterVariant.prices[0].value.currencyCode;
-    const productPriceAmount =
-      productDetails.masterData.current.masterVariant.prices[0].value.centAmount / centsPerDollar;
+    let productPriceAmount: string;
+    let oldPrice: string;
+
+    if (productDetails.masterData.current.masterVariant.prices[0].discounted) {
+      productPriceAmount = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].discounted.value.centAmount);
+      oldPrice = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].value.centAmount);
+      productOldPrice.textContent = `${currencySymbol.USD}${oldPrice}`;
+    } else {
+      productPriceAmount = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].value.centAmount);
+    }
 
     if (productCurrency === currencyName.USD) {
       productPrice.textContent = `Price: ${currencySymbol.USD}${productPriceAmount}`;
@@ -200,6 +211,13 @@ export default class ProductView {
     if (productCurrency === currencyName.GBP) {
       productPrice.textContent = `Price: ${currencySymbol.GBP}${productPriceAmount}`;
     }
+  }
+
+  private setTwoDecimals(num: number): string {
+    const numString = String(num);
+    const floatString = numString.slice(0, numString.length - 2) + '.' + numString.slice(numString.length - 2, numString.length);
+
+    return floatString;
   }
 
   private addProductCharacteristics(productDetails: IProduct, productHTML: HTMLElement): void {
