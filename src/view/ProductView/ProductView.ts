@@ -48,7 +48,8 @@ export default class ProductView {
         (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';
       }
     } else {
-      productDetails = new Error(`${clientTokens.message}`);
+      (document.querySelector('main') as HTMLElement).firstChild?.remove();
+      (document.querySelector('main') as HTMLElement).textContent = clientTokens.message;
     }
   }
 
