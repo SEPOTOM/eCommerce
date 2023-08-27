@@ -1,8 +1,8 @@
 import ProductHTML from './ProductView.html';
 import ProductPicture from './ProductPictureView/ProductPictureView.html';
 import MainPicture from './MainPictureView/MainPictureView.html';
-import ProductModal from './ProductModalView/ProductModalView.html';
 import Converter from '../../components/Converter/Converter';
+import ProductModalView from './ProductModalView/ProductModalView';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
@@ -14,8 +14,8 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
-import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
-import { currencySymbol, currencyName, categoryStyles } from './data';
+import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ICategory } from '../../types';
+import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
 
 const accessToken = 'access_token';
 
@@ -75,22 +75,10 @@ export default class ProductView {
       productPicture.appendChild(pictureContainer);
 
       pictureContainer.addEventListener('click', () => {
-        this.showProductModal('ab39b246-c292-4e50-94d6-3b2b61ee2e28');
+        const modal = new ProductModalView();
+        modal.showProductModal((pictureContainer as Node).cloneNode(true) as HTMLElement);
       });
     }
-  }
-
-  private showProductModal(productID: string): void {
-    const productModal = Converter.htmlToElement(ProductModal) as HTMLElement;
-    document.body.appendChild(productModal);
-
-    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).addEventListener('click', () => {
-      productModal.remove();
-    });
-
-    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).parentElement?.appendChild(
-      this.getProductView(productID)
-    );
   }
 
   private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
