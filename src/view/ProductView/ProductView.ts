@@ -75,14 +75,20 @@ export default class ProductView {
       productPicture.appendChild(pictureContainer);
 
       pictureContainer.addEventListener('click', () => {
-        this.showProductModal();
+        this.showProductModal('ab39b246-c292-4e50-94d6-3b2b61ee2e28');
       });
     }
   }
 
-  private showProductModal(): void {
+  private showProductModal(productID: string): void {
     const productModal = Converter.htmlToElement(ProductModal) as HTMLElement;
     document.body.appendChild(productModal);
+
+    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).addEventListener('click', () => {
+      productModal.remove();
+    });
+
+    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).parentElement?.appendChild(this.getProductView(productID));
   }
 
   private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
