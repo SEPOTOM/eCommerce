@@ -180,9 +180,14 @@ interface IPrices {
   channel?: object;
   validFrom?: Date;
   validUntil?: Date;
-  discounted?: object;
+  discounted?: IDiscount;
   tiers?: object[];
   custom?: object;
+}
+
+interface IDiscount {
+  value: ITypedMoney;
+  discount: object;
 }
 
 interface ITypedMoney {
@@ -251,6 +256,7 @@ enum ProductElements {
   PRODUCT_CATEGORY = 'product-category',
   PRODUCT_DESCRIPTION = 'product-description',
   PRODUCT_PRICE = 'product-price',
+  PRODUCT_PRICE_ORIGINAL = 'original-price',
   PRODUCT_DETAILS = 'product-details',
   PRODUCT_WRAPPER = 'product-wrapper',
 }
