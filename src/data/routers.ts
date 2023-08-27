@@ -51,7 +51,7 @@ Catalog.productLinks.then((arrayLink) => {
   arrayLink.forEach((data: IRouteProductLink) => {
     routers[data.link] = () => {
       const main: HTMLElement = document.querySelector('main')!;
-      main.innerHTML = `Palceholder for product ${data.link}`;
+      main.innerHTML = `Placeholder for product ${data.link}`;
     };
   });
 });
