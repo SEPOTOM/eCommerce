@@ -12,5 +12,6 @@ export default class BreadcrumbsView {
   public static clear() {
     const breadcraumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
     breadcraumbs.innerHTML = '';
+    localStorage.removeItem('previousCategory');
   }
 }

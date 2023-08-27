@@ -32,7 +32,6 @@ const routers: { [key: string]: () => void } = {
     RegistrationView.draw();
     BreadcrumbsView.clear();
   },
-  '/product': () => new ProductView().draw(),
   '/profile': () => {
     const main = document.querySelector('main');
 
@@ -51,10 +50,7 @@ Navigation.links.then((arrayLink: INavigation[]) => {
 
 Catalog.productLinks.then((arrayLink) => {
   arrayLink.forEach((data: IRouteProductLink) => {
-    routers[data.link] = () => {
-      const main: HTMLElement = document.querySelector('main')!;
-      main.innerHTML = `Placeholder for product ${data.link}`;
-    };
+    routers[data.link] = () => new ProductView().draw(data.produtId);
   });
 });
 

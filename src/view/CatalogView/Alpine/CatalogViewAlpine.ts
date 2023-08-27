@@ -24,6 +24,8 @@ const CategoryViewAlpine: IAlpineComponent = {
         link: `/${json.key}`,
       };
 
+      localStorage.setItem('previousCategory', JSON.stringify(categoryLink));
+
       this.title = json.name['en-US'];
       this.description = json.description['en-US'];
 
