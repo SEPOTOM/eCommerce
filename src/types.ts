@@ -252,6 +252,7 @@ enum ProductElements {
   PRODUCT_DESCRIPTION = 'product-description',
   PRODUCT_PRICE = 'product-price',
   PRODUCT_DETAILS = 'product-details',
+  PRODUCT_WRAPPER = 'product-wrapper',
 }
 
 export {
