@@ -42,8 +42,12 @@ export default class ProductView {
     let productDetails: IProduct | IError | Error;
 
     if (accessToken in clientTokens) {
-      productDetails = await product.getProductByID(id, clientTokens.access_token);
-      this.putProductDataToPage(productDetails as IProduct, productHTML);
+      try {
+        productDetails = await product.getProductByID(id, clientTokens.access_token);
+        this.putProductDataToPage(productDetails as IProduct, productHTML);
+      } catch (error) {
+        console.log('Wrong product ID. This error is captured and processed.');
+      }
     } else {
       productDetails = new Error(`${clientTokens.message}`);
     }
@@ -132,6 +136,16 @@ export default class ProductView {
     rightArrow?.remove();
   }
 
+  private widenDescription(): void {
+    const miniImages = document.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
+    const productWrapper = document.querySelector(`#${ProductElements.PRODUCT_WRAPPER}`) as HTMLElement;
+    const productDescription = document.querySelector(`#${ProductElements.PRODUCT_DESCRIPTION}`) as HTMLElement;
+
+    miniImages.remove();
+
+    productWrapper.appendChild(productDescription);
+  }
+
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
     const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
     const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
@@ -139,16 +153,14 @@ export default class ProductView {
     const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
 
     if (maxIndex > 0) {
-      rightArrow.addEventListener('click', (event) => {
-        event.preventDefault();
+      rightArrow.addEventListener('click', () => {
         if (ProductView.activeImage + 1 <= maxIndex) {
           ProductView.activeImage += 1;
           this.setActiveImage();
         }
       });
 
-      leftArrow.addEventListener('click', (event) => {
-        event.preventDefault();
+      leftArrow.addEventListener('click', () => {
         if (ProductView.activeImage - 1 >= minIndex) {
           ProductView.activeImage -= 1;
           this.setActiveImage();
@@ -187,7 +199,12 @@ export default class ProductView {
 
   private addProductDescription(productDetails: IProduct, productHTML: HTMLElement): void {
     const productDescription = productHTML.querySelector(`#${ProductElements.PRODUCT_DESCRIPTION}`) as HTMLElement;
+    const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
     productDescription.textContent = productDetails.masterData.current.description['en-US'];
+
+    if (imagesArray.length < 2) {
+      this.widenDescription();
+    }
   }
 
   private addProductPrice(productDetails: IProduct, productHTML: HTMLElement): void {
