@@ -18,13 +18,9 @@ import { currencySymbol, currencyName, categoryStyles } from './data';
 
 const accessToken = 'access_token';
 
-const centsPerDollar = 100;
-
 const urlStartPosition = 5;
 
 const urlEndShift = -2;
-
-const numberOfDecimals = 2;
 
 export default class ProductView {
   private static activeImage: number = 0;
@@ -215,11 +211,15 @@ export default class ProductView {
     let oldPrice: string;
 
     if (productDetails.masterData.current.masterVariant.prices[0].discounted) {
-      productPriceAmount = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].discounted.value.centAmount);
+      productPriceAmount = this.setTwoDecimals(
+        productDetails.masterData.current.masterVariant.prices[0].discounted.value.centAmount
+      );
       oldPrice = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].value.centAmount);
       productOldPrice.textContent = `${currencySymbol.USD}${oldPrice}`;
     } else {
-      productPriceAmount = this.setTwoDecimals(productDetails.masterData.current.masterVariant.prices[0].value.centAmount);
+      productPriceAmount = this.setTwoDecimals(
+        productDetails.masterData.current.masterVariant.prices[0].value.centAmount
+      );
     }
 
     if (productCurrency === currencyName.USD) {
@@ -232,7 +232,10 @@ export default class ProductView {
 
   private setTwoDecimals(num: number): string {
     const numString = String(num);
-    const floatString = numString.slice(0, numString.length - 2) + '.' + numString.slice(numString.length - 2, numString.length);
+    const floatString = `${numString.slice(0, numString.length - 2)}.${numString.slice(
+      numString.length - 2,
+      numString.length
+    )}`;
 
     return floatString;
   }
