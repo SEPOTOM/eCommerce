@@ -20,29 +20,31 @@ export interface Address {
 }
 
 export interface CustomerResponse {
-  customer: {
-    addresses: Address[];
-    authenticationMode: string;
-    billingAddressIds: string[];
-    createdAt: string;
-    createdBy: CreatedOrModifiedBy;
-    email: string;
-    firstName: string;
-    id: string;
-    isEmailVerified: boolean;
-    lastMessageSequenceNumber: number;
-    lastModifiedAt: string;
-    lastModifiedBy: CreatedOrModifiedBy;
-    lastName: string;
-    middleName: string;
-    password: string;
-    shippingAddressIds: string[];
-    stores: [];
-    title: string;
-    version: number;
-    versionModifiedAt: string;
-    dateOfBirth?: string;
-  };
+  customer: CustomerDataResponse;
+}
+
+export interface CustomerDataResponse {
+  addresses: Address[];
+  authenticationMode: string;
+  billingAddressIds: string[];
+  createdAt: string;
+  createdBy: CreatedOrModifiedBy;
+  email: string;
+  firstName: string;
+  id: string;
+  isEmailVerified: boolean;
+  lastMessageSequenceNumber: number;
+  lastModifiedAt: string;
+  lastModifiedBy: CreatedOrModifiedBy;
+  lastName: string;
+  middleName: string;
+  password: string;
+  shippingAddressIds: string[];
+  stores: [];
+  title: string;
+  version: number;
+  versionModifiedAt: string;
+  dateOfBirth?: string;
 }
 
 export interface CreatedOrModifiedBy {

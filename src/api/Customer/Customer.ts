@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
-import { CustomerResponse } from '../../types';
+import { CustomerDataResponse } from '../../types';
 
 enum ErrorMessages {
   NO_CUSTOMER = 'The customer with the given ID was not found',
@@ -9,7 +9,7 @@ enum ErrorMessages {
 }
 
 export default class Customer {
-  public static async getCurrentCustomer(): Promise<CustomerResponse | Error> {
+  public static async getCurrentCustomer(): Promise<CustomerDataResponse | Error> {
     try {
       const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
       const bearerToken = (await Tokens.getCustomerTokens()).access_token;
@@ -20,7 +20,7 @@ export default class Customer {
           Authorization: `Bearer ${bearerToken}`,
         },
       });
-      const data: CustomerResponse = await response.json();
+      const data: CustomerDataResponse = await response.json();
 
       if ('message' in data) {
         return new Error(ErrorMessages.NO_CUSTOMER);
