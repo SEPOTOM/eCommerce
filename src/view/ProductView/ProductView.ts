@@ -44,7 +44,8 @@ export default class ProductView {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
       } catch (error) {
-        console.log('Wrong product ID. This error is captured and processed.');
+        (document.querySelector('main') as HTMLElement).firstChild?.remove();
+        (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';
       }
     } else {
       productDetails = new Error(`${clientTokens.message}`);
@@ -93,6 +94,7 @@ export default class ProductView {
       blockContainer.addEventListener('click', () => {
         ProductView.activeImage = i;
         this.setActiveImage();
+        this.setArrowStyles(imagesArray.length - 1);
       });
 
       allPictures.appendChild(blockContainer);
@@ -150,11 +152,15 @@ export default class ProductView {
     const minIndex = 0;
     const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
 
+    leftArrow.classList.remove('hover:bg-white/50');
+    rightArrow.classList.remove('cursor-not-allowed');
+
     if (maxIndex > 0) {
       rightArrow.addEventListener('click', () => {
         if (ProductView.activeImage + 1 <= maxIndex) {
           ProductView.activeImage += 1;
           this.setActiveImage();
+          this.setArrowStyles(maxIndex);
         }
       });
 
@@ -162,9 +168,37 @@ export default class ProductView {
         if (ProductView.activeImage - 1 >= minIndex) {
           ProductView.activeImage -= 1;
           this.setActiveImage();
+          this.setArrowStyles(maxIndex);
         }
       });
     }
+  }
+
+  private setArrowStyles(maxIndex: number): void {
+    const rightArrow = document.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
+    const leftArrow = document.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
+    if (ProductView.activeImage === 0) {
+      this.setActiveArrow(rightArrow);
+      this.setInactiveArrow(leftArrow);
+    }
+    if (ProductView.activeImage === maxIndex) {
+      this.setActiveArrow(leftArrow);
+      this.setInactiveArrow(rightArrow);
+    }
+    if (ProductView.activeImage > 0 && ProductView.activeImage < maxIndex) {
+      this.setActiveArrow(rightArrow);
+      this.setActiveArrow(leftArrow);
+    }
+  }
+
+  private setActiveArrow(arrow: HTMLElement) {
+    arrow.classList.add('hover:bg-white/50');
+    arrow.classList.remove('cursor-not-allowed');
+  }
+
+  private setInactiveArrow(arrow: HTMLElement) {
+    arrow.classList.remove('hover:bg-white/50');
+    arrow.classList.add('cursor-not-allowed');
   }
 
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
