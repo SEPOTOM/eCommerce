@@ -5,6 +5,7 @@ import Page404View from '../view/Page404View/Page404View';
 import RegistrationView from '../view/RegistrationView/RegistrationView';
 import CatalogView from '../view/CatalogView/CatalogView';
 import BreadcrumbsView from '../view/BreadcrumbsView/BreadcrumbsView';
+import ProductView from '../view/ProductView/ProductView';
 
 // import navigation links
 import Navigation from '../api/Navigation/Navigation';
@@ -31,6 +32,7 @@ const routers: { [key: string]: () => void } = {
     RegistrationView.draw();
     BreadcrumbsView.clear();
   },
+  '/product': () => new ProductView().draw(),
   '/profile': () => {
     const main = document.querySelector('main');
 
