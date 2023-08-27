@@ -1,7 +1,7 @@
 import ProductHTML from './ProductView.html';
 import ProductPicture from './ProductPictureView/ProductPictureView.html';
 import MainPicture from './MainPictureView/MainPictureView.html';
-import ProductModal from './ProductModalView/ProductModdalView.html';
+import ProductModal from './ProductModalView/ProductModalView.html';
 import Converter from '../../components/Converter/Converter';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
@@ -88,7 +88,9 @@ export default class ProductView {
       productModal.remove();
     });
 
-    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).parentElement?.appendChild(this.getProductView(productID));
+    (document.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).parentElement?.appendChild(
+      this.getProductView(productID)
+    );
   }
 
   private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
