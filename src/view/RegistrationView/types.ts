@@ -13,6 +13,7 @@ export interface UserInfoCredentials {
   firstName: string;
   lastName: string;
   password: string;
+  dateOfBirth: string;
 }
 
 export type PatternAndMessage = [RegExp, string];

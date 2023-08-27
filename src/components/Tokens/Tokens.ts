@@ -2,9 +2,16 @@
 import Router from '../Router/Router';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, TokenPayload } from '../../types';
+import {
+  CTP_AUTH_URL,
+  // CTP_API_URL,
+  // CTP_PROJECT_KEY,
+  CTP_CLIENT_ID,
+  CTP_CLIENT_SECRET,
+  CTP_SCOPES,
+} from '../../api/APIClients/JSNinjas-custom';
 
 export default class Tokens {
-  // Please use the Tokens.customerTokens object once a customer logged in successfully
   private static customerTokens: ICustomerLoginResponse;
 
   public static setCustomerTokens(tokens: ICustomerLoginResponse): void {
@@ -52,5 +59,16 @@ export default class Tokens {
       refresh_token: '',
       token_type: '',
     });
+  }
+
+  public static async getClientAccessToken(): Promise<string> {
+    const endpoint = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
+    const basicToken = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
+    const data = await Authorization.loginClient(endpoint, basicToken);
+
+    if ('message' in data) {
+      return '';
+    }
+    return data.access_token;
   }
 }
