@@ -8,7 +8,6 @@ enum StorageNames {
 }
 
 enum ErrorMessages {
-  NO_ID = 'Customer id not found',
   NO_CUSTOMER = 'The customer with the given ID was not found',
   SERVER = 'Failed to connect to the server',
 }
@@ -23,14 +22,8 @@ export default class Customer {
   }
 
   public static async getCurrentCustomer(): Promise<CustomerResponse | Error> {
-    const id = this.getId();
-
-    if (!id) {
-      return new Error(ErrorMessages.NO_ID);
-    }
-
     try {
-      const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/customers/${id}`;
+      const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
       const bearerToken = (await Tokens.getCustomerTokens()).access_token;
 
       const response = await fetch(endpoint, {
