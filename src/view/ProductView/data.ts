@@ -19,7 +19,9 @@ enum ProductElements {
   PRODUCT_PRICE = 'product-price',
   PRODUCT_PRICE_ORIGINAL = 'original-price',
   PRODUCT_DETAILS = 'product-details',
+  PRODUCT_WRAPPER = 'product-wrapper',
   PRODUCT_MODAL_CLOSE = 'close-icon',
+
 }
 
 enum ProductModal {
