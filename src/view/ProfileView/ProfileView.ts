@@ -2,12 +2,12 @@ import Converter from '../../components/Converter/Converter';
 /* eslint-disable import/no-cycle */
 import Customer from '../../api/Customer/Customer';
 import HTML from './ProfileView.html';
-import ParagraphView from './ParagraphView/ParagraphView';
-import { CustomerDataResponse } from '../../types';
-import { DataAttrs, ParagraphLabels } from './data';
+import UserInfoView from './UserInfoView/UserInfoView';
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
+
+  private userInfo = new UserInfoView();
 
   constructor() {
     this.configureView();
@@ -26,21 +26,7 @@ export default class ProfileView {
     const customerData = await Customer.getCurrentCustomer();
 
     if (!('message' in customerData)) {
-      this.configureUserInfo(customerData);
-    }
-  }
-
-  private configureUserInfo(customerData: CustomerDataResponse): void {
-    const section = this.view.querySelector(`[${DataAttrs.USER_INFO}]`);
-
-    section?.append(new ParagraphView().buildView(ParagraphLabels.FIRST_NAME, customerData.firstName));
-    section?.append(new ParagraphView().buildView(ParagraphLabels.LAST_NAME, customerData.lastName));
-
-    if (typeof customerData.dateOfBirth === 'string') {
-      const [year, month, day] = customerData.dateOfBirth.split('-');
-      const formattedDate = `${month}/${day}/${year}`;
-
-      section?.append(new ParagraphView().buildView(ParagraphLabels.BIRTH_DATE, formattedDate));
+      this.view.append(this.userInfo.buildView(customerData));
     }
   }
 }

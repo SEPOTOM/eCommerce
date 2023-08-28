@@ -1,6 +1,4 @@
-export enum DataAttrs {
-  USER_INFO = 'data-user-info',
-}
+export enum DataAttrs {}
 
 export enum ParagraphLabels {
   FIRST_NAME = 'First name:',
