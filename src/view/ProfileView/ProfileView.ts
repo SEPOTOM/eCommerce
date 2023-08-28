@@ -3,11 +3,14 @@ import Converter from '../../components/Converter/Converter';
 import Customer from '../../api/Customer/Customer';
 import HTML from './ProfileView.html';
 import UserInfoView from './UserInfoView/UserInfoView';
+import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAddressesView';
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
   private userInfo = new UserInfoView();
+
+  private billingAddresses = new BillingAddressesView();
 
   constructor() {
     this.configureView();
@@ -27,6 +30,7 @@ export default class ProfileView {
 
     if (!('message' in customerData)) {
       this.view.append(this.userInfo.buildView(customerData));
+      this.view.append(this.billingAddresses.buildView(customerData));
     }
   }
 }
