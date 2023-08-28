@@ -198,11 +198,13 @@ export default class ProductView {
 
   private setActiveArrow(arrow: HTMLElement) {
     arrow.classList.add('hover:bg-white/50');
+    arrow.classList.add('cursor-pointer');
     arrow.classList.remove('cursor-not-allowed');
   }
 
   private setInactiveArrow(arrow: HTMLElement) {
     arrow.classList.remove('hover:bg-white/50');
+    arrow.classList.remove('cursor-pointer');
     arrow.classList.add('cursor-not-allowed');
   }
 
