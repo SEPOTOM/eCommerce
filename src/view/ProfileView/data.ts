@@ -1,4 +1,7 @@
-export enum DataAttrs {}
+export enum DataAttrs {
+  ADDRESSES_LIST = 'data-addresses-list',
+  ADDRESSES_TITLE = 'data-addresses-title',
+}
 
 export enum ParagraphLabels {
   FIRST_NAME = 'First name:',
@@ -11,4 +14,9 @@ export enum AddressLabels {
   CITY = 'City:',
   COUNTRY = 'Country:',
   CODE = 'Postal code:',
+}
+
+export enum AddressTypes {
+  BILLING = 'billing',
+  SHIPPING = 'shipping',
 }
