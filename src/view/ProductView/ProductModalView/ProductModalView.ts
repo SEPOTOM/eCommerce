@@ -22,7 +22,7 @@ export default class ProductModalView {
     const slider = new Slider();
     const sliderContainer = (modalHTML.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement)
       .parentElement as HTMLElement;
-    sliderContainer.appendChild(slider.getSlider(pictureContainer));
+    sliderContainer.appendChild(slider.getSlider((pictureContainer as HTMLImageElement).src));
   }
 
   private addCloseModal(modalHTML: HTMLElement): void {
