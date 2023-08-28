@@ -21,7 +21,6 @@ enum ProductElements {
   PRODUCT_DETAILS = 'product-details',
   PRODUCT_WRAPPER = 'product-wrapper',
   PRODUCT_MODAL_CLOSE = 'close-icon',
-
 }
 
 enum ProductModal {
