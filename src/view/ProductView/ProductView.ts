@@ -16,7 +16,7 @@ import {
 } from '../../api/APIClients/JSNinjas-custom';
 import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
 import { currencySymbol, currencyName, categoryStyles } from './data';
-import { IBreadCrumbLink } from './../CatalogView/types/types'
+import { IBreadCrumbLink } from '../CatalogView/types/types';
 
 const accessToken = 'access_token';
 
@@ -42,19 +42,18 @@ export default class ProductView {
     if (accessToken in clientTokens) {
       try {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
-        console.log(productDetails);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
 
         // Set breadcrumbs
         const arrayCrumbs: IBreadCrumbLink[] = [];
         const productLinks: IBreadCrumbLink = {
-            name: (productDetails as IProduct).masterData.current.name['en-US'],
-            link: `/${(productDetails as IProduct).key}`,
+          name: (productDetails as IProduct).masterData.current.name['en-US'],
+          link: `/${(productDetails as IProduct).key}`,
         };
 
         const categoryLink: string | null = localStorage.getItem('previousCategory');
 
-        if (categoryLink) arrayCrumbs.push(JSON.parse(categoryLink))
+        if (categoryLink) arrayCrumbs.push(JSON.parse(categoryLink));
         arrayCrumbs.push(productLinks);
 
         new BreadcrumbsView().draw(arrayCrumbs);

@@ -63,13 +63,19 @@
 
               <div class="flex justify-between items-center pt-4">
                 <div class="flex gap-2 items-center">
-                  <div
-                    class="text-lg font-medium text-gray-800"
-                    :class="{ 'text-sm opacity-50 line-through': item.discount }"
-                  >
-                    <span x-text="priceConverter(item.price)"></span>
-                    <span class="text-sm text-gray-500" x-text="item.currency"></span>
-                  </div>
+                  <template x-if="item.price">
+                    <div
+                      class="text-lg font-medium text-gray-800"
+                      :class="{ 'text-sm opacity-50 line-through': item.discount }"
+                    >
+                      <span x-text="priceConverter(item.price)"></span>
+                      <span class="text-sm text-gray-500" x-text="item.currency"></span>
+                    </div>
+                  </template>
+
+                  <template x-if="!item.price">
+                    <div class="text-lg font-medium text-gray-800">No price yet</div>
+                  </template>
 
                   <template x-if="item.discount">
                     <div class="text-lg font-medium text-gray-800 before:content-['/']">

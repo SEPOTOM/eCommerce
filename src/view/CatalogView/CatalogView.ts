@@ -1,4 +1,5 @@
 import CatalogViewHTML from './CatalogView.html';
+/* eslint-disable import/no-cycle */
 import CategoryViewAlpine from './Alpine/CatalogViewAlpine';
 
 export default class CatalogView {

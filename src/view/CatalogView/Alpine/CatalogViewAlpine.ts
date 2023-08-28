@@ -1,6 +1,10 @@
+/* eslint-disable import/no-cycle */
 import Catalog from '../../../api/Catalog/Catalog';
 import BreadcrumbsView from '../../BreadcrumbsView/BreadcrumbsView';
 import { ICategoryInfoJSON, IBreadCrumbLink, IAlpineComponent, IShortProductsJSON } from '../types/types';
+
+// Import images placeholder if product don't have an image
+import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
 
 const CategoryViewAlpine: IAlpineComponent = {
   title: null,
@@ -46,14 +50,17 @@ const CategoryViewAlpine: IAlpineComponent = {
             link: `/${item.key}`,
             name: current.name['en-US'],
             description: current.description['en-US'] || '',
-            image: current.masterVariant.images[0].url,
+            image: current.masterVariant.images.length ? current.masterVariant.images[0].url : imgProductPlaceholder,
             attributes: current.masterVariant?.attributes || [],
             onStock: current.masterVariant?.availability?.isOnStock || false,
-            price: (current.masterVariant.prices[0].value.centAmount / 100).toFixed(2),
-            discount: current.masterVariant.prices[0].discounted
-              ? (current.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
+            price: current.masterVariant.prices.length
+              ? (current.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
               : null,
-            currency: current.masterVariant.prices[0].value.currencyCode,
+            discount:
+              current.masterVariant.prices.length && current.masterVariant.prices[0].discounted
+                ? (current.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
+                : null,
+            currency: current.masterVariant.prices.length ? current.masterVariant.prices[0].value.currencyCode : null,
           });
         }
       });
