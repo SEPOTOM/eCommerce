@@ -68,6 +68,7 @@ export interface ResponseInfo {
 
 export interface AlpineRouter {
   isCustomerLogin: boolean;
+  activeItemMenu: number;
   init(): void;
   route(event: Event): void;
   logout(): void;

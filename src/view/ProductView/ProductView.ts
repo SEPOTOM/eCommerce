@@ -5,6 +5,7 @@ import Converter from '../../components/Converter/Converter';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
+import BreadcrumbsView from '../BreadcrumbsView/BreadcrumbsView';
 import {
   CTP_AUTH_URL,
   /* CTP_API_URL, */
@@ -15,6 +16,7 @@ import {
 } from '../../api/APIClients/JSNinjas-custom';
 import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
 import { currencySymbol, currencyName, categoryStyles } from './data';
+import { IBreadCrumbLink } from '../CatalogView/types/types';
 
 const accessToken = 'access_token';
 
@@ -25,10 +27,10 @@ const urlEndShift = -2;
 export default class ProductView {
   private static activeImage: number = 0;
 
-  public draw(): void {
+  public draw(id: string): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = '';
-    main.append(this.getProductView('ab39b246-c292-4e50-94d6-3b2b61ee2e28'));
+    main.append(this.getProductView(id));
   }
 
   private async displayProductByID(id: string, productHTML: HTMLElement): Promise<void> {
@@ -41,6 +43,20 @@ export default class ProductView {
       try {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
+
+        // Set breadcrumbs
+        const arrayCrumbs: IBreadCrumbLink[] = [];
+        const productLinks: IBreadCrumbLink = {
+          name: (productDetails as IProduct).masterData.current.name['en-US'],
+          link: `/${(productDetails as IProduct).key}`,
+        };
+
+        const categoryLink: string | null = localStorage.getItem('previousCategory');
+
+        if (categoryLink) arrayCrumbs.push(JSON.parse(categoryLink));
+        arrayCrumbs.push(productLinks);
+
+        new BreadcrumbsView().draw(arrayCrumbs);
       } catch (error) {
         (document.querySelector('main') as HTMLElement).firstChild?.remove();
         (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';

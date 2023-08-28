@@ -4,8 +4,13 @@ import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
 import { AlpineRouter } from '../../../types';
 
+// import links
+import Navigation from '../../../api/Navigation/Navigation';
+import Catalog from '../../../api/Catalog/Catalog';
+
 const RouterAlpine: AlpineRouter = {
   isCustomerLogin: false,
+  activeItemMenu: -1,
 
   init(): void {
     this.handleLocation();
@@ -26,6 +31,7 @@ const RouterAlpine: AlpineRouter = {
 
     window.history.pushState({}, '', href);
     this.handleLocation();
+    this.activeItemMenu = -1;
   },
 
   logout(): void {
@@ -34,19 +40,21 @@ const RouterAlpine: AlpineRouter = {
 
   handleLocation(): void {
     const path: string = window.location.pathname;
-    // this.checkCustomerLogin();
 
     // Added a redirect check if the user is already logged in.
-    // TODO: In the future, there will be a redirect to the "Profile" page
     Tokens.getCustomerTokens().then((data) => {
       this.isCustomerLogin = !!data?.access_token;
 
-      if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
-        Router.toHomePage();
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        routers[path] ? routers[path]() : routers['404']();
-      }
+      Navigation.links.then(() => {
+        Catalog.productLinks.then(() => {
+          if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
+            Router.toHomePage();
+          } else {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            routers[path] ? routers[path]() : routers['404']();
+          }
+        });
+      });
     });
   },
 

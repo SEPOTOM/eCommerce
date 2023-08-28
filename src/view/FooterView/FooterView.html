@@ -106,13 +106,13 @@
             </svg>
           </span>
           <div class="grid p-4 md:!grid md:text-right md:pr-0 md:pb-0" x-show="show">
-            <template x-for="item in menu">
+            <template x-for="(item, index) in menu">
               <div class="pb-2 mb-2 border-b border-gray-300 last:border-b-0 last:pb-0 last:mb-0 md:border-b-0 lg:pb-0">
                 <a
                   class="text-gray-600 font-medium hover:text-blue-500 duration-300"
                   x-text="item.text"
                   :href="item.link"
-                  @click="() => { show = false; route($event); }"
+                  @click="() => { route($event); show = false; activeItemMenu = index; }"
                 ></a>
               </div>
             </template>
