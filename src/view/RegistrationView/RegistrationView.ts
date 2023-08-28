@@ -1,104 +1,95 @@
 import Converter from '../../components/Converter/Converter';
-import InputView from './InputView/InputView';
-import DateInputView from './InputView/DateInputView/DateInputView';
-import DynamicInputView from './InputView/DynamicInputView/DynamicInputView';
-import SelectView from './SelectView/SelectView';
-import { InputOptions } from './types';
-import { ValidationData, Countries, PostalCodeErrorMessages, PostalCodeRegExps } from './data';
 import HTML from './RegistrationView.html';
+import { FormErrorMessages, DataAttrs } from './data';
+import { CustomerCredentials } from '../../types';
+import BillingAddressView from './AddressView/BillingAddressView/BillingAddressView';
+import ShippingAddressView from './AddressView/ShippingAddressView/ShippingAddressView';
+import UserInfoView from './UserInfoView/UserInfoView';
+/* eslint-disable import/no-cycle */
+import Registration from '../../api/Registration/Registration';
 
-const DEFAULT_COUNTRY = 'US';
-const BIRTH_DATE_INPUT_INDEX = 4;
-const POSTAL_CODE_INPUT_INDEX = 7;
-
-enum InputTypes {
-  EMAIL = 'email',
-  PASSWORD = 'password',
-}
-
-enum ClassNames {
-  FORM = 'reg-form',
-  LABEL = 'reg-form__label',
-  BUTTON = 'reg-form__button',
-  ROW = 'reg-form__row',
-}
-
-const inputOptions: InputOptions[] = [
-  { validationData: ValidationData.EMAIL },
-  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
-  { validationData: ValidationData.FIRST_NAME },
-  { validationData: ValidationData.LAST_NAME },
-  { validationData: ValidationData.DATE },
-  { validationData: ValidationData.STREET },
-  { validationData: ValidationData.CITY },
-  { validationData: ValidationData.POSTAL_CODES },
-];
+const ERROR_DISPLAY_TIME_MS = 3000;
 
 export default class RegistrationView {
   private form = Converter.htmlToElement<HTMLFormElement>(HTML) || document.createElement('form');
 
-  private select: HTMLSelectElement | null = null;
+  private billingAddressObject = new BillingAddressView();
 
-  private postalCodeInputObject: DynamicInputView | null = null;
+  private shippingAddressObject = new ShippingAddressView();
 
-  private inputObjects: InputView[] = [];
+  private userInfoObject = new UserInfoView();
+
+  private errorBlock: HTMLDivElement | null = null;
+
+  private errorTimeoutId = 0;
 
   public buildRegistrationView(): HTMLFormElement {
-    const rows = this.form.querySelectorAll(`.${ClassNames.ROW}`);
-
-    this.configureSelect(rows);
-    this.configureInputs(rows);
+    this.configureAddresses();
+    this.configureUserInfo();
     this.configureButton();
+    this.configureErrorBlock();
+    this.configureCheckboxes();
     this.configureForm();
 
     return this.form;
   }
 
-  private configureInputs(rows: NodeListOf<Element>): void {
-    const labels = this.form.querySelectorAll(`.${ClassNames.LABEL}`);
-
-    inputOptions.forEach((inputOption, index) => {
-      const localInputOption = inputOption;
-
-      localInputOption.id = labels[index].getAttribute('for') || '';
-
-      let inputObject: InputView | null = null;
-
-      if (index === BIRTH_DATE_INPUT_INDEX) {
-        inputObject = new DateInputView();
-      } else if (index === POSTAL_CODE_INPUT_INDEX) {
-        this.postalCodeInputObject = new DynamicInputView(
-          PostalCodeRegExps[DEFAULT_COUNTRY],
-          PostalCodeErrorMessages[DEFAULT_COUNTRY]
-        );
-        inputObject = this.postalCodeInputObject;
-      } else {
-        inputObject = new InputView();
-      }
-
-      this.inputObjects.push(inputObject);
-
-      const inputRow = inputObject.buildInputView(localInputOption);
-
-      rows[index].append(inputRow);
-    });
+  public static draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(new RegistrationView().buildRegistrationView());
   }
 
-  private configureSelect(rows: NodeListOf<Element>): void {
-    const lastRow = rows[rows.length - 1];
-    const label = lastRow.querySelector(`.${ClassNames.LABEL}`);
-    const id = label?.getAttribute('for') || '';
+  private configureAddresses(): void {
+    this.form.prepend(this.shippingAddressObject.buildAddressBlockView());
+    this.form.prepend(this.billingAddressObject.buildAddressBlockView());
+  }
 
-    this.select = new SelectView().buildSelectView(Countries, id);
-
-    this.select.addEventListener('change', this.changePostalCodeInputValidation.bind(this));
-
-    lastRow.append(this.select);
+  private configureUserInfo(): void {
+    this.form.prepend(this.userInfoObject.buildView());
   }
 
   private configureButton(): void {
-    const button = this.form.querySelector(`.${ClassNames.BUTTON}`);
-    button?.addEventListener('click', this.sendForm);
+    const button = this.form.querySelector(`[${DataAttrs.BUTTON}]`);
+    button?.addEventListener('click', this.sendForm.bind(this));
+  }
+
+  private configureCheckboxes(): void {
+    const billingCheckbox = this.billingAddressObject.getUseAsCheckbox();
+    billingCheckbox.addEventListener('change', () => {
+      if (billingCheckbox.checked) {
+        const shippingTextFields = this.shippingAddressObject.getTextFields();
+        const shippingSelect = this.shippingAddressObject.getSelect();
+
+        this.shippingAddressObject.disable();
+
+        this.billingAddressObject.trackTextFields(shippingTextFields);
+        this.billingAddressObject.trackSelect(shippingSelect);
+      } else {
+        this.billingAddressObject.untrackTextFields();
+        this.billingAddressObject.untrackSelect();
+
+        this.shippingAddressObject.enable();
+      }
+    });
+
+    const shippingCheckbox = this.shippingAddressObject.getUseAsCheckbox();
+    shippingCheckbox.addEventListener('change', () => {
+      if (shippingCheckbox.checked) {
+        const billingTextFields = this.billingAddressObject.getTextFields();
+        const billingSelect = this.billingAddressObject.getSelect();
+
+        this.billingAddressObject.disable();
+
+        this.shippingAddressObject.trackTextFields(billingTextFields);
+        this.shippingAddressObject.trackSelect(billingSelect);
+      } else {
+        this.shippingAddressObject.untrackTextFields();
+        this.shippingAddressObject.untrackSelect();
+
+        this.billingAddressObject.enable();
+      }
+    });
   }
 
   private configureForm(): void {
@@ -106,34 +97,86 @@ export default class RegistrationView {
     this.form.addEventListener('click', this.validateInputs);
   }
 
-  private sendForm(e: Event): void {
+  private configureErrorBlock(): void {
+    this.errorBlock = this.form.querySelector('[data-error-reg]');
+  }
+
+  private async sendForm(e: Event): Promise<void> {
     e.preventDefault();
 
+    const delay = 1000;
     const { form } = this;
     const formValid = RegistrationView.validateForm(form);
 
     if (formValid) {
-      console.log('Sending form...');
+      this.hideErrorBlock();
+
+      const regObject = new Registration();
+
+      const credentials = this.collectCredentials();
+      const response = await regObject.register(credentials);
+
+      if (response.ok) {
+        this.hideErrorBlock();
+        form.dataset.registered = 'true';
+
+        // Redirect to Login page
+        // TODO: Need to trigger after show sucess message
+        setTimeout(async () => {
+          await regObject.login(credentials.email, credentials.password);
+        }, delay);
+      } else {
+        form.dataset.registered = 'false';
+        this.showErrorBlock(response.message);
+      }
     } else {
-      console.error('Form is invalid!');
+      clearTimeout(this.errorTimeoutId);
+
+      this.showErrorBlock(FormErrorMessages.INVALID);
+
+      this.errorTimeoutId = window.setTimeout(this.hideErrorBlock.bind(this), ERROR_DISPLAY_TIME_MS);
     }
   }
 
-  private changePostalCodeInputValidation(): void {
-    const countyCode = `${this.select?.value}`;
+  private collectCredentials(): CustomerCredentials {
+    const userInfoCredentials = this.userInfoObject.collectCredentials();
+    const billingAddressCredentials = this.billingAddressObject.collectCredentials();
+    const shippingAddressCredentials = this.shippingAddressObject.collectCredentials();
+    const useBillingAsDefault = this.billingAddressObject.getDefaultCheckbox().checked;
+    const useShippingAsDefault = this.shippingAddressObject.getDefaultCheckbox().checked;
 
-    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countyCode]);
-    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countyCode]);
+    const credentials: CustomerCredentials = {
+      ...userInfoCredentials,
+      addresses: [],
+      shippingAddresses: [],
+      billingAddresses: [],
+    };
 
-    this.postalCodeInputObject?.validateInput();
+    credentials.addresses.push({
+      ...billingAddressCredentials,
+    });
+    credentials.billingAddresses.push(credentials.addresses.length - 1);
+
+    if (useBillingAsDefault) {
+      credentials.defaultBillingAddress = credentials.addresses.length - 1;
+    }
+
+    credentials.addresses.push({
+      ...shippingAddressCredentials,
+    });
+    credentials.shippingAddresses.push(credentials.addresses.length - 1);
+
+    if (useShippingAsDefault) {
+      credentials.defaultShippingAddress = credentials.addresses.length - 1;
+    }
+
+    return credentials;
   }
 
   private validateInputs(): void {
-    this.inputObjects.forEach((inputObject) => {
-      inputObject.validateInput();
-    });
-
-    this.inputObjects = [];
+    this.userInfoObject.validateInputs();
+    this.billingAddressObject.validateInputs();
+    this.shippingAddressObject.validateInputs();
 
     this.form.removeEventListener('click', this.validateInputs);
   }
@@ -149,5 +192,18 @@ export default class RegistrationView {
     });
 
     return valid;
+  }
+
+  private showErrorBlock(message: string): void {
+    if (this.errorBlock) {
+      this.errorBlock.textContent = message;
+      this.errorBlock.hidden = false;
+    }
+  }
+
+  private hideErrorBlock(): void {
+    if (this.errorBlock) {
+      this.errorBlock.hidden = true;
+    }
   }
 }

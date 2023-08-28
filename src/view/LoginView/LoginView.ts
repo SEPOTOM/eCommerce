@@ -1,8 +1,9 @@
 import passwordShown from '../../assets/svg/eyeOpen.svg';
+/* eslint-disable import/no-cycle */
+import Tokens from '../../components/Tokens/Tokens';
 import passwordHidden from '../../assets/svg/eyeClosed.svg';
 import Authorization from '../../api/Authorization/Authorization';
 import { ICustomerLoginResponse, IError } from '../../types';
-import Tokens from '../../components/Tokens/Tokens';
 import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
@@ -21,7 +22,6 @@ import {
   passwordModeStyles,
   buttonContainerStyles,
   loginButtonStyles,
-  cancelButtonStyles,
   registrationButtonStyles,
   validationErrorStyles,
   loginWindowAttributes,
@@ -29,9 +29,9 @@ import {
   loginInputAttributes,
   passwordInputAttributes,
   okButtonAttributes,
-  cancelButtonAttributes,
   loginErrorAttributes,
   passwordErrorAttributes,
+  registrationButtonAttributes,
 } from './data';
 
 export default class LoginView {
@@ -57,6 +57,12 @@ export default class LoginView {
 
     LoginView.loginWindow.appendChild(loginForm);
     return LoginView.loginWindow;
+  }
+
+  public static draw(): void {
+    const main: HTMLElement = document.querySelector('main')!;
+    main.innerHTML = '';
+    main.append(LoginView.showLoginView());
   }
 
   public static addStyles(htmlElement: HTMLElement, styles: string[]): void {
@@ -135,8 +141,7 @@ export default class LoginView {
   private static addLoginButtons(loginForm: HTMLFormElement): void {
     const container = document.createElement('div');
     const okButton = document.createElement('button');
-    const cancelButton = document.createElement('button');
-    const registrationButton = document.createElement('button');
+    const registrationButton = document.createElement('a');
 
     LoginView.addStyles(container, buttonContainerStyles);
 
@@ -144,15 +149,11 @@ export default class LoginView {
     LoginView.addAttributes(okButton, okButtonAttributes);
     okButton.textContent = 'Login';
 
-    LoginView.addStyles(cancelButton, cancelButtonStyles);
-    LoginView.addAttributes(cancelButton, cancelButtonAttributes);
-    cancelButton.textContent = 'Cancel';
-
     LoginView.addStyles(registrationButton, registrationButtonStyles);
+    LoginView.addAttributes(registrationButton, registrationButtonAttributes);
     registrationButton.textContent = 'Registration';
 
     container.appendChild(okButton);
-    container.appendChild(cancelButton);
     container.appendChild(registrationButton);
     loginForm.appendChild(container);
   }
@@ -180,9 +181,9 @@ export default class LoginView {
     const passwordInput: HTMLInputElement = document.getElementById('password') as HTMLInputElement;
     const passwordError: HTMLElement = document.getElementById('password-error') as HTMLElement;
     const submitButton: HTMLButtonElement = document.getElementById('ok-login') as HTMLButtonElement;
-    const cancelButton: HTMLButtonElement = document.getElementById('cancel-login') as HTMLButtonElement;
 
-    submitButton.addEventListener('click', async () => {
+    submitButton.addEventListener('click', async (event) => {
+      event.preventDefault();
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
       if (LoginView.passwordValid && LoginView.loginValid) {
         const customerLogin: ICustomerLoginResponse | IError | Error = await Authorization.loginBasicAuth(
@@ -207,10 +208,6 @@ export default class LoginView {
     loginInput.addEventListener('input', () => {
       loginError.classList.add('hidden');
       LoginView.checkRegExp(passwordInput, passwordError, loginInput, loginError);
-    });
-
-    cancelButton.addEventListener('click', () => {
-      LoginView.cleanLoginView();
     });
   }
 
@@ -273,6 +270,9 @@ export default class LoginView {
     if (password.value.length < PASSWORD_MIN_LENGTH) {
       error = 'Too short: at least 8 characters';
     }
+    if (password.value.length === 0) {
+      error = 'Password field required';
+    }
     return error;
   }
 
@@ -290,6 +290,9 @@ export default class LoginView {
     }
     if (!loginArray.includes('@')) {
       error = 'Missed "@" symbol';
+    }
+    if (loginArray.length === 0) {
+      error = 'Login field required';
     }
     return error;
   }

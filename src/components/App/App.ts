@@ -1,13 +1,12 @@
-import GenericView from '../../view/GenericView/GenericView';
+import HomepageView from '../../view/HomepageView/HomepageView';
+import Router from '../Router/Router';
 
 export default class App {
-  private view: GenericView;
-
-  constructor() {
-    this.view = new GenericView();
+  public loadDefaultPage(): void {
+    new HomepageView().drawDefaultContent();
   }
 
-  public build(): void {
-    this.view.buildGenericView();
+  public runRoute(): void {
+    new Router().initRoute();
   }
 }

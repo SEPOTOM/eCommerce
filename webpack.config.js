@@ -65,6 +65,7 @@ export default {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
+            favicon: './src/assets/favicon.jpg'
         }),
         new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),

@@ -1,15 +1,17 @@
+/* eslint-disable import/no-cycle */
+import Router from '../Router/Router';
 import Authorization from '../../api/Authorization/Authorization';
-import { ICustomerLoginResponse } from '../../types';
-
-enum TokenPayload {
-  EXPIRES_IN = 'expires_in',
-  REFRESH_TOKEN = 'refresh_token',
-  SCOPE = 'scope',
-  TOKEN_TYPE = 'token_type',
-}
+import { ICustomerLoginResponse, TokenPayload } from '../../types';
+import {
+  CTP_AUTH_URL,
+  // CTP_API_URL,
+  // CTP_PROJECT_KEY,
+  CTP_CLIENT_ID,
+  CTP_CLIENT_SECRET,
+  CTP_SCOPES,
+} from '../../api/APIClients/JSNinjas-custom';
 
 export default class Tokens {
-  // Please use the Tokens.customerTokens object once a customer logged in successfully
   private static customerTokens: ICustomerLoginResponse;
 
   public static setCustomerTokens(tokens: ICustomerLoginResponse): void {
@@ -18,6 +20,10 @@ export default class Tokens {
     localStorage.setItem(TokenPayload.REFRESH_TOKEN, `${Tokens.customerTokens.refresh_token}`);
     localStorage.setItem(TokenPayload.SCOPE, `${Tokens.customerTokens.scope}`);
     localStorage.setItem(TokenPayload.TOKEN_TYPE, `${Tokens.customerTokens.token_type}`);
+
+    // Starting verification that the user is logged in
+    Router.isCustomerLogin();
+    if (tokens.access_token) Router.toHomePage();
   }
 
   public static async getCustomerTokens(): Promise<ICustomerLoginResponse> {
@@ -53,5 +59,16 @@ export default class Tokens {
       refresh_token: '',
       token_type: '',
     });
+  }
+
+  public static async getClientAccessToken(): Promise<string> {
+    const endpoint = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
+    const basicToken = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
+    const data = await Authorization.loginClient(endpoint, basicToken);
+
+    if ('message' in data) {
+      return '';
+    }
+    return data.access_token;
   }
 }
