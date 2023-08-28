@@ -13,7 +13,7 @@ export interface IShortCategoryJSON {
 
 export interface IRouteProductLink {
   link: string;
-  produtId: string;
+  productId: string;
 }
 
 export interface IShortProductsJSON {

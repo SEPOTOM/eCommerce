@@ -5,13 +5,13 @@ export default class BreadcrumbsView {
   public draw(array: IBreadCrumbsLink[]): void {
     Alpine.data('Breadcrumbs', () => ({ links: array }));
 
-    const breadcraumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
-    breadcraumbs.innerHTML = BreadcrumbsViewHTML;
+    const breadcrumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
+    breadcrumbs.innerHTML = BreadcrumbsViewHTML;
   }
 
   public static clear() {
-    const breadcraumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
-    breadcraumbs.innerHTML = '';
+    const breadcrumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
+    breadcrumbs.innerHTML = '';
     localStorage.removeItem('previousCategory');
   }
 }

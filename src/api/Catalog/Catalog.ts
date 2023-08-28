@@ -25,9 +25,7 @@ export default class Catalog {
     };
 
     try {
-      return await fetch(URL, BODY)
-        .then((resp) => resp.json())
-        .then((json) => json);
+      return await fetch(URL, BODY).then((resp) => resp.json());
     } catch {
       return null;
     }
@@ -44,9 +42,7 @@ export default class Catalog {
     };
 
     try {
-      return await fetch(URL, BODY)
-        .then((resp) => resp.json())
-        .then((json) => json);
+      return await fetch(URL, BODY).then((resp) => resp.json());
     } catch {
       return null;
     }
@@ -60,7 +56,7 @@ export default class Catalog {
     JSON?.results.forEach((data): void => {
       const item: IRouteProductLink = {
         link: `/${data.key}`,
-        produtId: data.id,
+        productId: data.id,
       };
 
       productLinks.push(item);

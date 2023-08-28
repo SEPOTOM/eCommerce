@@ -24,9 +24,7 @@ export default class Navigation {
     };
 
     try {
-      return await fetch(URL, BODY)
-        .then((resp) => resp.json())
-        .then((json) => json);
+      return await fetch(URL, BODY).then((resp) => resp.json());
     } catch {
       return null;
     }

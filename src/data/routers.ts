@@ -50,7 +50,7 @@ Navigation.links.then((arrayLink: INavigation[]) => {
 
 Catalog.productLinks.then((arrayLink) => {
   arrayLink.forEach((data: IRouteProductLink) => {
-    routers[data.link] = () => new ProductView().draw(data.produtId);
+    routers[data.link] = () => new ProductView().draw(data.productId);
   });
 });
 
