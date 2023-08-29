@@ -1,10 +1,12 @@
 <div
-  class="flex-grow grid grid-cols-1 items-start gap-y-6 w-full max-w-6xl mx-auto my-0 pt-10 pb-10 lg:grid-cols-2 md:gap-x-6 md:px-7"
+  class="group/profile flex-grow grid grid-cols-1 items-start gap-y-6 w-full max-w-6xl mx-auto my-0 pt-10 pb-10 lg:grid-cols-2 md:gap-x-6 md:px-7"
+  data-edit="false"
 >
-  <div class="flex justify-end lg:col-start-1 lg:col-end-3 md:px-0">
+  <div class="justify-end hidden lg:col-start-1 lg:col-end-3 md:px-0 group-data-[edit=false]/profile:flex">
     <button
       class="flex-grow max-w-[195px] px-3 py-1 text-lg font-bold text-white bg-blue-900 transition-colors duration-300 hover:bg-blue-400 md:rounded-lg"
       type="button"
+      data-edit-button
     >
       Edit Mode
     </button>
