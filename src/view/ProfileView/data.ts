@@ -1,6 +1,7 @@
 export enum DataAttrs {
   ADDRESSES_LIST = 'data-addresses-list',
   ADDRESSES_TITLE = 'data-addresses-title',
+  ERROR_TEXT = 'data-error-text',
 }
 
 export enum ParagraphLabels {

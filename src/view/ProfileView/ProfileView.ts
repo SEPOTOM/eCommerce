@@ -5,6 +5,7 @@ import HTML from './ProfileView.html';
 import UserInfoView from './UserInfoView/UserInfoView';
 import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAddressesView';
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
+import ErrorView from './ErrorView/ErrorView';
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -14,6 +15,8 @@ export default class ProfileView {
   private billingAddresses = new BillingAddressesView();
 
   private shippingAddresses = new ShippingAddressesView();
+
+  private error = new ErrorView();
 
   constructor() {
     this.configureView();
@@ -35,6 +38,8 @@ export default class ProfileView {
       this.view.append(this.userInfo.buildView(customerData));
       this.view.append(this.billingAddresses.buildView(customerData));
       this.view.append(this.shippingAddresses.buildView(customerData));
+    } else {
+      this.view.append(this.error.buildView(customerData.message));
     }
   }
 }
