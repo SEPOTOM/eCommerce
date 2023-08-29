@@ -7,10 +7,22 @@ import { AddressLabels } from '../../data';
 export default class AddressView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
-  public buildView(addressData: Address): HTMLDivElement {
+  public buildView(addressData: Address): AddressView {
     this.configureView(addressData);
 
+    return this;
+  }
+
+  public getView(): HTMLDivElement {
     return this.view;
+  }
+
+  public makeDefault(): void {
+    this.view.dataset.default = 'true';
+  }
+
+  public isDefault(): boolean {
+    return this.view.dataset.default === 'true';
   }
 
   private configureView(addressData: Address): void {

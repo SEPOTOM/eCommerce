@@ -45,6 +45,8 @@ export interface CustomerDataResponse {
   version: number;
   versionModifiedAt: string;
   dateOfBirth?: string;
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
 }
 
 export interface CreatedOrModifiedBy {
