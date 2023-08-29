@@ -5,7 +5,7 @@ import {
   CTP_AUTH_URL,
   /* CTP_API_URL, */
   CTP_SCOPES,
-} from '../APIClients/JSNinjas';
+} from '../APIClients/JSNinjas-custom';
 import { IClientLoginResponse, ICustomerLoginResponse, IError } from '../../types';
 
 export default class Authorization {

@@ -10,12 +10,14 @@ import imgInfoBanner2 from '../../assets/banner-info2.jpg';
 export default class HomepageView {
   public drawDefaultContent(): void {
     const main = document.createElement('main');
+    const breadcrumbs = document.createElement('section');
     main.className = 'flex flex-col flex-grow';
+    breadcrumbs.setAttribute('data-element', 'breadcrumbs');
 
     // Draw base content
     new HeaderView().draw();
+    document.body.append(breadcrumbs);
     document.body.append(main);
-    new HomepageView().draw();
     new FooterView().draw();
   }
 
