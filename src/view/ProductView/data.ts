@@ -20,14 +20,8 @@ enum ProductElements {
   PRODUCT_PRICE_ORIGINAL = 'original-price',
   PRODUCT_DETAILS = 'product-details',
   PRODUCT_WRAPPER = 'product-wrapper',
-  PRODUCT_MODAL_CLOSE = 'close-icon',
-}
-
-enum ProductModal {
-  MODAL_MAIN_PICTURE = 'picture',
-  MODAL_SMALL_PICTURES = 'small-pictures',
 }
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3'];
 
-export { currencySymbol, currencyName, categoryStyles, ProductElements, ProductModal };
+export { currencySymbol, currencyName, categoryStyles, ProductElements };

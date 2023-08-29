@@ -1,0 +1,14 @@
+enum SliderSelectors {
+  SLIDER_CONTAINER = 'slider-container',
+  SLIDER_MAIN_PICTURE = 'main-slider-picture',
+  SLIDER_SMALL_PICTURES = 'small-pictures',
+  SLIDER_SMALL_PICTURE = 'slider-small-image',
+  SLIDER_LEFT = 'slider-left',
+  SLIDER_RIGHT = 'slider-right',
+  SLIDER_SLIDE_PART = 'slide-part',
+}
+
+const SLIDE_WIDTH = 160;
+const SLIDER_INITIAL_POSITION = '0px';
+
+export { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION };

@@ -1,4 +1,32 @@
-<div class="flex flex-col p-8">
-  <div class="relative m-auto" id="picture"></div>
-  <div id="small-pictures">Small pictures</div>
+<div class="flex flex-col p-8 max-h-[100vh]" id="slider-container">
+  <div class="relative m-auto" id="main-slider-picture"></div>
+  <div class="flex flex-row flex-nowrap justify-start">
+    <div class="flex items-center" id="slider-left">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </div>
+    <div class="overflow-hidden max-w-[90vw]" id="slide-part">
+      <div class="relative flex flex-row mt-2 transition-left duration-500 ease-in" id="small-pictures"></div>
+    </div>
+    <div class="flex items-center" id="slider-right">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </div>
+  </div>
 </div>

@@ -1,5 +1,11 @@
-import Links from '../../../data/links';
+import Navigation from '../../../api/Navigation/Navigation';
 
 export default () => ({
-  menu: Links,
+  menu: null,
+
+  init(): void {
+    Navigation.links.then((data): void => {
+      this.menu = data;
+    });
+  },
 });

@@ -37,12 +37,13 @@
       x-transition:leave-end="-translate-x-full"
     >
       <div class="flex flex-col md:flex-row md:gap-4 lg:justify-center">
-        <template x-for="item in menu">
+        <template x-for="(item, index) in menu">
           <a
             class="relative py-3 border-gray-200 [&+a]:border-t font-medium transition-colors duration-300 hover:text-blue-500 before:absolute before:top-0 before:-right-5 before:bottom-0 before:-left-5 before:-z-10 before:bg-blue-100/50 before:opacity-0 before:transition-colors before:duration-300 hover:before:opacity-100 md:before:hidden md:[&+a]:border-t-0 md:top-0.5 md:pb-2 md:after:absolute md:after:bottom-0 md:after:left-0 md:right-0 md:after:w-0 md:after:border-blue-500 md:hover:after:border-b md:hover:after:w-full md:after:transition-all md:after:duration-300"
+            :class="{ 'text-blue-500 before:opacity-100 md:after:w-full md:after:border-b': index === activeItemMenu || item.link === window.location.pathname }"
             x-text="item.text"
             :href="item.link"
-            @click="() => { showMobileMenu = false; route($event); }"
+            @click="() => { route($event); showMobileMenu = false; activeItemMenu = index; }"
           >
           </a>
         </template>

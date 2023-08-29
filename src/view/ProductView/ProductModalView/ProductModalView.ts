@@ -1,15 +1,16 @@
 import ProductModal from './ProductModalView.html';
-import { ProductElements } from '../data';
+import ProductModalData from './data';
 import Converter from '../../../components/Converter/Converter';
 import Slider from '../Slider/Slider';
+import { IImages } from '../../../types';
 
 export default class ProductModalView {
-  public showProductModal(pictureContainer: HTMLElement): void {
+  public showProductModal(pictureContainer: HTMLElement, imagesArray: IImages[]): void {
     const modalHTML = Converter.htmlToElement(ProductModal) as HTMLElement;
 
-    document.body.classList.add('overflow-y-hidden');
+    document.body.classList.add('overflow-hidden');
 
-    this.addSlider(pictureContainer, modalHTML);
+    this.addSlider(pictureContainer, modalHTML, imagesArray);
 
     this.addCloseModal(modalHTML);
 
@@ -18,15 +19,15 @@ export default class ProductModalView {
     document.body.appendChild(modalHTML);
   }
 
-  private addSlider(pictureContainer: HTMLElement, modalHTML: HTMLElement): void {
+  private addSlider(pictureContainer: HTMLElement, modalHTML: HTMLElement, imagesArray: IImages[]): void {
     const slider = new Slider();
-    const sliderContainer = (modalHTML.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement)
+    const sliderContainer = (modalHTML.querySelector(`#${ProductModalData.PRODUCT_MODAL_CLOSE}`) as HTMLElement)
       .parentElement as HTMLElement;
-    sliderContainer.appendChild(slider.getSlider((pictureContainer as HTMLImageElement).src));
+    sliderContainer.appendChild(slider.getSlider((pictureContainer as HTMLImageElement).src, imagesArray));
   }
 
   private addCloseModal(modalHTML: HTMLElement): void {
-    (modalHTML.querySelector(`#${ProductElements.PRODUCT_MODAL_CLOSE}`) as HTMLElement).addEventListener(
+    (modalHTML.querySelector(`#${ProductModalData.PRODUCT_MODAL_CLOSE}`) as HTMLElement).addEventListener(
       'click',
       () => {
         this.closeModal(modalHTML);
@@ -44,6 +45,6 @@ export default class ProductModalView {
 
   private closeModal(modalHTML: HTMLElement) {
     modalHTML.remove();
-    document.body.classList.remove('overflow-y-hidden');
+    document.body.classList.remove('overflow-hidden');
   }
 }
