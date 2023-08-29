@@ -73,7 +73,7 @@ export default class Slider {
     this.setActiveImage(slider, Slider.activeImage);
   }
 
-  private async setActiveImage(slider: HTMLElement, activeImage: number): Promise<void> {
+  private setActiveImage(slider: HTMLElement, activeImage: number): void {
     const imageNodes = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`)
       ?.childNodes as NodeListOf<ChildNode>;
     const mainImage = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_PICTURE}`)?.lastChild as HTMLImageElement;
@@ -88,16 +88,50 @@ export default class Slider {
 
     // now change the main image
     mainImage.classList.add('opacity-0');
-    await setTimeout(() => {
+    setTimeout(() => {
       mainImage.setAttribute(
         'src',
-        ((imageNodes[activeImage] as HTMLElement).querySelector('#slider-small-image') as HTMLImageElement).src
+        ((imageNodes[activeImage] as HTMLElement).querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURE}`) as HTMLImageElement).src
       );
       mainImage.classList.remove('opacity-0');
+      // now we adjust slider size to main picture size
       mainImage.onload = () => {
         this.setProperSize(slider, mainImage);
       };
     }, 500);
+  }
+
+  private setArrowStyles(slider: HTMLElement, totalNumber: number): void {
+    const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLImageElement;
+    const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLImageElement;
+
+    if (Slider.activeImage > 0 && Slider.activeImage < totalNumber - 1) {
+      this.setActiveArrow(leftArrow);
+      this.setActiveArrow(rightArrow);
+    }
+
+    if (Slider.activeImage === 0) {
+      this.setInactiveArrow(leftArrow);
+      this.setActiveArrow(rightArrow);
+    }
+
+    if (Slider.activeImage === totalNumber - 1) {
+      this.setInactiveArrow(rightArrow);
+      this.setActiveArrow(leftArrow);
+    }
+
+  }
+
+  private setActiveArrow(arrow: HTMLElement): void {
+    arrow.classList.remove('cursor-not-allowed');
+    arrow.classList.add('cursor-pointer');
+    arrow.classList.add('hover:opacity-70');
+  }
+
+  private setInactiveArrow(arrow: HTMLElement): void {
+    arrow.classList.add('cursor-not-allowed');
+    arrow.classList.remove('cursor-pointer');
+    arrow.classList.remove('hover:opacity-70');
   }
 
   private processMainNavigation(slider: HTMLElement, maxIndex: number): void {
@@ -108,7 +142,7 @@ export default class Slider {
       if (Slider.activeImage - 1 >= 0) {
         Slider.activeImage -= 1;
         this.setActiveImage(slider, Slider.activeImage);
-        // this.setArrowStyles(maxIndex);
+        this.setArrowStyles(slider, maxIndex);
       }
     });
 
@@ -116,12 +150,12 @@ export default class Slider {
       if (Slider.activeImage + 1 < maxIndex) {
         Slider.activeImage += 1;
         this.setActiveImage(slider, Slider.activeImage);
-        // this.setArrowStyles(maxIndex);
+        this.setArrowStyles(slider, maxIndex);
       }
     });
   }
 
-  private processSliderNavigation(slider: HTMLElement, puctureAmount: number) {
+  private processSliderNavigation(slider: HTMLElement, pictureAmount: number) {
     const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
@@ -133,12 +167,28 @@ export default class Slider {
       if (currentPosition !== 0) {
         slidingPart.style.left = `${String(currentPosition + SLIDE_WIDTH)}px`;
       }
+      if (Math.abs(currentPosition) <= SLIDE_WIDTH) {
+        this.setInactiveArrow(leftButton);
+      } else {
+        this.setActiveArrow(leftButton);
+      }
     });
 
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
-      if (puctureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > SLIDE_WIDTH) {
+      if (pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > SLIDE_WIDTH) {
         slidingPart.style.left = `${String(currentPosition - SLIDE_WIDTH)}px`;
+      }
+      if (currentPosition + SLIDE_WIDTH <= SLIDE_WIDTH) {
+        this.setActiveArrow(leftButton);
+      } else {
+        this.setInactiveArrow(leftButton);
+      }
+
+      if (currentPosition + SLIDE_WIDTH * pictureAmount <= SLIDE_WIDTH * 2) {
+        this.setInactiveArrow(rightButton);
+      } else {
+        this.setActiveArrow(rightButton);
       }
     });
   }
