@@ -2,6 +2,9 @@ export enum DataAttrs {
   ADDRESSES_LIST = 'data-addresses-list',
   ADDRESSES_TITLE = 'data-addresses-title',
   ERROR_TEXT = 'data-error-text',
+  CANCEL_BUTTON = 'data-cancel-button',
+  SAVE_BUTTON = 'data-save-button',
+  EDIT_BUTTON = 'data-edit-button',
 }
 
 export enum ParagraphLabels {
