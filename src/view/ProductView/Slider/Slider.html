@@ -1,7 +1,41 @@
-<div class="flex flex-col p-8 max-h-[100vh]" id="slider-container">
-  <div class="relative m-auto" id="main-slider-picture"></div>
-  <div class="flex flex-row flex-nowrap justify-start">
-    <div class="flex items-center" id="slider-left">
+<div class="flex flex-col max-h-[100vh] bg-slate-200" id="slider-container">
+  <div class="relative m-auto" id="main-slider-picture">
+    <div
+      class="absolute top-[45%] left-[1rem] flex items-center h-12 w-12 bg-white hover:opacity-70 opacity-40 rounded-2xl pl-3"
+      id="left-main-button"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </div>
+    <div
+      class="absolute top-[45%] right-[1rem] flex items-center h-12 w-12 bg-white hover:opacity-70 opacity-40 rounded-2xl pl-3"
+      id="right-main-button"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </div>
+  </div>
+  <div class="relative flex flex-row flex-nowrap justify-center max-w-[98vw]">
+    <div
+      class="absolute top-8 left-[1rem] flex items-center h-12 w-12 bg-white hover:opacity-70 opacity-40 rounded-2xl pl-3 z-10"
+      id="slider-left"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -14,9 +48,12 @@
       </svg>
     </div>
     <div class="overflow-hidden max-w-[90vw]" id="slide-part">
-      <div class="relative flex flex-row mt-2 transition-left duration-500 ease-in" id="small-pictures"></div>
+      <div class="relative flex flex-row my-2 transition-left duration-500 ease-in" id="small-pictures"></div>
     </div>
-    <div class="flex items-center" id="slider-right">
+    <div
+      class="absolute top-8 right-[1rem] flex items-center h-12 w-12 bg-white hover:opacity-70 opacity-40 rounded-2xl pl-3 z-10"
+      id="slider-right"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

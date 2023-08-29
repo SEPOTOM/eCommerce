@@ -5,12 +5,12 @@ import Slider from '../Slider/Slider';
 import { IImages } from '../../../types';
 
 export default class ProductModalView {
-  public showProductModal(pictureContainer: HTMLElement, imagesArray: IImages[]): void {
+  public showProductModal(pictureContainer: HTMLElement, imagesArray: IImages[], activeImage: number): void {
     const modalHTML = Converter.htmlToElement(ProductModal) as HTMLElement;
 
     document.body.classList.add('overflow-hidden');
 
-    this.addSlider(pictureContainer, modalHTML, imagesArray);
+    this.addSlider(pictureContainer, modalHTML, imagesArray, activeImage);
 
     this.addCloseModal(modalHTML);
 
@@ -19,11 +19,16 @@ export default class ProductModalView {
     document.body.appendChild(modalHTML);
   }
 
-  private addSlider(pictureContainer: HTMLElement, modalHTML: HTMLElement, imagesArray: IImages[]): void {
+  private addSlider(
+    pictureContainer: HTMLElement,
+    modalHTML: HTMLElement,
+    imagesArray: IImages[],
+    activeImage: number
+  ): void {
     const slider = new Slider();
     const sliderContainer = (modalHTML.querySelector(`#${ProductModalData.PRODUCT_MODAL_CLOSE}`) as HTMLElement)
       .parentElement as HTMLElement;
-    sliderContainer.appendChild(slider.getSlider((pictureContainer as HTMLImageElement).src, imagesArray));
+    sliderContainer.appendChild(slider.getSlider((pictureContainer as HTMLImageElement).src, imagesArray, activeImage));
   }
 
   private addCloseModal(modalHTML: HTMLElement): void {

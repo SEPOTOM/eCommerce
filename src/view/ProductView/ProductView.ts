@@ -98,7 +98,11 @@ export default class ProductView {
 
       pictureContainer.addEventListener('click', () => {
         const modal = new ProductModalView();
-        modal.showProductModal((pictureContainer as Node).cloneNode(true) as HTMLElement, imagesArray);
+        modal.showProductModal(
+          (pictureContainer as Node).cloneNode(true) as HTMLElement,
+          imagesArray,
+          ProductView.activeImage
+        );
       });
     }
   }
