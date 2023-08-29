@@ -91,7 +91,11 @@ export default class Slider {
     setTimeout(() => {
       mainImage.setAttribute(
         'src',
-        ((imageNodes[activeImage] as HTMLElement).querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURE}`) as HTMLImageElement).src
+        (
+          (imageNodes[activeImage] as HTMLElement).querySelector(
+            `#${SliderSelectors.SLIDER_SMALL_PICTURE}`
+          ) as HTMLImageElement
+        ).src
       );
       mainImage.classList.remove('opacity-0');
       // now we adjust slider size to main picture size
@@ -119,7 +123,6 @@ export default class Slider {
       this.setInactiveArrow(rightArrow);
       this.setActiveArrow(leftArrow);
     }
-
   }
 
   private setActiveArrow(arrow: HTMLElement): void {
