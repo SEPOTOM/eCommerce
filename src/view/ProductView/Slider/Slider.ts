@@ -24,7 +24,21 @@ export default class Slider {
 
     this.processSliderNavigation(slider, imagesArray.length);
 
+    document.body.addEventListener('click', () => {
+      setTimeout(() => {
+        this.setProperSize(slider, sliderMainPictureContainer);
+      }, 300);
+    });
+
     return slider;
+  }
+
+  private setProperSize(slider: HTMLElement, sliderMainPictureContainer: HTMLElement): void {
+    /* eslint-disable no-param-reassign */
+    (
+      slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_IMAGES_WRAPPER}`) as HTMLElement
+    ).style.width = `${sliderMainPictureContainer.offsetWidth}px`;
+    /* eslint-enable no-param-reassign */
   }
 
   private getSliderPicture(pictureURL: string): HTMLElement {
@@ -59,7 +73,7 @@ export default class Slider {
     this.setActiveImage(slider, Slider.activeImage);
   }
 
-  private setActiveImage(slider: HTMLElement, activeImage: number): void {
+  private async setActiveImage(slider: HTMLElement, activeImage: number): Promise<void> {
     const imageNodes = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`)
       ?.childNodes as NodeListOf<ChildNode>;
     const mainImage = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_PICTURE}`)?.lastChild as HTMLImageElement;
@@ -74,12 +88,15 @@ export default class Slider {
 
     // now change the main image
     mainImage.classList.add('opacity-0');
-    setTimeout(() => {
+    await setTimeout(() => {
       mainImage.setAttribute(
         'src',
         ((imageNodes[activeImage] as HTMLElement).querySelector('#slider-small-image') as HTMLImageElement).src
       );
       mainImage.classList.remove('opacity-0');
+      mainImage.onload = () => {
+        this.setProperSize(slider, mainImage);
+      };
     }, 500);
   }
 
@@ -96,7 +113,7 @@ export default class Slider {
     });
 
     rightButton.addEventListener('click', () => {
-      if (Slider.activeImage + 1 <= maxIndex) {
+      if (Slider.activeImage + 1 < maxIndex) {
         Slider.activeImage += 1;
         this.setActiveImage(slider, Slider.activeImage);
         // this.setArrowStyles(maxIndex);

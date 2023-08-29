@@ -8,6 +8,7 @@ enum SliderSelectors {
   SLIDER_SLIDE_PART = 'slide-part',
   SLIDER_MAIN_LEFT = 'left-main-button',
   SLIDER_MAIN_RIGHT = 'right-main-button',
+  SLIDER_SMALL_IMAGES_WRAPPER = 'small-images-wrapper',
 }
 
 const SLIDE_WIDTH = 160;
