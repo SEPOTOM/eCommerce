@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import Catalog from '../../../api/Catalog/Catalog';
 import BreadcrumbsView from '../../BreadcrumbsView/BreadcrumbsView';
-import { ICategoryInfoJSON, IBreadCrumbLink, IAlpineComponent, IShortProductsJSON } from '../types/types';
+import { ICategoryInfoJSON, IAlpineComponent, IShortProductsJSON } from '../types/types';
 
 // Import images placeholder if product don't have an image
 import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
@@ -23,17 +23,10 @@ const CategoryViewAlpine: IAlpineComponent = {
     Catalog.getCategoryInfoJSON(this.categoryId).then((json: ICategoryInfoJSON | null): void => {
       if (!json) return;
 
-      const categoryLink: IBreadCrumbLink = {
-        name: json.name['en-US'],
-        link: `/${json.key}`,
-      };
-
-      localStorage.setItem('previousCategory', JSON.stringify(categoryLink));
-
       this.title = json.name['en-US'];
       this.description = json.description['en-US'];
 
-      new BreadcrumbsView().draw([categoryLink]);
+      BreadcrumbsView.createCategoryPath(json);
     });
 
     Catalog.getAllProductsJSON().then((json: IShortProductsJSON | null): void => {

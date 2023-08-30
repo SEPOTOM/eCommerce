@@ -1,12 +1,11 @@
 export interface ICategoryInfoJSON {
+  id: string;
   name: { [key: string]: string };
   description: { [key: string]: string };
   key: string;
-}
-
-export interface IBreadCrumbLink {
-  name: string;
-  link: string;
+  parent?: {
+    id: string;
+  };
 }
 
 export interface IAlpineComponent {

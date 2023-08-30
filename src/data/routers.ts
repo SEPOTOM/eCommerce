@@ -42,7 +42,7 @@ const routers: { [key: string]: () => void } = {
   },
 };
 
-Navigation.links.then((arrayLink: INavigation[]) => {
+Navigation.allCategoryLinks.then((arrayLink: INavigation[]) => {
   arrayLink.forEach((data: INavigation) => {
     if (data.categoryId) routers[data.link] = () => new CatalogView().draw(data.categoryId!);
   });

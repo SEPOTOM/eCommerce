@@ -6,9 +6,13 @@ export interface IBodyRequest {
 }
 
 export interface IShortCategoryJSON {
+  id: string;
   name: { [key: string]: string };
   description: { [key: string]: string };
   key: string;
+  parent?: {
+    id: string;
+  };
 }
 
 export interface IRouteProductLink {
