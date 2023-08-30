@@ -3,6 +3,7 @@ import LoginView from '../view/LoginView/LoginView';
 import HomepageView from '../view/HomepageView/HomepageView';
 import Page404View from '../view/Page404View/Page404View';
 import RegistrationView from '../view/RegistrationView/RegistrationView';
+import ProfileView from '../view/ProfileView/ProfileView';
 import CatalogView from '../view/CatalogView/CatalogView';
 import BreadcrumbsView from '../view/BreadcrumbsView/BreadcrumbsView';
 import ProductView from '../view/ProductView/ProductView';
@@ -33,16 +34,12 @@ const routers: { [key: string]: () => void } = {
     BreadcrumbsView.clear();
   },
   '/profile': () => {
-    const main = document.querySelector('main');
-
-    if (main) {
-      main.innerHTML =
-        '<div class="flex justify-center items-center flex-grow basis-full text-2xl">profile page placeholder</div>';
-    }
+    new ProfileView().draw();
+    BreadcrumbsView.clear();
   },
 };
 
-Navigation.links.then((arrayLink: INavigation[]) => {
+Navigation.allCategoryLinks.then((arrayLink: INavigation[]) => {
   arrayLink.forEach((data: INavigation) => {
     if (data.categoryId) routers[data.link] = () => new CatalogView().draw(data.categoryId!);
   });

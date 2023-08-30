@@ -8,10 +8,19 @@ import {
 } from '../APIClients/JSNinjas';
 import Authorization from '../Authorization/Authorization';
 
-import { IAllCategories, INavigation, ISingleCategory, IBodyRequest } from './types/types';
+import {
+  IAllCategories,
+  INavigation,
+  ISingleCategory,
+  IBodyRequest,
+  INavigationLevel1,
+  INavigationLevel2,
+} from './types/types';
 
 export default class Navigation {
-  static links = new Navigation().createNavigation();
+  static allCategoryLinks = new Navigation().createRouteCategoryLinks();
+
+  static menu = new Navigation().createMenu();
 
   private async getCategoryJSON(): Promise<IAllCategories | null> {
     const TOKEN: string = await this.getBearerToken();
@@ -30,7 +39,7 @@ export default class Navigation {
     }
   }
 
-  public async createNavigation(): Promise<INavigation[]> {
+  public async createRouteCategoryLinks(): Promise<INavigation[]> {
     const JSON: IAllCategories | null = await this.getCategoryJSON();
     const navigation: INavigation[] = [];
 
@@ -52,6 +61,46 @@ export default class Navigation {
     });
 
     return navigation;
+  }
+
+  public async createMenu(): Promise<INavigation[]> {
+    const JSON: IAllCategories | null = await this.getCategoryJSON();
+    const level1: INavigationLevel1[] = [];
+    const level2: INavigationLevel2[] = [];
+
+    JSON?.results.forEach((data: ISingleCategory): void => {
+      if (!data.parent) {
+        level1.push({
+          text: data.name['en-US'],
+          link: `/${data.key}`,
+          categoryId: data.id,
+          children: [],
+        });
+      } else {
+        level2.push({
+          text: data.name['en-US'],
+          link: `/${data.key}`,
+          categoryId: data.id,
+          parentId: data.parent.id,
+        });
+      }
+    });
+
+    for (let i = 0; i < level2.length; i += 1) {
+      for (let j = 0; j < level1.length; j += 1) {
+        if (level2[i].parentId === level1[j].categoryId) {
+          level1[j].children!.push(level2[i]);
+        }
+      }
+    }
+
+    // Add additional links
+    level1.push({
+      text: 'About us',
+      link: '/about-us',
+    });
+
+    return level1;
   }
 
   private async getBearerToken(): Promise<string> {

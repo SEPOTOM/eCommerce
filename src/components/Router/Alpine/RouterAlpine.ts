@@ -45,7 +45,7 @@ const RouterAlpine: AlpineRouter = {
     Tokens.getCustomerTokens().then((data) => {
       this.isCustomerLogin = !!data?.access_token;
 
-      Navigation.links.then(() => {
+      Navigation.allCategoryLinks.then(() => {
         Catalog.productLinks.then(() => {
           if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
             Router.toHomePage();

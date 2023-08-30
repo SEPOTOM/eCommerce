@@ -20,31 +20,41 @@ export interface Address {
 }
 
 export interface CustomerResponse {
-  customer: {
-    addresses: Address[];
-    authenticationMode: string;
-    billingAddressIds: string[];
-    createdAt: string;
-    createdBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
-    email: string;
-    firstName: string;
+  customer: CustomerDataResponse;
+}
+
+export interface CustomerDataResponse {
+  addresses: Address[];
+  authenticationMode: string;
+  billingAddressIds: string[];
+  createdAt: string;
+  createdBy: CreatedOrModifiedBy;
+  email: string;
+  firstName: string;
+  id: string;
+  isEmailVerified: boolean;
+  lastMessageSequenceNumber: number;
+  lastModifiedAt: string;
+  lastModifiedBy: CreatedOrModifiedBy;
+  lastName: string;
+  middleName: string;
+  password: string;
+  shippingAddressIds: string[];
+  stores: [];
+  title: string;
+  version: number;
+  versionModifiedAt: string;
+  dateOfBirth?: string;
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
+}
+
+export interface CreatedOrModifiedBy {
+  isPlatformClient: boolean;
+  clientId?: string;
+  user?: {
     id: string;
-    isEmailVerified: boolean;
-    lastMessageSequenceNumber: number;
-    lastModifiedAt: string;
-    lastModifiedBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
-    lastName: string;
-    password: string;
-    shippingAddressIds: string[];
-    stores: [];
-    version: number;
-    versionModifiedAt: string;
+    typeId: string;
   };
 }
 

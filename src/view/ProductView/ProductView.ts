@@ -16,8 +16,8 @@ import {
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
 import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ICategory } from '../../types';
+import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
 import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
-import { IBreadCrumbLink } from '../CatalogView/types/types';
 
 const accessToken = 'access_token';
 
@@ -46,18 +46,11 @@ export default class ProductView {
         this.putProductDataToPage(productDetails as IProduct, productHTML);
 
         // Set breadcrumbs
-        const arrayCrumbs: IBreadCrumbLink[] = [];
-        const productLinks: IBreadCrumbLink = {
+        const productLink: IBreadCrumbsLink = {
           name: (productDetails as IProduct).masterData.current.name['en-US'],
           link: `/${(productDetails as IProduct).key}`,
         };
-
-        const categoryLink: string | null = localStorage.getItem('previousCategory');
-
-        if (categoryLink) arrayCrumbs.push(JSON.parse(categoryLink));
-        arrayCrumbs.push(productLinks);
-
-        new BreadcrumbsView().draw(arrayCrumbs);
+        BreadcrumbsView.createProductPath(productLink);
       } catch (error) {
         (document.querySelector('main') as HTMLElement).firstChild?.remove();
         (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';
