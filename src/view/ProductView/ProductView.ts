@@ -49,7 +49,7 @@ export default class ProductView {
           name: (productDetails as IProduct).masterData.current.name['en-US'],
           link: `/${(productDetails as IProduct).key}`,
         };
-        BreadcrumbsView.createProudctPath(productLink);
+        BreadcrumbsView.createProductPath(productLink);
       } catch (error) {
         (document.querySelector('main') as HTMLElement).firstChild?.remove();
         (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';

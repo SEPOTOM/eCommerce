@@ -57,7 +57,7 @@ export default class BreadcrumbsView {
     });
   }
 
-  public static async createProudctPath(productLink: IBreadCrumbsLink): Promise<void> {
+  public static async createProductPath(productLink: IBreadCrumbsLink): Promise<void> {
     let arrayCrumbs: IBreadCrumbsLink[] = [];
 
     const categoryLink: string | null = localStorage.getItem('category-path');
