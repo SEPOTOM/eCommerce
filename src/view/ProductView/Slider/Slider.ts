@@ -26,6 +26,8 @@ export default class Slider {
 
     this.processSliderNavigation(slider, imagesArray.length);
 
+    this.setDefaultSmallArrowStyles(slider, imagesArray.length);
+
     document.body.addEventListener('click', () => {
       setTimeout(() => {
         this.setProperSize(slider, sliderMainPictureContainer);
@@ -151,6 +153,7 @@ export default class Slider {
         Slider.activeImage -= 1;
         this.setActiveImage(slider, Slider.activeImage);
         this.setArrowStyles(slider, maxIndex);
+        this.setDefaultSmallArrowStyles(slider, maxIndex);
       }
     });
 
@@ -159,6 +162,7 @@ export default class Slider {
         Slider.activeImage += 1;
         this.setActiveImage(slider, Slider.activeImage);
         this.setArrowStyles(slider, maxIndex);
+        this.setDefaultSmallArrowStyles(slider, maxIndex);
       }
     });
   }
@@ -208,5 +212,35 @@ export default class Slider {
     window.addEventListener('resize', () => {
       Slider.previousSlideCriteria = false;
     });
+  }
+
+  private setDefaultSmallArrowStyles(slider: HTMLElement, pictureAmount: number) {
+    const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
+    const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
+    const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
+    const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
+
+    // set default styles for a left arrow of smaller slider
+    if (Math.abs(currentPosition) > SLIDE_WIDTH) {
+      this.setActiveArrow(rightButton);
+    } else {
+      this.setInactiveArrow(leftButton);
+      this.setActiveArrow(rightButton);
+    }
+
+    // set default styles for a right arrow of smaller slider
+    const slideRightCriteria: boolean =
+      Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
+    const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
+    if (
+      pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
+      slideRightCriteria &&
+      Slider.previousSlideCriteria
+    ) {
+      this.setActiveArrow(leftButton);
+    } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
+      this.setInactiveArrow(rightButton);
+      this.setActiveArrow(leftButton);
+    }
   }
 }
