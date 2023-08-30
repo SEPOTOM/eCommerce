@@ -164,7 +164,6 @@ export default class Slider {
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     slidingPart.style.left = SLIDER_INITIAL_POSITION;
     let previousSlideCriteria: boolean;
-
     leftButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       if (currentPosition !== 0) {
@@ -176,14 +175,10 @@ export default class Slider {
         this.setActiveArrow(leftButton);
       }
     });
-
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       const slideRightCriteria: boolean =
-        Math.abs(Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2))) +
-          slidingPart.offsetWidth +
-          SLIDE_WIDTH <
-        SLIDE_WIDTH * pictureAmount;
+        Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
       if (
         pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > SLIDE_WIDTH &&
         (slideRightCriteria || previousSlideCriteria)
