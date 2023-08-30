@@ -158,7 +158,7 @@ export default class Slider {
     });
   }
 
-  private processSliderNavigation(slider: HTMLElement, pictureAmount: number) {
+  private processSliderNavigation(slider: HTMLElement, pictureAmount: number): void {
     const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;

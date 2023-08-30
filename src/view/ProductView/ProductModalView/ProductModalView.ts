@@ -48,7 +48,7 @@ export default class ProductModalView {
     });
   }
 
-  private closeModal(modalHTML: HTMLElement) {
+  private closeModal(modalHTML: HTMLElement): void {
     modalHTML.remove();
     document.body.classList.remove('overflow-hidden');
   }
