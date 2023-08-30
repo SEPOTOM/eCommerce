@@ -141,6 +141,8 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
 
+    this.setArrowStyles(slider, maxIndex);
+
     leftButton.addEventListener('click', () => {
       if (Slider.activeImage - 1 >= 0) {
         Slider.activeImage -= 1;
