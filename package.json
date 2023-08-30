@@ -11,7 +11,7 @@
     "test": "jest src --passWithNoTests",
     "test-cov": "jest src --coverage --passWithNoTests",
     "build": "npm run generate-css && webpack",
-    "dev": "webpack serve",
+    "dev": "tailwindcss -i ./src/tailwind/tailwind.base.css -o ./src/style.css && webpack serve",
     "generate-css": "tailwindcss -i ./src/tailwind/tailwind.base.css -o ./src/style.css",
     "tailwind-watch": "tailwindcss -i ./src/tailwind/tailwind.base.css -o ./src/style.css --watch"
   },
