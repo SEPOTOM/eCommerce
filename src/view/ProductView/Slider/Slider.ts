@@ -10,6 +10,8 @@ import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 export default class Slider {
   private static activeImage: number;
 
+  private static previousSlideCriteria: boolean;
+
   public getSlider(pictureURL: string, imagesArray: IImages[], activeImage: number): HTMLElement {
     const slider = Converter.htmlToElement(SliderHTML) as HTMLElement;
     const sliderMainPictureContainer = this.getSliderPicture(pictureURL);
@@ -101,6 +103,7 @@ export default class Slider {
       // now we adjust slider size to main picture size
       mainImage.onload = () => {
         this.setProperSize(slider, mainImage);
+        Slider.previousSlideCriteria = true;
       };
     }, 500);
   }
@@ -165,39 +168,45 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     slidingPart.style.left = SLIDER_INITIAL_POSITION;
-    let previousSlideCriteria: boolean;
+
+    this.setPreviousSlideCriteria();
+
     leftButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
-      if (currentPosition !== 0) {
+      if (Math.abs(currentPosition) > SLIDE_WIDTH) {
         slidingPart.style.left = `${String(currentPosition + SLIDE_WIDTH)}px`;
-      }
-      if (Math.abs(currentPosition) <= SLIDE_WIDTH) {
-        this.setInactiveArrow(leftButton);
+        this.setActiveArrow(rightButton);
       } else {
-        this.setActiveArrow(leftButton);
+        slidingPart.style.left = `${String(currentPosition + Math.abs(currentPosition))}px`;
+        this.setInactiveArrow(leftButton);
+        this.setActiveArrow(rightButton);
       }
     });
+
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       const slideRightCriteria: boolean =
         Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
+      const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
       if (
-        pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > SLIDE_WIDTH &&
-        (slideRightCriteria || previousSlideCriteria)
+        pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
+        slideRightCriteria &&
+        Slider.previousSlideCriteria
       ) {
         slidingPart.style.left = `${String(currentPosition - SLIDE_WIDTH)}px`;
-      }
-      if (currentPosition + SLIDE_WIDTH <= SLIDE_WIDTH) {
         this.setActiveArrow(leftButton);
-      } else {
-        this.setInactiveArrow(leftButton);
-      }
-      if (!slideRightCriteria) {
+      } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
+        slidingPart.style.left = `${String(currentPosition - smallShiftAmount)}px`;
         this.setInactiveArrow(rightButton);
-      } else {
-        this.setActiveArrow(rightButton);
+        this.setActiveArrow(leftButton);
       }
-      previousSlideCriteria = slideRightCriteria;
+      Slider.previousSlideCriteria = slideRightCriteria;
+    });
+  }
+
+  private setPreviousSlideCriteria() {
+    window.addEventListener('resize', () => {
+      Slider.previousSlideCriteria = false;
     });
   }
 }
