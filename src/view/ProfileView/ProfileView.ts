@@ -77,6 +77,7 @@ export default class ProfileView {
 
     this.buttonsViews.forEach((buttonsView) => {
       buttonsView.hideSuccessMessage();
+      buttonsView.hideErrorMessage();
     });
   }
 
@@ -93,7 +94,9 @@ export default class ProfileView {
       .sendUpdateRequest();
 
     if ('message' in response) {
-      console.error(response.message);
+      this.buttonsViews.forEach((buttonsView) => {
+        buttonsView.showErrorMessage(response.message);
+      });
     } else {
       setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
 
