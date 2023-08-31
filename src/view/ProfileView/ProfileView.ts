@@ -114,10 +114,14 @@ export default class ProfileView {
   private updateInfo(userInfoData: string[]): void {
     const localUserInfoData = userInfoData;
 
-    const [year, month, day] = localUserInfoData[DATE_DATA_INDEX];
-    const formattedDate = `${month}/${day}/${year}`;
-    localUserInfoData[DATE_DATA_INDEX] = formattedDate;
+    localUserInfoData[DATE_DATA_INDEX] = this.formatDate(localUserInfoData[DATE_DATA_INDEX]);
 
     this.userInfo.updateInfo(userInfoData);
+  }
+
+  private formatDate(date: string): string {
+    const [year, month, day] = date.split('-');
+    const formattedDate = `${month}/${day}/${year}`;
+    return formattedDate;
   }
 }
