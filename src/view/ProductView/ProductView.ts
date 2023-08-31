@@ -1,7 +1,8 @@
 import ProductHTML from './ProductView.html';
-import ProductPicture from './ProductPicture/ProductPicture.html';
-import MainPicture from './MainPicture/MainPicture.html';
+import ProductPicture from './ProductPictureView/ProductPictureView.html';
+import MainPicture from './MainPictureView/MainPictureView.html';
 import Converter from '../../components/Converter/Converter';
+import ProductModalView from './ProductModalView/ProductModalView';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
@@ -14,9 +15,9 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
-import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ProductElements, ICategory } from '../../types';
+import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ICategory } from '../../types';
 import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
-import { currencySymbol, currencyName, categoryStyles } from './data';
+import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
 
 const accessToken = 'access_token';
 
@@ -49,7 +50,7 @@ export default class ProductView {
           name: (productDetails as IProduct).masterData.current.name['en-US'],
           link: `/${(productDetails as IProduct).key}`,
         };
-        BreadcrumbsView.createProudctPath(productLink);
+        BreadcrumbsView.createProductPath(productLink);
       } catch (error) {
         (document.querySelector('main') as HTMLElement).firstChild?.remove();
         (document.querySelector('main') as HTMLElement).textContent = 'Product with the specified ID is not found';
@@ -87,6 +88,15 @@ export default class ProductView {
     if ('url' in imagesArray[0]) {
       pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
       productPicture.appendChild(pictureContainer);
+
+      pictureContainer.addEventListener('click', () => {
+        const modal = new ProductModalView();
+        modal.showProductModal(
+          (pictureContainer as Node).cloneNode(true) as HTMLElement,
+          imagesArray,
+          ProductView.activeImage
+        );
+      });
     }
   }
 
@@ -199,13 +209,15 @@ export default class ProductView {
     }
   }
 
-  private setActiveArrow(arrow: HTMLElement) {
+  private setActiveArrow(arrow: HTMLElement): void {
     arrow.classList.add('hover:bg-white/50');
+    arrow.classList.add('cursor-pointer');
     arrow.classList.remove('cursor-not-allowed');
   }
 
-  private setInactiveArrow(arrow: HTMLElement) {
+  private setInactiveArrow(arrow: HTMLElement): void {
     arrow.classList.remove('hover:bg-white/50');
+    arrow.classList.remove('cursor-pointer');
     arrow.classList.add('cursor-not-allowed');
   }
 

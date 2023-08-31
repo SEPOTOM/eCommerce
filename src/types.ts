@@ -20,31 +20,41 @@ export interface Address {
 }
 
 export interface CustomerResponse {
-  customer: {
-    addresses: Address[];
-    authenticationMode: string;
-    billingAddressIds: string[];
-    createdAt: string;
-    createdBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
-    email: string;
-    firstName: string;
+  customer: CustomerDataResponse;
+}
+
+export interface CustomerDataResponse {
+  addresses: Address[];
+  authenticationMode: string;
+  billingAddressIds: string[];
+  createdAt: string;
+  createdBy: CreatedOrModifiedBy;
+  email: string;
+  firstName: string;
+  id: string;
+  isEmailVerified: boolean;
+  lastMessageSequenceNumber: number;
+  lastModifiedAt: string;
+  lastModifiedBy: CreatedOrModifiedBy;
+  lastName: string;
+  middleName: string;
+  password: string;
+  shippingAddressIds: string[];
+  stores: [];
+  title: string;
+  version: number;
+  versionModifiedAt: string;
+  dateOfBirth?: string;
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
+}
+
+export interface CreatedOrModifiedBy {
+  isPlatformClient: boolean;
+  clientId?: string;
+  user?: {
     id: string;
-    isEmailVerified: boolean;
-    lastMessageSequenceNumber: number;
-    lastModifiedAt: string;
-    lastModifiedBy: {
-      clientId: string;
-      isPlatformClient: boolean;
-    };
-    lastName: string;
-    password: string;
-    shippingAddressIds: string[];
-    stores: [];
-    version: number;
-    versionModifiedAt: string;
+    typeId: string;
   };
 }
 
@@ -248,29 +258,6 @@ enum TokenPayload {
   TOKEN_TYPE = 'token_type',
 }
 
-enum ProductElements {
-  PRODUCT_NAME = 'product-name',
-  PRODUCT_PICTURES = 'product-pictures',
-  PRODUCT_RIGHT_ARROW = 'right-arrow',
-  PRODUCT_LEFT_ARROW = 'left-arrow',
-  PRODUCT_PICTURES_ALL = 'pictures-small',
-  PRODUCT_CATEGORY = 'product-category',
-  PRODUCT_DESCRIPTION = 'product-description',
-  PRODUCT_PRICE = 'product-price',
-  PRODUCT_PRICE_ORIGINAL = 'original-price',
-  PRODUCT_DETAILS = 'product-details',
-  PRODUCT_WRAPPER = 'product-wrapper',
-}
-
-export {
-  IClientLoginResponse,
-  ICustomerLoginResponse,
-  IError,
-  IProduct,
-  IAttributes,
-  IImages,
-  TokenPayload,
-  ProductElements,
-};
+export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload };
 
 export type EventCallback = (e: Event) => void;

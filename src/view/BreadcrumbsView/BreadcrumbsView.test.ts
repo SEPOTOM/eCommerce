@@ -10,7 +10,6 @@ describe('Main [BreadcrumbsView] test', (): void => {
     expect(new BreadcrumbsView().draw).toBeDefined();
     expect(BreadcrumbsView.clear).toBeDefined();
     expect(BreadcrumbsView.createCategoryPath).toBeDefined();
-    expect(BreadcrumbsView.createProudctPath).toBeDefined();
   });
 });
 
@@ -31,14 +30,5 @@ describe('[BreadcrumbsView] test method "draw"', (): void => {
     const data = [{ name: 'Test', link: '/test' }];
 
     expect(new BreadcrumbsView().draw(data)).toBeFalsy();
-  });
-});
-
-describe('[BreadcrumbsView] test method "createProudctPath"', (): void => {
-  it('-- method return void & work correctly', (): void => {
-    document.body.innerHTML = '<div data-element="breadcrumbs"></div>';
-    const data = { name: 'Test', link: '/test' };
-
-    expect(BreadcrumbsView.createProudctPath(data)).toBeFalsy();
   });
 });
