@@ -28,4 +28,12 @@ export default class ButtonsView {
 
     return document.createElement('button');
   }
+
+  public showSuccessMessage(): void {
+    this.view.dataset.success = 'true';
+  }
+
+  public hideSuccessMessage(): void {
+    this.view.dataset.success = 'false';
+  }
 }

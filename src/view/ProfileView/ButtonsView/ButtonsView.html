@@ -1,16 +1,26 @@
-<div class="justify-end hidden lg:col-start-1 lg:col-end-3 md:gap-x-3 group-data-[edit=true]/profile:flex">
-  <button
-    class="flex-grow basis-1/2 px-3 py-1 text-lg font-bold text-white border-r border-gray-500 bg-red-600 transition-colors duration-300 hover:bg-red-400 md:border-r-0 md:rounded-lg sm:max-w-[195px]"
-    type="button"
-    data-cancel-button
+<div
+  class="group/buttons flex-col gap-y-3 hidden lg:col-start-1 lg:col-end-3 group-data-[edit=true]/profile:flex"
+  data-success="false"
+>
+  <div class="flex justify-end md:gap-x-3">
+    <button
+      class="flex-grow basis-1/2 px-3 py-1 text-lg font-bold text-white border-r border-gray-500 bg-red-600 transition-colors duration-300 hover:bg-red-400 md:border-r-0 md:rounded-lg sm:max-w-[195px]"
+      type="button"
+      data-cancel-button
+    >
+      Cancel
+    </button>
+    <button
+      class="flex-grow basis-1/2 px-3 py-1 text-lg font-bold text-white border-l border-gray-500 bg-green-600 transition-colors duration-300 hover:bg-green-400 border-l-0 md:rounded-lg sm:max-w-[195px]"
+      type="button"
+      data-save-button
+    >
+      Save Changes
+    </button>
+  </div>
+  <div
+    class="p-2 font-bold text-lime-600 text-center bg-lime-200 hidden md:rounded-lg group-data-[success=true]/buttons:block"
   >
-    Cancel
-  </button>
-  <button
-    class="flex-grow basis-1/2 px-3 py-1 text-lg font-bold text-white border-l border-gray-500 bg-green-600 transition-colors duration-300 hover:bg-green-400 border-l-0 md:rounded-lg sm:max-w-[195px]"
-    type="button"
-    data-save-button
-  >
-    Save Changes
-  </button>
+    Changes saved!
+  </div>
 </div>

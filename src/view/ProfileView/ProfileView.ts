@@ -74,6 +74,10 @@ export default class ProfileView {
     this.view.dataset.edit = 'false';
 
     this.userInfo.exitEditMode();
+
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.hideSuccessMessage();
+    });
   }
 
   private async sendChanges(): Promise<void> {
@@ -92,6 +96,10 @@ export default class ProfileView {
       console.error(response.message);
     } else {
       setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
+
+      this.buttonsViews.forEach((buttonsView) => {
+        buttonsView.showSuccessMessage();
+      });
 
       const userInfoData = [response.firstName, response.lastName];
 
