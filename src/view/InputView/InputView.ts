@@ -1,5 +1,5 @@
-import Converter from '../../../components/Converter/Converter';
-import { InputOptions, PatternAndMessage } from '../types';
+import Converter from '../../components/Converter/Converter';
+import { InputOptions, PatternAndMessage } from '../../types';
 import HTML from './InputView.html';
 
 export default class InputView {

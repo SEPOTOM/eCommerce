@@ -1,4 +1,4 @@
-import { PatternAndMessage, InputOptions } from './types';
+import { PatternAndMessage, InputOptions } from '../../types';
 
 const ErrorMessages = {
   EMAIL: 'Incorrect format (e.g., user@example.com)',

@@ -1,7 +1,7 @@
 import Converter from '../../../components/Converter/Converter';
 import HTML from './AddressView.html';
-import InputView from '../InputView/InputView';
-import DynamicInputView from '../InputView/DynamicInputView/DynamicInputView';
+import InputView from '../../InputView/InputView';
+import DynamicInputView from '../../InputView/DynamicInputView/DynamicInputView';
 import SelectView from '../SelectView/SelectView';
 import { EventCallback, Address } from '../../../types';
 import {
