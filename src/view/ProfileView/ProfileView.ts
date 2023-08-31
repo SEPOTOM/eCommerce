@@ -50,6 +50,7 @@ export default class ProfileView {
 
       this.configureButtons();
     } else {
+      this.view.innerHTML = '';
       this.view.append(this.error.buildView(customerData.message));
     }
   }
