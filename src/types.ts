@@ -258,29 +258,6 @@ enum TokenPayload {
   TOKEN_TYPE = 'token_type',
 }
 
-enum ProductElements {
-  PRODUCT_NAME = 'product-name',
-  PRODUCT_PICTURES = 'product-pictures',
-  PRODUCT_RIGHT_ARROW = 'right-arrow',
-  PRODUCT_LEFT_ARROW = 'left-arrow',
-  PRODUCT_PICTURES_ALL = 'pictures-small',
-  PRODUCT_CATEGORY = 'product-category',
-  PRODUCT_DESCRIPTION = 'product-description',
-  PRODUCT_PRICE = 'product-price',
-  PRODUCT_PRICE_ORIGINAL = 'original-price',
-  PRODUCT_DETAILS = 'product-details',
-  PRODUCT_WRAPPER = 'product-wrapper',
-}
-
-export {
-  IClientLoginResponse,
-  ICustomerLoginResponse,
-  IError,
-  IProduct,
-  IAttributes,
-  IImages,
-  TokenPayload,
-  ProductElements,
-};
+export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload };
 
 export type EventCallback = (e: Event) => void;
