@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 import HomepageView from './HomepageView';
-import HomepageViewAlpine from './Alpine/HomepageViewAlpine';
 
 describe('Main [Home page] test', (): void => {
   it('-- сlass "HomepageView" should be defined', (): void => {

@@ -1,6 +1,6 @@
 <!-- Main section -->
 <div x-data="Homepage()">
-    <section
+  <section
     class="relative h-72 text-white bg-center bg-no-repeat md:h-96 lg:bg-cover before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black/40"
     :style="{ 'background-image': mainBanner }"
     data-element="main-banner"
@@ -13,7 +13,7 @@
       </div>
     </div>
   </section>
-  
+
   <!-- Info banner -->
   <section class="grid gap-6 max-w-6xl my-12 mx-auto text-center p-5 md:grid-cols-3 md:px-7" data-element="info-banner">
     <div class="pt-4 px-4 pb-6 bg-blue-100/50 rounded-lg">
@@ -75,33 +75,38 @@
       </svg>
       <div>
         <div class="mb-2 font-medium text-blue-600 text-lg">Month warranty</div>
-        <div class="text-sm opacity-80 tracking-wider">In addition, with every car you receive an extended warranty.</div>
+        <div class="text-sm opacity-80 tracking-wider">
+          In addition, with every car you receive an extended warranty.
+        </div>
       </div>
     </div>
   </section>
-  
+
   <!-- Double banner block -->
   <section
     class="grid text-gray-600 leading-7 tracking-widest lg:text-lg 2xl:leading-10 2xl:text-2xl"
     data-element="home-double-banner-block"
   >
     <div class="grid md:grid-cols-2">
-      <div class="h-64 bg-center bg-cover lg:h-96 2xl:h-[500px]"
-           data-element="info-banner-1"
-           :style="{ 'background-image': infoBanner1 }"
-           ></div>
+      <div
+        class="h-64 bg-center bg-cover lg:h-96 2xl:h-[500px]"
+        data-element="info-banner-1"
+        :style="{ 'background-image': infoBanner1 }"
+      ></div>
       <div class="flex items-center justify-center p-10">
         <div>
-          <b>Welcome to the TrueCar auto shop!</b> We have a wide range of cars for sale. Our goal is to make the purchase
-          of your car simple and relaxed. You can be sure that you will receive a favorable offer.
+          <b>Welcome to the TrueCar auto shop!</b> We have a wide range of cars for sale. Our goal is to make the
+          purchase of your car simple and relaxed. You can be sure that you will receive a favorable offer.
         </div>
       </div>
     </div>
-  
+
     <div class="grid md:grid-cols-2">
-      <div class="h-64 bg-center bg-cover md:order-1 lg:h-96 2xl:h-[500px]" 
-      :style="{ 'background-image': infoBanner2 }"
-          data-element="info-banner-2"></div>
+      <div
+        class="h-64 bg-center bg-cover md:order-1 lg:h-96 2xl:h-[500px]"
+        :style="{ 'background-image': infoBanner2 }"
+        data-element="info-banner-2"
+      ></div>
       <div class="flex items-center justify-center p-10">
         Check out our extensive range of cars, all of them have been carefully prepared.
       </div>
