@@ -8,7 +8,7 @@ import { IImages } from '../../../types';
 import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 
 export default class Slider {
-  private static activeImage: number;
+  public static activeImage: number;
 
   private static previousSlideCriteria: boolean;
 

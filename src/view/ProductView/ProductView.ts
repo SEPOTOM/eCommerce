@@ -1,12 +1,12 @@
 import ProductHTML from './ProductView.html';
-import ProductPicture from './ProductPictureView/ProductPictureView.html';
-import MainPicture from './MainPictureView/MainPictureView.html';
 import Converter from '../../components/Converter/Converter';
 import ProductModalView from './ProductModalView/ProductModalView';
 import Product from '../../api/Product/Product';
 import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
 import BreadcrumbsView from '../BreadcrumbsView/BreadcrumbsView';
+import Slider from './Slider/Slider';
+import { SliderSelectors } from './Slider/data';
 import {
   CTP_AUTH_URL,
   /* CTP_API_URL, */
@@ -69,8 +69,9 @@ export default class ProductView {
   }
 
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
-    this.addMainPicture(productDetails, productHTML);
-    this.addAllProductPictures(productDetails, productHTML);
+    // this.addMainPicture(productDetails, productHTML);
+    // this.addAllProductPictures(productDetails, productHTML);
+    // this.addSlider(productDetails, productHTML);
     this.addSlider(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
     this.addProductCategories(productDetails, productHTML);
@@ -79,50 +80,81 @@ export default class ProductView {
     this.addProductCharacteristics(productDetails, productHTML);
   }
 
-  private addMainPicture(productDetails: IProduct, productHTML: HTMLElement): void {
-    const productPicture = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
+  private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
+    const sliderContainer = productHTML.querySelector(`#${ProductElements.PRODUCT_SLIDER}`) as HTMLElement;
+    const imagesArray: IImages[] = productDetails.masterData.current.masterVariant.images as IImages[];
+    const productSlider = new Slider();
 
-    const pictureContainer = Converter.htmlToElement(MainPicture) as HTMLElement;
+    sliderContainer.appendChild(
+      productSlider.getSlider(imagesArray[ProductView.activeImage].url, imagesArray, ProductView.activeImage)
+    );
 
-    const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
-    if ('url' in imagesArray[0]) {
-      pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
-      productPicture.appendChild(pictureContainer);
+    const htmlSlider = productHTML.querySelector(`#${SliderSelectors.SLIDER_MAIN_PICTURE}`) as HTMLElement;
 
-      pictureContainer.addEventListener('click', () => {
-        const modal = new ProductModalView();
-        modal.showProductModal(
-          (pictureContainer as Node).cloneNode(true) as HTMLElement,
-          imagesArray,
-          ProductView.activeImage
-        );
-      });
-    }
+    htmlSlider.classList.add('relative');
+    (productHTML.querySelector(`#${SliderSelectors.SLIDER_SMALL_IMAGES_WRAPPER}`) as HTMLElement).classList.add(
+      'max-w-xs'
+    );
+    (productHTML.querySelector(`#${SliderSelectors.SLIDER_SMALL_IMAGES_WRAPPER}`) as HTMLElement).classList.add(
+      'sm:max-w-[582px]'
+    );
+
+    (htmlSlider.lastChild as HTMLElement).addEventListener('click', () => {
+      const modal = new ProductModalView();
+      modal.showProductModal(
+        (htmlSlider.lastChild as Node).cloneNode(true) as HTMLElement,
+        imagesArray,
+        Slider.activeImage
+      );
+    });
+
+    // TODO: this.deleteIDs() {}
   }
 
-  private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
-    const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
-    const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
+  // private addMainPicture(productDetails: IProduct, productHTML: HTMLElement): void {
+  //   const productPicture = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
 
-    for (let i = 0; i < imagesArray.length; i += 1) {
-      const blockContainer = Converter.htmlToElement(ProductPicture) as HTMLElement;
-      blockContainer.style.backgroundImage = `url(${imagesArray[i].url})`;
-      ProductView.activeImage = 0;
+  //   const pictureContainer = Converter.htmlToElement(MainPicture) as HTMLElement;
 
-      blockContainer.addEventListener('click', () => {
-        ProductView.activeImage = i;
-        this.setActiveImage();
-        this.setArrowStyles(imagesArray.length - 1);
-      });
+  //   const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
+  //   if ('url' in imagesArray[0]) {
+  //     pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
+  //     productPicture.appendChild(pictureContainer);
 
-      allPictures.appendChild(blockContainer);
-    }
-    this.setActiveImage();
+  //     pictureContainer.addEventListener('click', () => {
+  //       const modal = new ProductModalView();
+  //       modal.showProductModal(
+  //         (pictureContainer as Node).cloneNode(true) as HTMLElement,
+  //         imagesArray,
+  //         ProductView.activeImage
+  //       );
+  //     });
+  //   }
+  // }
 
-    if (imagesArray.length < 2) {
-      this.removeImageNavigation();
-    }
-  }
+  // private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
+  //   const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
+  //   const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
+
+  //   for (let i = 0; i < imagesArray.length; i += 1) {
+  //     const blockContainer = Converter.htmlToElement(ProductPicture) as HTMLElement;
+  //     blockContainer.style.backgroundImage = `url(${imagesArray[i].url})`;
+  //     ProductView.activeImage = 0;
+
+  //     blockContainer.addEventListener('click', () => {
+  //       ProductView.activeImage = i;
+  //       this.setActiveImage();
+  //       this.setArrowStyles(imagesArray.length - 1);
+  //     });
+
+  //     allPictures.appendChild(blockContainer);
+  //   }
+  //   this.setActiveImage();
+
+  //   if (imagesArray.length < 2) {
+  //     this.removeImageNavigation();
+  //   }
+  // }
 
   private setActiveImage(): void {
     const pictureContainers = document.getElementById('pictures-small')?.childNodes as NodeListOf<ChildNode>;
@@ -164,33 +196,33 @@ export default class ProductView {
     productWrapper.appendChild(productDescription);
   }
 
-  private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
-    const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
-    const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
-    const minIndex = 0;
-    const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
+  // private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
+  //   const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
+  //   const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
+  //   const minIndex = 0;
+  //   const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
 
-    leftArrow.classList.remove('hover:bg-white/50');
-    rightArrow.classList.remove('cursor-not-allowed');
+  //   leftArrow.classList.remove('hover:bg-white/50');
+  //   rightArrow.classList.remove('cursor-not-allowed');
 
-    if (maxIndex > 0) {
-      rightArrow.addEventListener('click', () => {
-        if (ProductView.activeImage + 1 <= maxIndex) {
-          ProductView.activeImage += 1;
-          this.setActiveImage();
-          this.setArrowStyles(maxIndex);
-        }
-      });
+  //   if (maxIndex > 0) {
+  //     rightArrow.addEventListener('click', () => {
+  //       if (ProductView.activeImage + 1 <= maxIndex) {
+  //         ProductView.activeImage += 1;
+  //         this.setActiveImage();
+  //         this.setArrowStyles(maxIndex);
+  //       }
+  //     });
 
-      leftArrow.addEventListener('click', () => {
-        if (ProductView.activeImage - 1 >= minIndex) {
-          ProductView.activeImage -= 1;
-          this.setActiveImage();
-          this.setArrowStyles(maxIndex);
-        }
-      });
-    }
-  }
+  //     leftArrow.addEventListener('click', () => {
+  //       if (ProductView.activeImage - 1 >= minIndex) {
+  //         ProductView.activeImage -= 1;
+  //         this.setActiveImage();
+  //         this.setArrowStyles(maxIndex);
+  //       }
+  //     });
+  //   }
+  // }
 
   private setArrowStyles(maxIndex: number): void {
     const rightArrow = document.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;

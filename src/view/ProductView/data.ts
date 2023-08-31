@@ -10,6 +10,7 @@ const currencyName = {
 
 enum ProductElements {
   PRODUCT_NAME = 'product-name',
+  PRODUCT_SLIDER = 'slider-component',
   PRODUCT_PICTURES = 'product-pictures',
   PRODUCT_RIGHT_ARROW = 'right-arrow',
   PRODUCT_LEFT_ARROW = 'left-arrow',
