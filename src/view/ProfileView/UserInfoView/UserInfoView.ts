@@ -71,6 +71,12 @@ export default class UserInfoView {
     });
   }
 
+  private updateInputsValues(userData: string[]): void {
+    this.inputsObjects.forEach((inputObject, index) => {
+      inputObject.setValue(userData[index]);
+    });
+  }
+
   private configureInfoBlock(customerData: CustomerDataResponse): void {
     const paragraphsData = [
       [ParagraphLabels.FIRST_NAME, customerData.firstName],
@@ -129,11 +135,5 @@ export default class UserInfoView {
 
   private getCurrentData(): string[] {
     return this.paragraphsObjects.map((paragraphObject) => paragraphObject.getContent());
-  }
-
-  private updateInputsValues(userData: string[]): void {
-    this.inputsObjects.forEach((inputObject, index) => {
-      inputObject.setValue(userData[index]);
-    });
   }
 }
