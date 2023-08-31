@@ -33,7 +33,8 @@ export default {
     "\\types.ts$",
     "\\Types.ts$",
     "\\links.ts$",
-    "\\data.ts$"
+    "\\data.ts$",
+    "\\index.ts$"
   ],
 
   // Indicates which provider should be used to instrument code for coverage
