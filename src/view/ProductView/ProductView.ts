@@ -21,10 +21,6 @@ import { currencySymbol, currencyName, categoryStyles, ProductElements } from '.
 
 const accessToken = 'access_token';
 
-const urlStartPosition = 5;
-
-const urlEndShift = -2;
-
 export default class ProductView {
   private static activeImage: number = 0;
 
@@ -69,9 +65,6 @@ export default class ProductView {
   }
 
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
-    // this.addMainPicture(productDetails, productHTML);
-    // this.addAllProductPictures(productDetails, productHTML);
-    // this.addSlider(productDetails, productHTML);
     this.addSlider(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
     this.addProductCategories(productDetails, productHTML);
@@ -101,83 +94,6 @@ export default class ProductView {
         ProductView.activeImage
       );
     });
-
-    // TODO: this.deleteIDs() {}
-  }
-
-  // private addMainPicture(productDetails: IProduct, productHTML: HTMLElement): void {
-  //   const productPicture = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
-
-  //   const pictureContainer = Converter.htmlToElement(MainPicture) as HTMLElement;
-
-  //   const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
-  //   if ('url' in imagesArray[0]) {
-  //     pictureContainer.setAttribute('src', `${imagesArray[0].url}`);
-  //     productPicture.appendChild(pictureContainer);
-
-  //     pictureContainer.addEventListener('click', () => {
-  //       const modal = new ProductModalView();
-  //       modal.showProductModal(
-  //         (pictureContainer as Node).cloneNode(true) as HTMLElement,
-  //         imagesArray,
-  //         ProductView.activeImage
-  //       );
-  //     });
-  //   }
-  // }
-
-  // private addAllProductPictures(productDetails: IProduct, productHTML: HTMLElement): void {
-  //   const allPictures = productHTML.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
-  //   const imagesArray = productDetails.masterData.current.masterVariant.images as IImages[];
-
-  //   for (let i = 0; i < imagesArray.length; i += 1) {
-  //     const blockContainer = Converter.htmlToElement(ProductPicture) as HTMLElement;
-  //     blockContainer.style.backgroundImage = `url(${imagesArray[i].url})`;
-  //     ProductView.activeImage = 0;
-
-  //     blockContainer.addEventListener('click', () => {
-  //       ProductView.activeImage = i;
-  //       this.setActiveImage();
-  //       this.setArrowStyles(imagesArray.length - 1);
-  //     });
-
-  //     allPictures.appendChild(blockContainer);
-  //   }
-  //   this.setActiveImage();
-
-  //   if (imagesArray.length < 2) {
-  //     this.removeImageNavigation();
-  //   }
-  // }
-
-  private setActiveImage(): void {
-    const pictureContainers = document.getElementById('pictures-small')?.childNodes as NodeListOf<ChildNode>;
-    const productPicture = document.querySelector(`#${ProductElements.PRODUCT_PICTURES}`) as HTMLElement;
-    const activeImage = pictureContainers[ProductView.activeImage] as HTMLElement;
-    const activeImageURL = activeImage.style.backgroundImage.slice(urlStartPosition, urlEndShift);
-
-    pictureContainers.forEach((element) => {
-      (element as HTMLElement).classList.remove('opacity-100');
-      (element as HTMLElement).classList.add('opacity-30');
-    });
-
-    (activeImage as HTMLElement).classList.remove('opacity-30');
-    (activeImage as HTMLElement).classList.add('opacity-100');
-
-    // the following block makes smooth change of the main product image
-    (productPicture.lastChild as HTMLImageElement).classList.add('opacity-0');
-    setTimeout(() => {
-      (productPicture.lastChild as HTMLImageElement).setAttribute('src', activeImageURL);
-      (productPicture.lastChild as HTMLImageElement).classList.remove('opacity-0');
-    }, 500);
-  }
-
-  private removeImageNavigation(): void {
-    const leftArrow = document.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`);
-    const rightArrow = document.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`);
-
-    leftArrow?.remove();
-    rightArrow?.remove();
   }
 
   private widenDescription(): void {
@@ -188,63 +104,6 @@ export default class ProductView {
     miniImages.remove();
 
     productWrapper.appendChild(productDescription);
-  }
-
-  // private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
-  //   const rightArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
-  //   const leftArrow = productHTML.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
-  //   const minIndex = 0;
-  //   const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
-
-  //   leftArrow.classList.remove('hover:bg-white/50');
-  //   rightArrow.classList.remove('cursor-not-allowed');
-
-  //   if (maxIndex > 0) {
-  //     rightArrow.addEventListener('click', () => {
-  //       if (ProductView.activeImage + 1 <= maxIndex) {
-  //         ProductView.activeImage += 1;
-  //         this.setActiveImage();
-  //         this.setArrowStyles(maxIndex);
-  //       }
-  //     });
-
-  //     leftArrow.addEventListener('click', () => {
-  //       if (ProductView.activeImage - 1 >= minIndex) {
-  //         ProductView.activeImage -= 1;
-  //         this.setActiveImage();
-  //         this.setArrowStyles(maxIndex);
-  //       }
-  //     });
-  //   }
-  // }
-
-  private setArrowStyles(maxIndex: number): void {
-    const rightArrow = document.querySelector(`#${ProductElements.PRODUCT_RIGHT_ARROW}`) as HTMLElement;
-    const leftArrow = document.querySelector(`#${ProductElements.PRODUCT_LEFT_ARROW}`) as HTMLElement;
-    if (ProductView.activeImage === 0) {
-      this.setActiveArrow(rightArrow);
-      this.setInactiveArrow(leftArrow);
-    }
-    if (ProductView.activeImage === maxIndex) {
-      this.setActiveArrow(leftArrow);
-      this.setInactiveArrow(rightArrow);
-    }
-    if (ProductView.activeImage > 0 && ProductView.activeImage < maxIndex) {
-      this.setActiveArrow(rightArrow);
-      this.setActiveArrow(leftArrow);
-    }
-  }
-
-  private setActiveArrow(arrow: HTMLElement): void {
-    arrow.classList.add('hover:bg-white/50');
-    arrow.classList.add('cursor-pointer');
-    arrow.classList.remove('cursor-not-allowed');
-  }
-
-  private setInactiveArrow(arrow: HTMLElement): void {
-    arrow.classList.remove('hover:bg-white/50');
-    arrow.classList.remove('cursor-pointer');
-    arrow.classList.add('cursor-not-allowed');
   }
 
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
