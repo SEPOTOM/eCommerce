@@ -12,9 +12,9 @@ import {
 import { UpdateActions } from './data';
 
 enum ErrorMessages {
-  NO_CUSTOMER = 'The customer with the given ID was not found',
-  SERVER = 'Failed to connect to the server',
-  TRY_LATER = 'Please, try again later.',
+  NO_CUSTOMER = 'The customer with the given ID was not found.',
+  SERVER = 'Failed to connect to the server.',
+  TRY_LATER = 'Please, check your connection or try again later.',
 }
 
 export default class Customer {
@@ -36,14 +36,14 @@ export default class Customer {
       const data: CustomerDataResponse = await response.json();
 
       if ('message' in data) {
-        return new Error(ErrorMessages.NO_CUSTOMER);
+        return new Error(`${ErrorMessages.NO_CUSTOMER} ${ErrorMessages.TRY_LATER}`);
       }
 
       this.setVersion(data.version);
 
       return data;
     } catch (err) {
-      return new Error(ErrorMessages.SERVER);
+      return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
     }
   }
 
@@ -104,14 +104,14 @@ export default class Customer {
       const data: CustomerDataResponse | Error = await response.json();
 
       if ('message' in data) {
-        return new Error(`${data.message}. ${ErrorMessages.TRY_LATER}`);
+        return new Error(`${data.message} ${ErrorMessages.TRY_LATER}`);
       }
 
       Customer.setVersion(data.version);
 
       return data;
     } catch (err) {
-      return new Error(ErrorMessages.SERVER);
+      return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
     }
   }
 }
