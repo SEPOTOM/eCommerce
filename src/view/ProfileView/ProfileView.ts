@@ -62,9 +62,13 @@ export default class ProfileView {
 
   private enterEditMode(): void {
     this.view.dataset.edit = 'true';
+
+    this.userInfo.enterEditMode();
   }
 
   private exitEditMode(): void {
     this.view.dataset.edit = 'false';
+
+    this.userInfo.exitEditMode();
   }
 }

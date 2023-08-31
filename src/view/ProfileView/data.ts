@@ -1,3 +1,5 @@
+import { InputOptions, PatternAndMessage } from '../../types';
+
 export enum DataAttrs {
   ADDRESSES_LIST = 'data-addresses-list',
   ADDRESSES_TITLE = 'data-addresses-title',
@@ -5,6 +7,10 @@ export enum DataAttrs {
   CANCEL_BUTTON = 'data-cancel-button',
   SAVE_BUTTON = 'data-save-button',
   EDIT_BUTTON = 'data-edit-button',
+  INFO_BLOCK = 'data-info-block',
+  EDIT_BLOCK = 'data-edit-block',
+  ROW = 'data-row-profile',
+  LABEL = 'data-label-profile',
 }
 
 export enum ParagraphLabels {
@@ -24,3 +30,15 @@ export enum AddressTypes {
   BILLING = 'billing',
   SHIPPING = 'shipping',
 }
+
+export const ValidationData: Record<string, PatternAndMessage[]> = {
+  FIRST_NAME: [],
+  LAST_NAME: [],
+  DATE: [],
+};
+
+export const UserInfoInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.FIRST_NAME },
+  { validationData: ValidationData.LAST_NAME },
+  { validationData: ValidationData.DATE },
+];
