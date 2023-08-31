@@ -50,6 +50,10 @@ export default class InputView {
     this.input.dataset.small = 'true';
   }
 
+  public setValue(value: string): void {
+    this.input.value = value;
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }
