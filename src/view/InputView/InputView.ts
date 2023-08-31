@@ -46,6 +46,10 @@ export default class InputView {
     }
   }
 
+  public makeSmall(): void {
+    this.input.dataset.small = 'true';
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }
