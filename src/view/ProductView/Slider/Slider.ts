@@ -8,7 +8,7 @@ import { IImages } from '../../../types';
 import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 
 export default class Slider {
-  public static activeImage: number;
+  private activeImage: number = 0;
 
   private static previousSlideCriteria: boolean;
 
@@ -16,7 +16,7 @@ export default class Slider {
     const slider = Converter.htmlToElement(SliderHTML) as HTMLElement;
     const sliderMainPictureContainer = this.getSliderPicture(pictureURL);
 
-    Slider.activeImage = activeImage;
+    this.activeImage = activeImage;
 
     this.addSliderMainPicture(slider, sliderMainPictureContainer);
 
@@ -68,13 +68,13 @@ export default class Slider {
       smallPicture.src = imagesArray[i].url;
 
       smallPicture.addEventListener('click', () => {
-        Slider.activeImage = i;
+        this.activeImage = i;
         this.setActiveImage(slider, i);
       });
 
       smallPicturesContainer.appendChild(smallPictureWrapper);
     }
-    this.setActiveImage(slider, Slider.activeImage);
+    this.setActiveImage(slider, this.activeImage);
   }
 
   private setActiveImage(slider: HTMLElement, activeImage: number): void {
@@ -114,17 +114,17 @@ export default class Slider {
     const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLImageElement;
     const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLImageElement;
 
-    if (Slider.activeImage > 0 && Slider.activeImage < totalNumber - 1) {
+    if (this.activeImage > 0 && this.activeImage < totalNumber - 1) {
       this.setActiveArrow(leftArrow);
       this.setActiveArrow(rightArrow);
     }
 
-    if (Slider.activeImage === 0) {
+    if (this.activeImage === 0) {
       this.setInactiveArrow(leftArrow);
       this.setActiveArrow(rightArrow);
     }
 
-    if (Slider.activeImage === totalNumber - 1) {
+    if (this.activeImage === totalNumber - 1) {
       this.setInactiveArrow(rightArrow);
       this.setActiveArrow(leftArrow);
     }
@@ -149,18 +149,18 @@ export default class Slider {
     this.setArrowStyles(slider, maxIndex);
 
     leftButton.addEventListener('click', () => {
-      if (Slider.activeImage - 1 >= 0) {
-        Slider.activeImage -= 1;
-        this.setActiveImage(slider, Slider.activeImage);
+      if (this.activeImage - 1 >= 0) {
+        this.activeImage -= 1;
+        this.setActiveImage(slider, this.activeImage);
         this.setArrowStyles(slider, maxIndex);
         this.setDefaultSmallArrowStyles(slider, maxIndex);
       }
     });
 
     rightButton.addEventListener('click', () => {
-      if (Slider.activeImage + 1 < maxIndex) {
-        Slider.activeImage += 1;
-        this.setActiveImage(slider, Slider.activeImage);
+      if (this.activeImage + 1 < maxIndex) {
+        this.activeImage += 1;
+        this.setActiveImage(slider, this.activeImage);
         this.setArrowStyles(slider, maxIndex);
         this.setDefaultSmallArrowStyles(slider, maxIndex);
       }

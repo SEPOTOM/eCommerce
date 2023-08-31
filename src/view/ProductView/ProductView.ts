@@ -93,16 +93,12 @@ export default class ProductView {
 
     htmlSlider.classList.add('relative');
 
-    // sliderContainer.style.maxWidth = `max-w-[${window.innerWidth - 200}px]`;
-
-    console.log(window.innerWidth);
-
     (htmlSlider.lastChild as HTMLElement).addEventListener('click', () => {
       const modal = new ProductModalView();
       modal.showProductModal(
         (htmlSlider.lastChild as Node).cloneNode(true) as HTMLElement,
         imagesArray,
-        Slider.activeImage
+        ProductView.activeImage
       );
     });
 
