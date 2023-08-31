@@ -1,3 +1,4 @@
+import Alpine from 'alpinejs';
 import BreadcrumbsViewHTML from './BreadcrumbsView.html';
 import { IBreadCrumbsLink, ICategoryInfoJSON, INavigationLevel1 } from './types/types';
 import Navigation from '../../api/Navigation/Navigation';
@@ -10,7 +11,7 @@ export default class BreadcrumbsView {
     breadcrumbs.innerHTML = BreadcrumbsViewHTML;
   }
 
-  public static clear() {
+  public static clear(): void {
     const breadcrumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
     breadcrumbs.innerHTML = '';
     localStorage.removeItem('category-path');
@@ -57,7 +58,7 @@ export default class BreadcrumbsView {
     });
   }
 
-  public static async createProudctPath(productLink: IBreadCrumbsLink): Promise<void> {
+  public static createProudctPath(productLink: IBreadCrumbsLink): void {
     let arrayCrumbs: IBreadCrumbsLink[] = [];
 
     const categoryLink: string | null = localStorage.getItem('category-path');
