@@ -93,7 +93,7 @@ export default class ProductView {
 
     htmlSlider.classList.add('relative');
 
-    sliderContainer.style.maxWidth = `max-w-[${window.innerWidth - 200}px]`;
+    // sliderContainer.style.maxWidth = `max-w-[${window.innerWidth - 200}px]`;
 
     console.log(window.innerWidth);
 
