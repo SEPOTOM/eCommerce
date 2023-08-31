@@ -4,6 +4,7 @@ import ParagraphView from '../ParagraphView/ParagraphView';
 import InputView from '../../InputView/InputView';
 import DateInputView from '../../InputView/DateInputView/DateInputView';
 import { CustomerDataResponse } from '../../../types';
+import { UserInfoCredentials } from '../types';
 import { DataAttrs, ParagraphLabels, UserInfoInputsOptions } from '../data';
 
 const BIRTH_DATE_INPUT_INDEX = 2;
@@ -32,6 +33,42 @@ export default class UserInfoView {
 
   public exitEditMode(): void {
     this.view.dataset.edit = 'false';
+  }
+
+  public collectCredentials(): UserInfoCredentials {
+    const credentials: UserInfoCredentials = {
+      firstName: '',
+      lastName: '',
+      birthDate: '',
+    };
+
+    const editBlock = this.view.querySelector(`[${DataAttrs.EDIT_BLOCK}]`);
+
+    if (editBlock) {
+      const inputs = editBlock.querySelectorAll('input');
+
+      inputs.forEach((input) => {
+        const inputType = `${input.dataset.type}`;
+
+        if (inputType === 'first-name') {
+          credentials.firstName = input.value;
+        }
+        if (inputType === 'last-name') {
+          credentials.lastName = input.value;
+        }
+        if (inputType === 'birth-date') {
+          credentials.birthDate = input.value;
+        }
+      });
+    }
+
+    return credentials;
+  }
+
+  public updateInfo(contents: string[]): void {
+    this.paragraphsObjects.forEach((paragraphsObject, index) => {
+      paragraphsObject.setContent(contents[index]);
+    });
   }
 
   private configureInfoBlock(customerData: CustomerDataResponse): void {

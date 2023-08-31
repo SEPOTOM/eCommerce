@@ -20,6 +20,14 @@ export default class ParagraphView {
     return '';
   }
 
+  public setContent(contentText: string): void {
+    const content = this.view.lastElementChild;
+
+    if (content) {
+      content.textContent = contentText;
+    }
+  }
+
   private configureView(labelText: string, contentText: string): void {
     this.configureLabel(labelText);
     this.configureContent(contentText);
