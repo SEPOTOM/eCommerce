@@ -76,13 +76,12 @@ export default class ProfileView {
 
     this.userInfo.exitEditMode();
 
-    this.buttonsViews.forEach((buttonsView) => {
-      buttonsView.hideSuccessMessage();
-      buttonsView.hideErrorMessage();
-    });
+    this.hideMessages();
   }
 
   private async sendChanges(): Promise<void> {
+    this.hideMessages();
+
     const userInfoCredentials = this.userInfo.collectCredentials();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
@@ -127,5 +126,12 @@ export default class ProfileView {
     const [year, month, day] = date.split('-');
     const formattedDate = `${month}/${day}/${year}`;
     return formattedDate;
+  }
+
+  private hideMessages(): void {
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.hideSuccessMessage();
+      buttonsView.hideErrorMessage();
+    });
   }
 }
