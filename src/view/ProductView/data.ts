@@ -23,6 +23,6 @@ enum ProductElements {
   PRODUCT_WRAPPER = 'product-wrapper',
 }
 
-const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3'];
+const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];
 
 export { currencySymbol, currencyName, categoryStyles, ProductElements };
