@@ -101,11 +101,16 @@ export default class ProductView {
   }
 
   private widenDescription(): void {
-    const miniImages = document.querySelector(`#${ProductElements.PRODUCT_PICTURES_ALL}`) as HTMLElement;
+    const miniImages = document.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
     const productWrapper = document.querySelector(`#${ProductElements.PRODUCT_WRAPPER}`) as HTMLElement;
     const productDescription = document.querySelector(`#${ProductElements.PRODUCT_DESCRIPTION}`) as HTMLElement;
 
+    const leftMainArrow = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
+    const rightMainArrow = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
+
     miniImages.remove();
+    leftMainArrow.remove();
+    rightMainArrow.remove();
 
     productWrapper.appendChild(productDescription);
   }
