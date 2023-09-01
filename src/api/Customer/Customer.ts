@@ -12,8 +12,8 @@ import {
 import { UpdateActions } from './data';
 
 enum ErrorMessages {
-  NO_CUSTOMER = 'The customer with the given ID was not found.',
   SERVER = 'Failed to connect to the server.',
+  LOG_IN = 'Please, log in first.',
   TRY_LATER = 'Please, check your connection or try again later.',
 }
 
@@ -23,10 +23,16 @@ export default class Customer {
   private static version: number = 0;
 
   public static async getCurrentCustomer(): Promise<CustomerDataResponse | Error> {
-    try {
-      const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
-      const bearerToken = (await Tokens.getCustomerTokens()).access_token;
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
+    const tokens = await Tokens.getCustomerTokens();
 
+    if (!tokens) {
+      return new Error(ErrorMessages.LOG_IN);
+    }
+
+    const bearerToken = tokens.access_token;
+
+    try {
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -36,7 +42,7 @@ export default class Customer {
       const data: CustomerDataResponse = await response.json();
 
       if ('message' in data) {
-        return new Error(`${ErrorMessages.NO_CUSTOMER} ${ErrorMessages.TRY_LATER}`);
+        return new Error(ErrorMessages.LOG_IN);
       }
 
       this.setVersion(data.version);
