@@ -1,7 +1,7 @@
 import Converter from '../../../components/Converter/Converter';
 import HTML from './UserInfoView.html';
-import InputView from '../InputView/InputView';
-import DateInputView from '../InputView/DateInputView/DateInputView';
+import InputView from '../../InputView/InputView';
+import DateInputView from '../../InputView/DateInputView/DateInputView';
 import { UserInfoCredentials } from '../types';
 import { UserInfoInputsOptions, DataAttrs } from '../data';
 
