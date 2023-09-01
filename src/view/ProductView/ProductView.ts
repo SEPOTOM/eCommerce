@@ -83,8 +83,12 @@ export default class ProductView {
     );
 
     const htmlSlider = productHTML.querySelector(`#${SliderSelectors.SLIDER_MAIN_PICTURE}`) as HTMLElement;
+    const sliderBox = productHTML.querySelector(`#${SliderSelectors.SLIDER_CONTAINER}`) as HTMLElement;
 
+    // Adapt the re-used slider for product page
     htmlSlider.classList.add('relative');
+    sliderBox.classList.add('h-[450px]');
+    sliderBox.classList.add('sm:h-[650px]');
 
     (htmlSlider.lastChild as HTMLElement).addEventListener('click', () => {
       const modal = new ProductModalView();
