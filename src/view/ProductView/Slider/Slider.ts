@@ -70,6 +70,7 @@ export default class Slider {
       smallPicture.addEventListener('click', () => {
         this.activeImage = i;
         this.setActiveImage(slider, i);
+        this.setArrowStyles(slider, imagesArray.length);
       });
 
       smallPicturesContainer.appendChild(smallPictureWrapper);
