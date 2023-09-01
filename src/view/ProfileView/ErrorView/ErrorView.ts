@@ -15,7 +15,7 @@ export default class ErrorView {
     const paragraph = this.view.querySelector(`[${DataAttrs.ERROR_TEXT}]`);
 
     if (paragraph) {
-      paragraph.textContent = `${message}. ${paragraph.textContent}`;
+      paragraph.textContent = message;
     }
   }
 }
