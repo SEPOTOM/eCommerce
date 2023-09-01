@@ -170,25 +170,27 @@ export default class ProductView {
     const minIndex = 0;
     const maxIndex = (productDetails.masterData.current.masterVariant.images as IImages[]).length - 1;
 
-    leftArrow.classList.remove('hover:bg-white/50');
-    rightArrow.classList.remove('cursor-not-allowed');
+    if (maxIndex - minIndex > 0) {
+      leftArrow.classList.remove('hover:bg-white/50');
+      rightArrow.classList.remove('cursor-not-allowed');
 
-    if (maxIndex > 0) {
-      rightArrow.addEventListener('click', () => {
-        if (ProductView.activeImage + 1 <= maxIndex) {
-          ProductView.activeImage += 1;
-          this.setActiveImage();
-          this.setArrowStyles(maxIndex);
-        }
-      });
+      if (maxIndex > 0) {
+        rightArrow.addEventListener('click', () => {
+          if (ProductView.activeImage + 1 <= maxIndex) {
+            ProductView.activeImage += 1;
+            this.setActiveImage();
+            this.setArrowStyles(maxIndex);
+          }
+        });
 
-      leftArrow.addEventListener('click', () => {
-        if (ProductView.activeImage - 1 >= minIndex) {
-          ProductView.activeImage -= 1;
-          this.setActiveImage();
-          this.setArrowStyles(maxIndex);
-        }
-      });
+        leftArrow.addEventListener('click', () => {
+          if (ProductView.activeImage - 1 >= minIndex) {
+            ProductView.activeImage -= 1;
+            this.setActiveImage();
+            this.setArrowStyles(maxIndex);
+          }
+        });
+      }
     }
   }
 

@@ -128,6 +128,11 @@ export default class Slider {
       this.setInactiveArrow(rightArrow);
       this.setActiveArrow(leftArrow);
     }
+
+    if (totalNumber === 1) {
+      this.setInactiveArrow(leftArrow);
+      this.setInactiveArrow(rightArrow);
+    }
   }
 
   private setActiveArrow(arrow: HTMLElement): void {
@@ -172,7 +177,6 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     slidingPart.style.left = SLIDER_INITIAL_POSITION;
-
     this.setPreviousSlideCriteria();
 
     leftButton.addEventListener('click', () => {
@@ -183,10 +187,11 @@ export default class Slider {
       } else {
         slidingPart.style.left = `${String(currentPosition + Math.abs(currentPosition))}px`;
         this.setInactiveArrow(leftButton);
-        this.setActiveArrow(rightButton);
+        if (pictureAmount > 1) {
+          this.setActiveArrow(rightButton);
+        }
       }
     });
-
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       const slideRightCriteria: boolean =
@@ -220,15 +225,12 @@ export default class Slider {
     const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
     const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
 
-    // set default styles for a left arrow of smaller slider
     if (Math.abs(currentPosition) > SLIDE_WIDTH) {
       this.setActiveArrow(rightButton);
     } else {
       this.setInactiveArrow(leftButton);
       this.setActiveArrow(rightButton);
     }
-
-    // set default styles for a right arrow of smaller slider
     const slideRightCriteria: boolean =
       Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
     const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
@@ -241,6 +243,10 @@ export default class Slider {
     } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
       this.setInactiveArrow(rightButton);
       this.setActiveArrow(leftButton);
+    }
+    if (pictureAmount === 1) {
+      this.setInactiveArrow(leftButton);
+      this.setInactiveArrow(rightButton);
     }
   }
 }
