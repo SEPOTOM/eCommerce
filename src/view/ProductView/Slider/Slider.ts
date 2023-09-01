@@ -159,7 +159,6 @@ export default class Slider {
         this.activeImage -= 1;
         this.setActiveImage(slider, this.activeImage);
         this.setArrowStyles(slider, maxIndex);
-        this.setDefaultSmallArrowStyles(slider, maxIndex);
       }
     });
 
@@ -168,7 +167,6 @@ export default class Slider {
         this.activeImage += 1;
         this.setActiveImage(slider, this.activeImage);
         this.setArrowStyles(slider, maxIndex);
-        this.setDefaultSmallArrowStyles(slider, maxIndex);
       }
     });
   }
