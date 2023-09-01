@@ -37,6 +37,7 @@ export default class UserInfoView {
 
   public collectCredentials(): UserInfoCredentials {
     const credentials: UserInfoCredentials = {
+      email: '',
       firstName: '',
       lastName: '',
       birthDate: '',
@@ -50,6 +51,9 @@ export default class UserInfoView {
       inputs.forEach((input) => {
         const inputType = `${input.dataset.type}`;
 
+        if (inputType === 'email') {
+          credentials.email = input.value;
+        }
         if (inputType === 'first-name') {
           credentials.firstName = input.value;
         }
@@ -79,6 +83,7 @@ export default class UserInfoView {
 
   private configureInfoBlock(customerData: CustomerDataResponse): void {
     const paragraphsData = [
+      [ParagraphLabels.EMAIL, customerData.email],
       [ParagraphLabels.FIRST_NAME, customerData.firstName],
       [ParagraphLabels.LAST_NAME, customerData.lastName],
     ];

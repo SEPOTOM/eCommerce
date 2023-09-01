@@ -14,6 +14,7 @@ export enum DataAttrs {
 }
 
 export enum ParagraphLabels {
+  EMAIL = 'Email:',
   FIRST_NAME = 'First name:',
   LAST_NAME = 'Last name:',
   BIRTH_DATE = 'Date of birth:',
@@ -32,12 +33,14 @@ export enum AddressTypes {
 }
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
+  EMAIL: [],
   FIRST_NAME: [],
   LAST_NAME: [],
   DATE: [],
 };
 
 export const UserInfoInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.EMAIL },
   { validationData: ValidationData.FIRST_NAME },
   { validationData: ValidationData.LAST_NAME },
   { validationData: ValidationData.DATE },

@@ -10,7 +10,7 @@ import ButtonsView from './ButtonsView/ButtonsView';
 import { DataAttrs } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
-const DATE_DATA_INDEX = 2;
+const DATE_DATA_INDEX = 3;
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -88,6 +88,7 @@ export default class ProfileView {
     const formattedDate = `${year}-${month}-${day}`;
 
     const response = await new Customer()
+      .updateEmail(userInfoCredentials.email)
       .updateFirstName(userInfoCredentials.firstName)
       .updateLastName(userInfoCredentials.lastName)
       .updateBirthDate(formattedDate)
@@ -104,7 +105,7 @@ export default class ProfileView {
         buttonsView.showSuccessMessage();
       });
 
-      const userInfoData = [response.firstName, response.lastName];
+      const userInfoData = [response.email, response.firstName, response.lastName];
 
       if (response.dateOfBirth) {
         userInfoData.push(response.dateOfBirth);
