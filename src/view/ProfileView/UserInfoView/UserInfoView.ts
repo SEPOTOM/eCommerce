@@ -27,6 +27,7 @@ export default class UserInfoView {
     const currentUserData = this.getCurrentData();
 
     this.updateInputsValues(currentUserData);
+    this.validateInputs();
   }
 
   public exitEditMode(): void {
@@ -139,5 +140,11 @@ export default class UserInfoView {
 
   private getCurrentData(): string[] {
     return this.paragraphsObjects.map((paragraphObject) => paragraphObject.getContent());
+  }
+
+  private validateInputs(): void {
+    this.inputsObjects.forEach((inputObject) => {
+      inputObject.validateInput();
+    });
   }
 }
