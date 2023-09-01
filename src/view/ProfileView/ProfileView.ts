@@ -11,6 +11,10 @@ import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
 
+enum ErrorMessages {
+  INVALID_FIELDS = 'Please, make sure that all fields are filled in correctly.',
+}
+
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
@@ -81,6 +85,11 @@ export default class ProfileView {
   private async sendChanges(): Promise<void> {
     this.hideMessages();
 
+    if (!this.validateFields()) {
+      this.showErrors(ErrorMessages.INVALID_FIELDS);
+      return;
+    }
+
     const userInfoCredentials = this.userInfo.collectCredentials();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
@@ -94,9 +103,7 @@ export default class ProfileView {
       .sendUpdateRequest();
 
     if ('message' in response) {
-      this.buttonsViews.forEach((buttonsView) => {
-        buttonsView.showErrorMessage(response.message);
-      });
+      this.showErrors(response.message);
     } else {
       setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
 
@@ -114,6 +121,18 @@ export default class ProfileView {
     }
   }
 
+  private validateFields(): boolean {
+    const fields = this.view.querySelectorAll(`[${DataAttrs.VALID}]`);
+
+    for (let i = 0; i < fields.length; i += 1) {
+      if (fields[i].getAttribute(DataAttrs.VALID) !== 'true') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private updateInfo(userInfoData: string[]): void {
     const localUserInfoData = userInfoData;
 
@@ -126,6 +145,12 @@ export default class ProfileView {
     const [year, month, day] = date.split('-');
     const formattedDate = `${month}/${day}/${year}`;
     return formattedDate;
+  }
+
+  private showErrors(message: string): void {
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.showErrorMessage(message);
+    });
   }
 
   private hideMessages(): void {

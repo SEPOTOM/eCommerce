@@ -12,6 +12,7 @@ export enum DataAttrs {
   EDIT_BLOCK = 'data-edit-block',
   ROW = 'data-row-profile',
   LABEL = 'data-label-profile',
+  VALID = 'data-valid',
 }
 
 export enum ParagraphLabels {
