@@ -177,7 +177,6 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     slidingPart.style.left = SLIDER_INITIAL_POSITION;
-
     this.setPreviousSlideCriteria();
 
     leftButton.addEventListener('click', () => {
@@ -188,10 +187,11 @@ export default class Slider {
       } else {
         slidingPart.style.left = `${String(currentPosition + Math.abs(currentPosition))}px`;
         this.setInactiveArrow(leftButton);
-        this.setActiveArrow(rightButton);
+        if (pictureAmount > 1) {
+          this.setActiveArrow(rightButton);
+        }
       }
     });
-
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       const slideRightCriteria: boolean =
