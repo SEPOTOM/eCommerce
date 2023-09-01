@@ -20,13 +20,22 @@ export default class Slider {
 
     this.addSliderMainPicture(slider, sliderMainPictureContainer);
 
-    this.addSliderSmallPictures(slider, imagesArray);
+    if (imagesArray.length >= 2) {
+      this.addSliderSmallPictures(slider, imagesArray);
 
-    this.processMainNavigation(slider, imagesArray.length);
+      this.processMainNavigation(slider, imagesArray.length);
 
-    this.processSliderNavigation(slider, imagesArray.length);
+      this.processSliderNavigation(slider, imagesArray.length);
 
-    this.setDefaultSmallArrowStyles(slider, imagesArray.length);
+      this.setDefaultSmallArrowStyles(slider, imagesArray.length);
+    } else {
+      const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
+      const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
+      console.log(leftArrow);
+      console.log(rightArrow);
+      leftArrow.remove();
+      rightArrow.remove();
+    }
 
     document.body.addEventListener('click', () => {
       setTimeout(() => {
