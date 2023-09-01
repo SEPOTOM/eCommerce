@@ -5,9 +5,7 @@ import InputView from '../../InputView/InputView';
 import DateInputView from '../../InputView/DateInputView/DateInputView';
 import { CustomerDataResponse } from '../../../types';
 import { UserInfoCredentials } from '../types';
-import { DataAttrs, ParagraphLabels, UserInfoInputsOptions } from '../data';
-
-const BIRTH_DATE_INPUT_INDEX = 2;
+import { DataAttrs, ParagraphLabels, UserInfoInputsOptions, BIRTH_DATE_INPUT_INDEX } from '../data';
 
 export default class UserInfoView {
   private view = Converter.htmlToElement<HTMLElement>(HTML) || document.createElement('section');
@@ -129,6 +127,7 @@ export default class UserInfoView {
       }
 
       inputObject.makeSmall();
+      inputObject.makeErrorDynamic();
 
       this.inputsObjects.push(inputObject);
 

@@ -7,10 +7,9 @@ import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAd
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
-import { DataAttrs } from './data';
+import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
-const DATE_DATA_INDEX = 3;
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -118,7 +117,7 @@ export default class ProfileView {
   private updateInfo(userInfoData: string[]): void {
     const localUserInfoData = userInfoData;
 
-    localUserInfoData[DATE_DATA_INDEX] = this.formatDate(localUserInfoData[DATE_DATA_INDEX]);
+    localUserInfoData[BIRTH_DATE_INPUT_INDEX] = this.formatDate(localUserInfoData[BIRTH_DATE_INPUT_INDEX]);
 
     this.userInfo.updateInfo(userInfoData);
   }
