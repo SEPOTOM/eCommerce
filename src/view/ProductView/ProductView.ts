@@ -95,7 +95,7 @@ export default class ProductView {
       modal.showProductModal(
         (htmlSlider.lastChild as Node).cloneNode(true) as HTMLElement,
         imagesArray,
-        ProductView.activeImage
+        productSlider.activeImage
       );
     });
   }
