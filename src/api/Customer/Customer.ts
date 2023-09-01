@@ -4,6 +4,7 @@ import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import { CustomerDataResponse } from '../../types';
 import {
   UpdateAction,
+  EmailUpdateAction,
   FirstNameUpdateAction,
   LastNameUpdateAction,
   BirthDateUpdateAction,
@@ -55,6 +56,17 @@ export default class Customer {
 
   public static setVersion(version: number): void {
     this.version = version;
+  }
+
+  public updateEmail(email: string): Customer {
+    const action: EmailUpdateAction = {
+      email,
+      action: UpdateActions.EMAIL,
+    };
+
+    this.updateActions.push(action);
+
+    return this;
   }
 
   public updateFirstName(firstName: string): Customer {
