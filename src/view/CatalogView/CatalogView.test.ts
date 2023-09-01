@@ -3,11 +3,11 @@ import CatalogView from './CatalogView';
 import CatalogViewAlpine from './Alpine/CatalogViewAlpine';
 
 describe('Main [Catalog] test', (): void => {
-  it('-- сlass "CatalogView" should be defined', (): void => {
+  it('-- class "CatalogView" should be defined', (): void => {
     expect(CatalogView).toBeDefined();
   });
 
-  it('-- сlass "CatalogView", all method exist & return nothing', () => {
+  it('-- class "CatalogView", all method exist & return nothing', () => {
     document.body.innerHTML = '<main></main>';
     const id = 'test-id';
     expect(new CatalogView().draw).toBeDefined();

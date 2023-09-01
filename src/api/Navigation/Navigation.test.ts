@@ -1,11 +1,11 @@
 import Navigation from './Navigation';
 
 describe('Main [Navigation] test', (): void => {
-  it('-- сlass "Navigation" should be defined', (): void => {
+  it('-- class "Navigation" should be defined', (): void => {
     expect(Navigation).toBeDefined();
   });
 
-  it('-- сlass "Navigation" has properties', (): void => {
+  it('-- class "Navigation" has properties', (): void => {
     expect(Navigation).toHaveProperty('allCategoryLinks');
     expect(Navigation).toHaveProperty('menu');
   });

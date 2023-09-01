@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import Page404View from './Page404View';
 
 describe('Main [404 page] test', (): void => {
-  it('-- сlass "Page404View" should be defined', (): void => {
+  it('-- class "Page404View" should be defined', (): void => {
     expect(Page404View).toBeDefined();
   });
 

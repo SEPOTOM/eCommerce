@@ -1,7 +1,7 @@
 import Catalog from './Catalog';
 
 describe('Main [Catalog] test', (): void => {
-  it('-- сlass "Catalog" should be defined', (): void => {
+  it('-- class "Catalog" should be defined', (): void => {
     expect(Catalog).toBeDefined();
   });
 
@@ -14,7 +14,7 @@ describe('Main [Catalog] test', (): void => {
 
 describe('Check work Catalog fetch methods', () => {
   it('-- check "getCategoryInfoJSON" method', async () => {
-    const ctagoryId = '5a64b445-8662-4959-a874-dc666cd26335';
-    await expect(Catalog.getCategoryInfoJSON(ctagoryId)).resolves.toBe(null);
+    const categoryId = '5a64b445-8662-4959-a874-dc666cd26335';
+    await expect(Catalog.getCategoryInfoJSON(categoryId)).resolves.toBe(null);
   });
 });

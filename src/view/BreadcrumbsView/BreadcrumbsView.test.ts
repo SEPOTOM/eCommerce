@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import BreadcrumbsView from './BreadcrumbsView';
 
 describe('Main [BreadcrumbsView] test', (): void => {
-  it('-- сlass "BreadcrumbsView" should be defined', (): void => {
+  it('-- class "BreadcrumbsView" should be defined', (): void => {
     expect(BreadcrumbsView).toBeDefined();
   });
 
