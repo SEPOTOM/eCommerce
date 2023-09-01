@@ -31,8 +31,6 @@ export default class Slider {
     } else {
       const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
       const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
-      console.log(leftArrow);
-      console.log(rightArrow);
       leftArrow.remove();
       rightArrow.remove();
     }
