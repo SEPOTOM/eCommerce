@@ -7,6 +7,7 @@ import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAd
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
+import PasswordModalView from '../PasswordModalView/PasswordModalView';
 import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
@@ -25,6 +26,8 @@ export default class ProfileView {
   private shippingAddresses = new ShippingAddressesView();
 
   private error = new ErrorView();
+
+  private passwordModal = new PasswordModalView();
 
   private buttonsViews = [new ButtonsView(), new ButtonsView()];
 
@@ -51,6 +54,8 @@ export default class ProfileView {
       this.view.append(this.shippingAddresses.buildView(customerData));
       this.view.append(this.buttonsViews[1].buildView());
 
+      document.body.append(this.passwordModal.buildView());
+
       this.configureButtons();
     } else {
       this.view.innerHTML = '';
@@ -61,6 +66,9 @@ export default class ProfileView {
   private configureButtons(): void {
     const editButton = this.view.querySelector(`[${DataAttrs.EDIT_BUTTON}]`);
     editButton?.addEventListener('click', this.enterEditMode.bind(this));
+
+    const changePasswordButton = this.view.querySelector(`[${DataAttrs.CHANGE_PASSWORD_BUTTON}]`);
+    changePasswordButton?.addEventListener('click', this.passwordModal.show.bind(this.passwordModal));
 
     this.buttonsViews.forEach((buttonsView) => {
       buttonsView.getCancelButton().addEventListener('click', this.exitEditMode.bind(this));

@@ -8,6 +8,7 @@ export enum DataAttrs {
   CANCEL_BUTTON = 'data-cancel-button',
   SAVE_BUTTON = 'data-save-button',
   EDIT_BUTTON = 'data-edit-button',
+  CHANGE_PASSWORD_BUTTON = 'data-change-password-button',
   INFO_BLOCK = 'data-info-block',
   EDIT_BLOCK = 'data-edit-block',
   ROW = 'data-row-profile',
