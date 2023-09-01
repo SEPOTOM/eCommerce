@@ -1,3 +1,4 @@
+import Alpine from 'alpinejs';
 import CatalogViewHTML from './CatalogView.html';
 /* eslint-disable import/no-cycle */
 import CategoryViewAlpine from './Alpine/CatalogViewAlpine';
