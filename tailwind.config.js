@@ -2,7 +2,6 @@
 module.exports = {
     content: ["./src/**/*.{html, ts}", "./src/index.html"],
     safelist: ['cursor-not-allowed', 'h-[450px]', 'sm:h-[650px]'],
-    safelist: ['cursor-not-allowed'],
     darkMode: false,
     theme: {
       extend: {
