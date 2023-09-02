@@ -7,10 +7,13 @@ import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAd
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
-import { DataAttrs } from './data';
+import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
-const DATE_DATA_INDEX = 2;
+
+enum ErrorMessages {
+  INVALID_FIELDS = 'Please, make sure that all fields are filled in correctly.',
+}
 
 export default class ProfileView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -82,21 +85,25 @@ export default class ProfileView {
   private async sendChanges(): Promise<void> {
     this.hideMessages();
 
+    if (!this.validateFields()) {
+      this.showErrors(ErrorMessages.INVALID_FIELDS);
+      return;
+    }
+
     const userInfoCredentials = this.userInfo.collectCredentials();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
 
     const response = await new Customer()
+      .updateEmail(userInfoCredentials.email)
       .updateFirstName(userInfoCredentials.firstName)
       .updateLastName(userInfoCredentials.lastName)
       .updateBirthDate(formattedDate)
       .sendUpdateRequest();
 
     if ('message' in response) {
-      this.buttonsViews.forEach((buttonsView) => {
-        buttonsView.showErrorMessage(response.message);
-      });
+      this.showErrors(response.message);
     } else {
       setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
 
@@ -104,7 +111,7 @@ export default class ProfileView {
         buttonsView.showSuccessMessage();
       });
 
-      const userInfoData = [response.firstName, response.lastName];
+      const userInfoData = [response.email, response.firstName, response.lastName];
 
       if (response.dateOfBirth) {
         userInfoData.push(response.dateOfBirth);
@@ -114,10 +121,22 @@ export default class ProfileView {
     }
   }
 
+  private validateFields(): boolean {
+    const fields = this.view.querySelectorAll(`[${DataAttrs.VALID}]`);
+
+    for (let i = 0; i < fields.length; i += 1) {
+      if (fields[i].getAttribute(DataAttrs.VALID) !== 'true') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private updateInfo(userInfoData: string[]): void {
     const localUserInfoData = userInfoData;
 
-    localUserInfoData[DATE_DATA_INDEX] = this.formatDate(localUserInfoData[DATE_DATA_INDEX]);
+    localUserInfoData[BIRTH_DATE_INPUT_INDEX] = this.formatDate(localUserInfoData[BIRTH_DATE_INPUT_INDEX]);
 
     this.userInfo.updateInfo(userInfoData);
   }
@@ -126,6 +145,12 @@ export default class ProfileView {
     const [year, month, day] = date.split('-');
     const formattedDate = `${month}/${day}/${year}`;
     return formattedDate;
+  }
+
+  private showErrors(message: string): void {
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.showErrorMessage(message);
+    });
   }
 
   private hideMessages(): void {

@@ -50,6 +50,10 @@ export default class InputView {
     this.input.dataset.small = 'true';
   }
 
+  public makeErrorDynamic(): void {
+    this.errorBlock.dataset.dynamic = 'true';
+  }
+
   public setValue(value: string): void {
     this.input.value = value;
   }
