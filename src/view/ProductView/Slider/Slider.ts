@@ -8,7 +8,7 @@ import { IImages } from '../../../types';
 import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 
 export default class Slider {
-  private static activeImage: number;
+  public activeImage: number = 0;
 
   private static previousSlideCriteria: boolean;
 
@@ -16,17 +16,24 @@ export default class Slider {
     const slider = Converter.htmlToElement(SliderHTML) as HTMLElement;
     const sliderMainPictureContainer = this.getSliderPicture(pictureURL);
 
-    Slider.activeImage = activeImage;
+    this.activeImage = activeImage;
 
     this.addSliderMainPicture(slider, sliderMainPictureContainer);
 
-    this.addSliderSmallPictures(slider, imagesArray);
+    if (imagesArray.length >= 2) {
+      this.addSliderSmallPictures(slider, imagesArray);
 
-    this.processMainNavigation(slider, imagesArray.length);
+      this.processMainNavigation(slider, imagesArray.length);
 
-    this.processSliderNavigation(slider, imagesArray.length);
+      this.processSliderNavigation(slider, imagesArray.length);
 
-    this.setDefaultSmallArrowStyles(slider, imagesArray.length);
+      this.setDefaultSmallArrowStyles(slider, imagesArray.length);
+    } else {
+      const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
+      const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
+      leftArrow.remove();
+      rightArrow.remove();
+    }
 
     document.body.addEventListener('click', () => {
       setTimeout(() => {
@@ -68,13 +75,14 @@ export default class Slider {
       smallPicture.src = imagesArray[i].url;
 
       smallPicture.addEventListener('click', () => {
-        Slider.activeImage = i;
+        this.activeImage = i;
         this.setActiveImage(slider, i);
+        this.setArrowStyles(slider, imagesArray.length);
       });
 
       smallPicturesContainer.appendChild(smallPictureWrapper);
     }
-    this.setActiveImage(slider, Slider.activeImage);
+    this.setActiveImage(slider, this.activeImage);
   }
 
   private setActiveImage(slider: HTMLElement, activeImage: number): void {
@@ -114,17 +122,17 @@ export default class Slider {
     const leftArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLImageElement;
     const rightArrow = slider.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLImageElement;
 
-    if (Slider.activeImage > 0 && Slider.activeImage < totalNumber - 1) {
+    if (this.activeImage > 0 && this.activeImage < totalNumber - 1) {
       this.setActiveArrow(leftArrow);
       this.setActiveArrow(rightArrow);
     }
 
-    if (Slider.activeImage === 0) {
+    if (this.activeImage === 0) {
       this.setInactiveArrow(leftArrow);
       this.setActiveArrow(rightArrow);
     }
 
-    if (Slider.activeImage === totalNumber - 1) {
+    if (this.activeImage === totalNumber - 1) {
       this.setInactiveArrow(rightArrow);
       this.setActiveArrow(leftArrow);
     }
@@ -154,20 +162,22 @@ export default class Slider {
     this.setArrowStyles(slider, maxIndex);
 
     leftButton.addEventListener('click', () => {
-      if (Slider.activeImage - 1 >= 0) {
-        Slider.activeImage -= 1;
-        this.setActiveImage(slider, Slider.activeImage);
-        this.setArrowStyles(slider, maxIndex);
-        this.setDefaultSmallArrowStyles(slider, maxIndex);
+      if (this.activeImage - 1 >= 0) {
+        this.activeImage -= 1;
+        setTimeout(() => {
+          this.setActiveImage(slider, this.activeImage);
+          this.setArrowStyles(slider, maxIndex);
+        }, 300);
       }
     });
 
     rightButton.addEventListener('click', () => {
-      if (Slider.activeImage + 1 < maxIndex) {
-        Slider.activeImage += 1;
-        this.setActiveImage(slider, Slider.activeImage);
-        this.setArrowStyles(slider, maxIndex);
-        this.setDefaultSmallArrowStyles(slider, maxIndex);
+      if (this.activeImage + 1 < maxIndex) {
+        this.activeImage += 1;
+        setTimeout(() => {
+          this.setActiveImage(slider, this.activeImage);
+          this.setArrowStyles(slider, maxIndex);
+        }, 300);
       }
     });
   }
@@ -179,19 +189,42 @@ export default class Slider {
     slidingPart.style.left = SLIDER_INITIAL_POSITION;
     this.setPreviousSlideCriteria();
 
+    this.processLeftButtonClick(leftButton, rightButton, slidingPart, pictureAmount);
+
+    this.processRightButtonClick(leftButton, rightButton, slidingPart, pictureAmount);
+  }
+
+  private processLeftButtonClick(
+    leftButton: HTMLElement,
+    rightButton: HTMLElement,
+    slidingPart: HTMLElement,
+    pictureAmount: number
+  ): void {
     leftButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       if (Math.abs(currentPosition) > SLIDE_WIDTH) {
+        /*eslint-disable no-param-reassign*/
         slidingPart.style.left = `${String(currentPosition + SLIDE_WIDTH)}px`;
+        /*eslint-enable no-param-reassign*/
         this.setActiveArrow(rightButton);
       } else {
+        /*eslint-disable no-param-reassign*/
         slidingPart.style.left = `${String(currentPosition + Math.abs(currentPosition))}px`;
+        /*eslint-enable no-param-reassign*/
         this.setInactiveArrow(leftButton);
         if (pictureAmount > 1) {
           this.setActiveArrow(rightButton);
         }
       }
     });
+  }
+
+  private processRightButtonClick(
+    leftButton: HTMLElement,
+    rightButton: HTMLElement,
+    slidingPart: HTMLElement,
+    pictureAmount: number
+  ): void {
     rightButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       const slideRightCriteria: boolean =
@@ -202,10 +235,14 @@ export default class Slider {
         slideRightCriteria &&
         Slider.previousSlideCriteria
       ) {
+        /*eslint-disable no-param-reassign*/
         slidingPart.style.left = `${String(currentPosition - SLIDE_WIDTH)}px`;
+        /*eslint-enable no-param-reassign*/
         this.setActiveArrow(leftButton);
       } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
+        /*eslint-disable no-param-reassign*/
         slidingPart.style.left = `${String(currentPosition - smallShiftAmount)}px`;
+        /*eslint-enable no-param-reassign*/
         this.setInactiveArrow(rightButton);
         this.setActiveArrow(leftButton);
       }
@@ -223,30 +260,38 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
+    const slidingPartWrapper = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_IMAGES_WRAPPER}`) as HTMLElement;
     const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
 
-    if (Math.abs(currentPosition) > SLIDE_WIDTH) {
-      this.setActiveArrow(rightButton);
-    } else {
-      this.setInactiveArrow(leftButton);
-      this.setActiveArrow(rightButton);
-    }
-    const slideRightCriteria: boolean =
-      Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
-    const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
-    if (
-      pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
-      slideRightCriteria &&
-      Slider.previousSlideCriteria
-    ) {
-      this.setActiveArrow(leftButton);
-    } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
-      this.setInactiveArrow(rightButton);
-      this.setActiveArrow(leftButton);
-    }
-    if (pictureAmount === 1) {
-      this.setInactiveArrow(leftButton);
-      this.setInactiveArrow(rightButton);
-    }
+    setTimeout(() => {
+      if (Math.abs(currentPosition) > SLIDE_WIDTH) {
+        this.setActiveArrow(rightButton);
+      } else {
+        this.setInactiveArrow(leftButton);
+        this.setActiveArrow(rightButton);
+      }
+      const slideRightCriteria: boolean =
+        Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
+      const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
+      if (
+        pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
+        slideRightCriteria &&
+        Slider.previousSlideCriteria
+      ) {
+        this.setActiveArrow(leftButton);
+      } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
+        this.setInactiveArrow(rightButton);
+        this.setActiveArrow(leftButton);
+      }
+      if (pictureAmount === 1) {
+        this.setInactiveArrow(leftButton);
+        this.setInactiveArrow(rightButton);
+      }
+
+      if (slidingPart.offsetWidth < slidingPartWrapper.offsetWidth) {
+        this.setInactiveArrow(leftButton);
+        this.setInactiveArrow(rightButton);
+      }
+    }, 100);
   }
 }

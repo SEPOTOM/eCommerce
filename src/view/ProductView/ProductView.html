@@ -1,48 +1,15 @@
 <div
-  class="text-center mt-4 mb-4 m-auto max-w-6xl flex flex-col gap-y-4 text-gray-600 select-none px-5 max-w-6xl md:px-7"
+  class="text-center mt-4 mb-4 m-auto max-w-6xl flex flex-col gap-y-4 text-gray-600 max-w-6xl px-5 md:px-7"
   id="product-wrapper"
 >
-  <div class="flex gap-x-4 flex-col lg:flex-row mx-auto">
-    <div class="self-start select-none self-start">
-      <div
-        class="relative max-[320px]:w-[260px] w-[330px] h-[260px] sm:w-[525px] sm:h-[400px] select-none cursor-pointer"
-        id="product-pictures"
-      >
-        <div class="absolute top-[45%] border-2 h-16 hover:bg-white/50 z-10 cursor-not-allowed" id="left-arrow">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6 mt-4"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-        </div>
-        <div class="absolute top-[45%] right-0 border-2 h-16 hover:bg-white/50 z-10 cursor-pointer" id="right-arrow">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6 mt-4"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </div>
-      </div>
-      <div class="flex flex-row hidden sm:flex">
-        <div
-          class="flex-row flex-wrap items-center justify-start hidden sm:flex flex-wrap w-[525px]"
-          id="pictures-small"
-        ></div>
-      </div>
-    </div>
+  <div class="relative flex gap-x-4 flex-col lg:flex-row mx-auto">
+    <div
+      class="flex self-center lg:self-start select-none max-w-[300px] lg:max-w-[600px] md:max-w-[680px] sm:max-w-[580px] min-[500px]:max-w-[440px] min-[450px]:max-w-[390px]"
+      id="slider-component"
+    ></div>
     <div class="text-left w-full flex flex-col gap-y-4">
       <h3 class="text-4xl font-bold" id="product-name"></h3>
-      <div class="text-xl font-bold border-b-2 py-3 flex flex-row gap-x-2" id="product-category"></div>
+      <div class="text-xl font-bold border-b-2 py-3 flex flex-row flex-wrap gap-x-2" id="product-category"></div>
       <div>
         <label for="amount">Quantity</label>
         <input
