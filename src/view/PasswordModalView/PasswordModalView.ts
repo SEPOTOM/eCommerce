@@ -1,6 +1,9 @@
 import Converter from '../../components/Converter/Converter';
 /* eslint-disable import/no-cycle */
 import Customer from '../../api/Customer/Customer';
+import Authorization from '../../api/Authorization/Authorization';
+import Tokens from '../../components/Tokens/Tokens';
+import Router from '../../components/Router/Router';
 import HTML from './PasswordModalView.html';
 import InputView from '../InputView/InputView';
 import { PasswordData } from './types';
@@ -99,7 +102,16 @@ export default class PasswordModalView {
   private async changePassword(): Promise<void> {
     const passwordData = this.getPasswordData();
 
-    await Customer.changePassword(passwordData.currentPassword, passwordData.newPassword);
+    const response = await Customer.changePassword(passwordData.currentPassword, passwordData.newPassword);
+
+    if (!('message' in response)) {
+      const tokens = await Authorization.loginBasicAuth(response.email, passwordData.newPassword);
+
+      if (!('message' in tokens)) {
+        Tokens.setCustomerTokens(tokens);
+        Router.toProfilePage();
+      }
+    }
   }
 
   private getPasswordData(): PasswordData {
