@@ -14,6 +14,7 @@ export enum DataAttrs {
   ROW = 'data-row-profile',
   LABEL = 'data-label-profile',
   VALID = 'data-valid',
+  MODAL_CONTENT = 'data-modal-content',
 }
 
 export enum ParagraphLabels {
