@@ -7,6 +7,7 @@ export enum DataAttrs {
   MODAL_CONTENT = 'data-modal-content',
   ROW = 'data-row-modal-password',
   LABEL = 'data-label-modal-password',
+  ERROR_BLOCK = 'data-error-block',
 }
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {

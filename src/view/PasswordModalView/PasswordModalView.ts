@@ -20,6 +20,8 @@ enum ClassNames {
 export default class PasswordModalView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
+  private errorBlock = this.view.querySelector(`[${DataAttrs.ERROR_BLOCK}]`) || document.createElement('div');
+
   private inputsObjects: InputView[] = [];
 
   public buildView(): HTMLElement {
@@ -105,18 +107,24 @@ export default class PasswordModalView {
 
     const response = await Customer.changePassword(passwordData.currentPassword, passwordData.newPassword);
 
-    if (!('message' in response)) {
-      const tokens = await Authorization.loginBasicAuth(response.email, passwordData.newPassword);
-
-      if (!('message' in tokens)) {
-        this.showSuccessMessage();
-
-        setTimeout(() => {
-          Tokens.setCustomerTokens(tokens);
-          Router.toProfilePage();
-        }, HIDE_MODAL_DELAY);
-      }
+    if ('message' in response) {
+      this.showErrorMessage(response.message);
+      return;
     }
+
+    const tokens = await Authorization.loginBasicAuth(response.email, passwordData.newPassword);
+
+    if ('message' in tokens) {
+      this.showErrorMessage(tokens.message);
+      return;
+    }
+
+    this.showSuccessMessage();
+
+    setTimeout(() => {
+      Tokens.setCustomerTokens(tokens);
+      Router.toProfilePage();
+    }, HIDE_MODAL_DELAY);
   }
 
   private getPasswordData(): PasswordData {
@@ -156,5 +164,10 @@ export default class PasswordModalView {
 
   private showSuccessMessage(): void {
     this.view.dataset.success = 'true';
+  }
+
+  private showErrorMessage(message: string): void {
+    this.view.dataset.error = 'true';
+    this.errorBlock.textContent = message;
   }
 }
