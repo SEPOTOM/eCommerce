@@ -20,3 +20,7 @@ export interface LastNameUpdateAction extends UpdateAction {
 export interface BirthDateUpdateAction extends UpdateAction {
   dateOfBirth: string;
 }
+
+export interface EmailUpdateAction extends UpdateAction {
+  email: string;
+}

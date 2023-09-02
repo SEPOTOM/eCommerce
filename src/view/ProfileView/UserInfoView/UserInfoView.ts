@@ -5,9 +5,7 @@ import InputView from '../../InputView/InputView';
 import DateInputView from '../../InputView/DateInputView/DateInputView';
 import { CustomerDataResponse } from '../../../types';
 import { UserInfoCredentials } from '../types';
-import { DataAttrs, ParagraphLabels, UserInfoInputsOptions } from '../data';
-
-const BIRTH_DATE_INPUT_INDEX = 2;
+import { DataAttrs, ParagraphLabels, UserInfoInputsOptions, BIRTH_DATE_INPUT_INDEX } from '../data';
 
 export default class UserInfoView {
   private view = Converter.htmlToElement<HTMLElement>(HTML) || document.createElement('section');
@@ -29,6 +27,7 @@ export default class UserInfoView {
     const currentUserData = this.getCurrentData();
 
     this.updateInputsValues(currentUserData);
+    this.validateInputs();
   }
 
   public exitEditMode(): void {
@@ -37,6 +36,7 @@ export default class UserInfoView {
 
   public collectCredentials(): UserInfoCredentials {
     const credentials: UserInfoCredentials = {
+      email: '',
       firstName: '',
       lastName: '',
       birthDate: '',
@@ -50,6 +50,9 @@ export default class UserInfoView {
       inputs.forEach((input) => {
         const inputType = `${input.dataset.type}`;
 
+        if (inputType === 'email') {
+          credentials.email = input.value;
+        }
         if (inputType === 'first-name') {
           credentials.firstName = input.value;
         }
@@ -79,6 +82,7 @@ export default class UserInfoView {
 
   private configureInfoBlock(customerData: CustomerDataResponse): void {
     const paragraphsData = [
+      [ParagraphLabels.EMAIL, customerData.email],
       [ParagraphLabels.FIRST_NAME, customerData.firstName],
       [ParagraphLabels.LAST_NAME, customerData.lastName],
     ];
@@ -124,6 +128,7 @@ export default class UserInfoView {
       }
 
       inputObject.makeSmall();
+      inputObject.makeErrorDynamic();
 
       this.inputsObjects.push(inputObject);
 
@@ -135,5 +140,11 @@ export default class UserInfoView {
 
   private getCurrentData(): string[] {
     return this.paragraphsObjects.map((paragraphObject) => paragraphObject.getContent());
+  }
+
+  private validateInputs(): void {
+    this.inputsObjects.forEach((inputObject) => {
+      inputObject.validateInput();
+    });
   }
 }
