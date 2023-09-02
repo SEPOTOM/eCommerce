@@ -57,6 +57,7 @@ export default class PasswordModalView {
         if (!isInsideContent || isCloseButton) {
           this.hide();
           this.clear();
+          this.hideErrorMessage();
         }
       }
     });
