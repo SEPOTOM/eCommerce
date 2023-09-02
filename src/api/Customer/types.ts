@@ -24,3 +24,9 @@ export interface BirthDateUpdateAction extends UpdateAction {
 export interface EmailUpdateAction extends UpdateAction {
   email: string;
 }
+
+export interface PasswordData {
+  version: number;
+  currentPassword: string;
+  newPassword: string;
+}
