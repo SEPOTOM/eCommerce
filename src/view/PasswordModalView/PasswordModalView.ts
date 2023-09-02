@@ -3,6 +3,8 @@ import HTML from './PasswordModalView.html';
 import InputView from '../InputView/InputView';
 import { DataAttrs, ModalInputsOptions } from './data';
 
+const DEFAULT_INPUT_VALUE = '';
+
 enum ClassNames {
   HIDDEN = 'hidden',
   NO_OVERFLOW = 'overflow-hidden',
@@ -44,6 +46,7 @@ export default class PasswordModalView {
 
         if (!isInsideContent || isCloseButton) {
           this.hide();
+          this.clear();
         }
       }
     });
@@ -70,6 +73,13 @@ export default class PasswordModalView {
       const inputRow = inputObject.buildInputView(localInputOptions);
 
       rows[index]?.append(inputRow);
+    });
+  }
+
+  private clear(): void {
+    this.inputsObjects.forEach((inputObject) => {
+      inputObject.setValue(DEFAULT_INPUT_VALUE);
+      inputObject.hideError();
     });
   }
 }
