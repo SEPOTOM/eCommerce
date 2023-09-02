@@ -103,6 +103,8 @@ export default class PasswordModalView {
   }
 
   private async changePassword(): Promise<void> {
+    this.hideErrorMessage();
+
     const passwordData = this.getPasswordData();
 
     const response = await Customer.changePassword(passwordData.currentPassword, passwordData.newPassword);
@@ -172,5 +174,9 @@ export default class PasswordModalView {
   private showErrorMessage(message: string): void {
     this.view.dataset.error = 'true';
     this.errorBlock.textContent = message;
+  }
+
+  private hideErrorMessage(): void {
+    this.view.dataset.error = 'false';
   }
 }
