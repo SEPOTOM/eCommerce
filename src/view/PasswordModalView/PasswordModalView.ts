@@ -122,6 +122,9 @@ export default class PasswordModalView {
     this.showSuccessMessage();
 
     setTimeout(() => {
+      this.hide();
+      this.clear();
+
       Tokens.setCustomerTokens(tokens);
       Router.toProfilePage();
     }, HIDE_MODAL_DELAY);
