@@ -1,4 +1,5 @@
 import { InputOptions, PatternAndMessage } from '../../types';
+import { InputTypes, RegExps, ErrorMessages } from '../../data/validation';
 
 export enum DataAttrs {
   CANCEL_BUTTON = 'data-cancel-button',
@@ -9,10 +10,17 @@ export enum DataAttrs {
 }
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
-  PASSWORD: [],
+  PASSWORD: [
+    [RegExps.MIN_LENGTH, ErrorMessages.MIN_LENGTH],
+    [RegExps.ONE_UPPERCASE, ErrorMessages.ONE_UPPERCASE],
+    [RegExps.ONE_LOWERCASE, ErrorMessages.ONE_LOWERCASE],
+    [RegExps.ONE_DIGIT, ErrorMessages.ONE_DIGIT],
+    [RegExps.ONE_SPECIAL, ErrorMessages.ONE_SPECIAL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+  ],
 };
 
 export const ModalInputsOptions: InputOptions[] = [
-  { validationData: ValidationData.PASSWORD },
-  { validationData: ValidationData.PASSWORD },
+  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
+  { validationData: ValidationData.PASSWORD, type: InputTypes.PASSWORD },
 ];
