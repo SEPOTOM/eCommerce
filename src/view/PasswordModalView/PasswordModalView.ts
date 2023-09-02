@@ -1,6 +1,9 @@
 import Converter from '../../components/Converter/Converter';
+/* eslint-disable import/no-cycle */
+import Customer from '../../api/Customer/Customer';
 import HTML from './PasswordModalView.html';
 import InputView from '../InputView/InputView';
+import { PasswordData } from './types';
 import { DataAttrs, ModalInputsOptions } from './data';
 
 const DEFAULT_INPUT_VALUE = '';
@@ -18,6 +21,7 @@ export default class PasswordModalView {
   public buildView(): HTMLElement {
     this.configureView();
     this.configureInputs();
+    this.configureSaveButton();
 
     return this.view;
   }
@@ -76,10 +80,60 @@ export default class PasswordModalView {
     });
   }
 
+  private configureSaveButton(): void {
+    const saveButton = this.view.querySelector(`[${DataAttrs.SAVE_BUTTON}]`);
+    saveButton?.addEventListener('click', () => {
+      if (this.isFieldsValid()) {
+        this.changePassword();
+      }
+    });
+  }
+
   private clear(): void {
     this.inputsObjects.forEach((inputObject) => {
       inputObject.setValue(DEFAULT_INPUT_VALUE);
       inputObject.hideError();
     });
+  }
+
+  private async changePassword(): Promise<void> {
+    const passwordData = this.getPasswordData();
+
+    await Customer.changePassword(passwordData.currentPassword, passwordData.newPassword);
+  }
+
+  private getPasswordData(): PasswordData {
+    const data: PasswordData = {
+      currentPassword: '',
+      newPassword: '',
+    };
+
+    const inputs = this.view.querySelectorAll('input');
+
+    inputs.forEach((input) => {
+      const inputType = input.dataset.type;
+
+      if (inputType === 'old-password') {
+        data.currentPassword = input.value;
+      }
+
+      if (inputType === 'new-password') {
+        data.newPassword = input.value;
+      }
+    });
+
+    return data;
+  }
+
+  private isFieldsValid(): boolean {
+    const inputs = this.view.querySelectorAll('input');
+
+    for (let i = 0; i < inputs.length; i += 1) {
+      if (inputs[i].dataset.valid !== 'true') {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
