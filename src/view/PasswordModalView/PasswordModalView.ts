@@ -17,6 +17,10 @@ enum ClassNames {
   NO_OVERFLOW = 'overflow-hidden',
 }
 
+enum ErrorMessages {
+  INVALID_FIELD = 'Please, make sure that all fields are filled in correctly.',
+}
+
 export default class PasswordModalView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
@@ -92,6 +96,9 @@ export default class PasswordModalView {
     saveButton?.addEventListener('click', () => {
       if (this.isFieldsValid()) {
         this.changePassword();
+      } else {
+        this.showErrorMessage(ErrorMessages.INVALID_FIELD);
+        this.validateFields();
       }
     });
   }
@@ -179,5 +186,11 @@ export default class PasswordModalView {
 
   private hideErrorMessage(): void {
     this.view.dataset.error = 'false';
+  }
+
+  private validateFields(): void {
+    this.inputsObjects.forEach((inputObject) => {
+      inputObject.validateInput();
+    });
   }
 }
