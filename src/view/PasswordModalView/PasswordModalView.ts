@@ -10,6 +10,7 @@ import { PasswordData } from './types';
 import { DataAttrs, ModalInputsOptions } from './data';
 
 const DEFAULT_INPUT_VALUE = '';
+const HIDE_MODAL_DELAY = 1000;
 
 enum ClassNames {
   HIDDEN = 'hidden',
@@ -108,8 +109,12 @@ export default class PasswordModalView {
       const tokens = await Authorization.loginBasicAuth(response.email, passwordData.newPassword);
 
       if (!('message' in tokens)) {
-        Tokens.setCustomerTokens(tokens);
-        Router.toProfilePage();
+        this.showSuccessMessage();
+
+        setTimeout(() => {
+          Tokens.setCustomerTokens(tokens);
+          Router.toProfilePage();
+        }, HIDE_MODAL_DELAY);
       }
     }
   }
@@ -147,5 +152,9 @@ export default class PasswordModalView {
     }
 
     return true;
+  }
+
+  private showSuccessMessage(): void {
+    this.view.dataset.success = 'true';
   }
 }
