@@ -229,30 +229,38 @@ export default class Slider {
     const leftButton = slider.querySelector(`#${SliderSelectors.SLIDER_LEFT}`) as HTMLElement;
     const rightButton = slider.querySelector(`#${SliderSelectors.SLIDER_RIGHT}`) as HTMLElement;
     const slidingPart = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_PICTURES}`) as HTMLElement;
+    const slidingPartWrapper = slider.querySelector(`#${SliderSelectors.SLIDER_SMALL_IMAGES_WRAPPER}`) as HTMLElement;
     const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
 
-    if (Math.abs(currentPosition) > SLIDE_WIDTH) {
-      this.setActiveArrow(rightButton);
-    } else {
-      this.setInactiveArrow(leftButton);
-      this.setActiveArrow(rightButton);
-    }
-    const slideRightCriteria: boolean =
-      Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
-    const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
-    if (
-      pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
-      slideRightCriteria &&
-      Slider.previousSlideCriteria
-    ) {
-      this.setActiveArrow(leftButton);
-    } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
-      this.setInactiveArrow(rightButton);
-      this.setActiveArrow(leftButton);
-    }
-    if (pictureAmount === 1) {
-      this.setInactiveArrow(leftButton);
-      this.setInactiveArrow(rightButton);
-    }
+    setTimeout(() => {
+      if (Math.abs(currentPosition) > SLIDE_WIDTH) {
+        this.setActiveArrow(rightButton);
+      } else {
+        this.setInactiveArrow(leftButton);
+        this.setActiveArrow(rightButton);
+      }
+      const slideRightCriteria: boolean =
+        Math.abs(currentPosition) + slidingPart.offsetWidth + SLIDE_WIDTH < SLIDE_WIDTH * pictureAmount;
+      const smallShiftAmount = SLIDE_WIDTH * pictureAmount - Math.abs(currentPosition) - slidingPart.offsetWidth;
+      if (
+        pictureAmount * SLIDE_WIDTH - Math.abs(currentPosition) > 0 &&
+        slideRightCriteria &&
+        Slider.previousSlideCriteria
+      ) {
+        this.setActiveArrow(leftButton);
+      } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
+        this.setInactiveArrow(rightButton);
+        this.setActiveArrow(leftButton);
+      }
+      if (pictureAmount === 1) {
+        this.setInactiveArrow(leftButton);
+        this.setInactiveArrow(rightButton);
+      }
+
+      if (slidingPart.offsetWidth < slidingPartWrapper.offsetWidth) {
+        this.setInactiveArrow(leftButton);
+        this.setInactiveArrow(rightButton);
+      }
+    }, 100);
   }
 }
