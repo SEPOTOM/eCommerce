@@ -1,10 +1,5 @@
 import { PatternAndMessage, InputOptions } from '../../types';
-import { RegExps, ErrorMessages } from '../../data/validation';
-
-enum InputTypes {
-  EMAIL = 'email',
-  PASSWORD = 'password',
-}
+import { RegExps, ErrorMessages, InputTypes } from '../../data/validation';
 
 export const DEFAULT_COUNTRY = 'US';
 
