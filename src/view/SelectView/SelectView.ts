@@ -31,6 +31,14 @@ export default class SelectView {
     this.select.value = value;
   }
 
+  public disable(): void {
+    this.select.disabled = true;
+  }
+
+  public enable(): void {
+    this.select.disabled = false;
+  }
+
   public dispatchEvent(event: Event): void {
     this.select.dispatchEvent(event);
   }
