@@ -56,9 +56,16 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.DATE, ErrorMessages.DATE],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
-  STREET: [],
-  CITY: [],
-  POSTAL_CODE: [],
+  STREET: [
+    [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+  ],
+  CITY: [
+    [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
+    [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
+    [RegExps.WORDS, ErrorMessages.WORDS],
+  ],
+  POSTAL_CODE: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
 };
 
 export const UserInfoInputsOptions: InputOptions[] = [

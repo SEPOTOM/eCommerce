@@ -2,17 +2,22 @@ import Converter from '../../../../components/Converter/Converter';
 import HTML from './AddressView.html';
 import ParagraphView from '../../ParagraphView/ParagraphView';
 import InputView from '../../../InputView/InputView';
+import DynamicInputView from '../../../InputView/DynamicInputView/DynamicInputView';
 import SelectView from '../../../SelectView/SelectView';
 import { Address } from '../../../../types';
 import { AddressLabels, DataAttrs, AddressInputsOptions } from '../../data';
-import { Countries } from '../../../../data/countries';
+import { Countries, DEFAULT_COUNTRY } from '../../../../data/countries';
+import { PostalCodeErrorMessages, PostalCodeRegExps } from '../../../../data/validation';
 
 const COUNTRY_FIELD_INDEX = 2;
+const POSTAL_CODE_FIELD_INDEX = 3;
 
 export default class AddressView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
   private selectObject = new SelectView();
+
+  private postalCodeInputObject: DynamicInputView | null = null;
 
   private inputObjects: InputView[] = [];
 
@@ -93,15 +98,24 @@ export default class AddressView {
         value: id,
       };
 
-      const inputObject = new InputView();
+      let inputObject;
+
+      if (index === POSTAL_CODE_FIELD_INDEX) {
+        inputObject = new DynamicInputView(
+          PostalCodeRegExps[DEFAULT_COUNTRY],
+          PostalCodeErrorMessages[DEFAULT_COUNTRY]
+        );
+        this.postalCodeInputObject = inputObject;
+      } else {
+        inputObject = new InputView();
+      }
+
       inputObject.makeSmall();
       inputObject.makeErrorDynamic();
 
       this.inputObjects.push(inputObject);
 
-      const inputView = inputObject.buildInputView(inputOptions);
-
-      row.append(inputView);
+      row.append(inputObject.buildInputView(inputOptions));
 
       optionsIndex += 1;
     });
@@ -110,10 +124,20 @@ export default class AddressView {
   private configureSelect(row: Element, label: Element): void {
     const id = label.getAttribute('for') || '';
 
-    const select = this.selectObject.buildSelectView(Countries, id);
-
     this.selectObject.makeSmall();
 
+    const select = this.selectObject.buildSelectView(Countries, id);
+    select.addEventListener('change', this.changePostalCodeValidation.bind(this));
+
     row.append(select);
+  }
+
+  private changePostalCodeValidation(): void {
+    const countryCode = this.selectObject.getValue();
+
+    this.postalCodeInputObject?.setRegExp(PostalCodeRegExps[countryCode]);
+    this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countryCode]);
+
+    this.postalCodeInputObject?.validateInput();
   }
 }
