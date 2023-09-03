@@ -33,3 +33,8 @@ export interface AddressAddAction extends Action {
 export interface IdAddressAddAction extends Action {
   addressId: string;
 }
+
+export interface AddressUpdateAction extends Action {
+  address: Address;
+  addressId: string;
+}

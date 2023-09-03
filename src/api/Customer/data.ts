@@ -7,4 +7,5 @@ export enum Actions {
   ADD_ADDRESS = 'addAddress',
   ADD_BILLING_ADDRESS = 'addBillingAddressId',
   ADD_SHIPPING_ADDRESS = 'addShippingAddressId',
+  CHANGE_ADDRESS = 'changeAddress',
 }

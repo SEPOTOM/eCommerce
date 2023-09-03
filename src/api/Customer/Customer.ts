@@ -10,6 +10,7 @@ import {
   BirthDateUpdateAction,
   AddressAddAction,
   IdAddressAddAction,
+  AddressUpdateAction,
   UpdateRequest,
 } from './types';
 import { Actions } from './data';
@@ -100,6 +101,20 @@ export default class Customer {
     };
 
     this.actions.push(action);
+
+    return this;
+  }
+
+  public updateAddresses(addresses: Address[]): Customer {
+    addresses.forEach((address) => {
+      const action: AddressUpdateAction = {
+        address,
+        addressId: `${address.id}`,
+        action: Actions.CHANGE_ADDRESS,
+      };
+
+      this.actions.push(action);
+    });
 
     return this;
   }
