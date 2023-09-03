@@ -56,6 +56,9 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.DATE, ErrorMessages.DATE],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
+  STREET: [],
+  CITY: [],
+  POSTAL_CODE: [],
 };
 
 export const UserInfoInputsOptions: InputOptions[] = [
@@ -63,6 +66,12 @@ export const UserInfoInputsOptions: InputOptions[] = [
   { validationData: ValidationData.FIRST_NAME },
   { validationData: ValidationData.LAST_NAME },
   { validationData: ValidationData.DATE },
+];
+
+export const AddressInputsOptions: InputOptions[] = [
+  { validationData: ValidationData.STREET },
+  { validationData: ValidationData.CITY },
+  { validationData: ValidationData.POSTAL_CODE },
 ];
 
 export const BIRTH_DATE_INPUT_INDEX = 3;

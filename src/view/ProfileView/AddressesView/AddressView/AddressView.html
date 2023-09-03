@@ -1,4 +1,40 @@
-<div
-  class="grid gap-1 px-5 py-5 border-y lg:grid-cols-1 md:grid-cols-2 data-[default=true]:bg-blue-50"
-  data-default="false"
-></div>
+<div class="group/address data-[default=true]:bg-blue-50" data-default="false" data-edit="false">
+  <div
+    class="grid gap-1 px-5 py-5 border-y lg:grid-cols-1 md:grid-cols-2 group-data-[edit=true]/address:hidden"
+    data-info-block
+  ></div>
+  <div
+    class="hidden gap-1 px-5 py-5 border-y lg:grid-cols-1 md:grid-cols-2 group-data-[edit=true]/address:grid"
+    data-edit-block
+  >
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="street"
+        data-label-profile
+        >Street:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline" for="city" data-label-profile
+        >City:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="country"
+        data-label-profile
+        >Country:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="postal-code"
+        data-label-profile
+        >Postal code:</label
+      >
+    </div>
+  </div>
+</div>
