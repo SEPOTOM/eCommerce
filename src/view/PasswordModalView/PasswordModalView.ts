@@ -51,7 +51,7 @@ export default class PasswordModalView {
   private configureView(): void {
     this.hide();
 
-    this.view.addEventListener('click', (e) => {
+    this.view.addEventListener('mousedown', (e) => {
       const { target } = e;
 
       if (target instanceof HTMLElement) {
