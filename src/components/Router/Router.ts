@@ -23,4 +23,8 @@ export default class Router {
   public static toHomePage(): void {
     (document.querySelector('[data-element="header-logo"]') as HTMLElement)?.click();
   }
+
+  public static toProfilePage(): void {
+    (document.querySelector('[data-element="profile-link"]') as HTMLElement)?.click();
+  }
 }

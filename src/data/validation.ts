@@ -30,3 +30,8 @@ export const RegExps = {
   DOMAIN: /@[^\s@]+\.[^\s@]+/,
   ONE_SYMBOL: /.+/,
 };
+
+export enum InputTypes {
+  EMAIL = 'email',
+  PASSWORD = 'password',
+}
