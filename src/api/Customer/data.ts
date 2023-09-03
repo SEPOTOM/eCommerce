@@ -4,4 +4,7 @@ export enum Actions {
   FIRST_NAME = 'setFirstName',
   LAST_NAME = 'setLastName',
   BIRTH_DATE = 'setDateOfBirth',
+  ADD_ADDRESS = 'addAddress',
+  ADD_BILLING_ADDRESS = 'addBillingAddressId',
+  ADD_SHIPPING_ADDRESS = 'addShippingAddressId',
 }

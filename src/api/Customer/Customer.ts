@@ -1,13 +1,15 @@
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
-import { CustomerDataResponse } from '../../types';
+import { CustomerDataResponse, Address } from '../../types';
 import {
   Action,
   EmailUpdateAction,
   FirstNameUpdateAction,
   LastNameUpdateAction,
   BirthDateUpdateAction,
+  AddressAddAction,
+  IdAddressAddAction,
   UpdateRequest,
 } from './types';
 import { Actions } from './data';
@@ -102,13 +104,67 @@ export default class Customer {
     return this;
   }
 
-  public async sendUpdateRequest(): Promise<CustomerDataResponse | Error> {
+  public async addBillingAddresses(billingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
+    const billingActions = this.getAddressesActions(billingAddresses);
+    const billingResponse = await this.sendUpdateRequest(billingActions);
+
+    if (billingResponse instanceof Error) {
+      return billingResponse;
+    }
+
+    const untypedBillingAddresses = this.getUntypedAddresses(billingResponse);
+    const billingSetActions = untypedBillingAddresses.map((address) => {
+      const action: IdAddressAddAction = {
+        action: Actions.ADD_BILLING_ADDRESS,
+        addressId: `${address.id}`,
+      };
+
+      return action;
+    });
+
+    const billingSetResponse = this.sendUpdateRequest(billingSetActions);
+
+    if (billingSetResponse instanceof Error) {
+      return billingSetResponse;
+    }
+
+    return billingSetResponse;
+  }
+
+  public async addShippingAddresses(shippingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
+    const shippingActions = this.getAddressesActions(shippingAddresses);
+    const shippingResponse = await this.sendUpdateRequest(shippingActions);
+
+    if (shippingResponse instanceof Error) {
+      return shippingResponse;
+    }
+
+    const untypedShippingAddresses = this.getUntypedAddresses(shippingResponse);
+    const shippingSetActions = untypedShippingAddresses.map((address) => {
+      const action: IdAddressAddAction = {
+        action: Actions.ADD_SHIPPING_ADDRESS,
+        addressId: `${address.id}`,
+      };
+
+      return action;
+    });
+
+    const shippingSetResponse = this.sendUpdateRequest(shippingSetActions);
+
+    if (shippingSetResponse instanceof Error) {
+      return shippingSetResponse;
+    }
+
+    return shippingSetResponse;
+  }
+
+  public async sendUpdateRequest(actions = this.actions): Promise<CustomerDataResponse | Error> {
     try {
       const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
       const bearerToken = (await Tokens.getCustomerTokens()).access_token;
       const bodyData: UpdateRequest = {
+        actions,
         version: Customer.version,
-        actions: this.actions,
       };
 
       const response = await fetch(endpoint, {
@@ -131,5 +187,23 @@ export default class Customer {
     } catch (err) {
       return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
     }
+  }
+
+  private getAddressesActions(addresses: Address[]): Action[] {
+    return addresses.map((address) => {
+      const action: AddressAddAction = {
+        address,
+        action: Actions.ADD_ADDRESS,
+      };
+
+      return action;
+    });
+  }
+
+  private getUntypedAddresses(data: CustomerDataResponse): Address[] {
+    return data.addresses.filter(
+      (address) =>
+        !data.shippingAddressIds.includes(`${address.id}`) && !data.billingAddressIds.includes(`${address.id}`)
+    );
   }
 }

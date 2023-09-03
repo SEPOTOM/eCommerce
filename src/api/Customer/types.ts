@@ -1,4 +1,5 @@
 import { Actions } from './data';
+import { Address } from '../../types';
 
 export interface UpdateRequest {
   version: number;
@@ -23,4 +24,12 @@ export interface BirthDateUpdateAction extends Action {
 
 export interface EmailUpdateAction extends Action {
   email: string;
+}
+
+export interface AddressAddAction extends Action {
+  address: Address;
+}
+
+export interface IdAddressAddAction extends Action {
+  addressId: string;
 }
