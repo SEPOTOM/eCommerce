@@ -34,6 +34,37 @@ export default class AddressView {
     return this.view;
   }
 
+  public getData(): Address {
+    const data: Address = {
+      country: this.selectObject.getValue(),
+      streetName: '',
+      city: '',
+      postalCode: '',
+    };
+
+    this.inputObjects.forEach((inputObject) => {
+      const inputType = inputObject.getAttr('data-type');
+
+      if (inputType.includes('street')) {
+        data.streetName = inputObject.getValue();
+      }
+      if (inputType.includes('city')) {
+        data.city = inputObject.getValue();
+      }
+      if (inputType.includes('postal-code')) {
+        data.postalCode = inputObject.getValue();
+      }
+    });
+
+    return data;
+  }
+
+  public updateView(data: string[]): void {
+    data.forEach((fieldData, index) => {
+      this.paragraphsObjects[index].setContent(fieldData);
+    });
+  }
+
   public makeDefault(): void {
     this.view.dataset.default = 'true';
   }
@@ -82,8 +113,8 @@ export default class AddressView {
 
     if (labels && rows) {
       this.configureLabels(labels, determinant);
-      this.configureInputs(rows, labels);
       this.configureSelect(rows[COUNTRY_FIELD_INDEX], labels[COUNTRY_FIELD_INDEX]);
+      this.configureInputs(rows, labels);
     }
   }
 
@@ -157,12 +188,13 @@ export default class AddressView {
     return this.paragraphsObjects.map((paragraphObject) => paragraphObject.getContent());
   }
 
-  private setEditValues(values: string[]): void {
+  public setEditValues(values: string[]): void {
     let inputIndex = 0;
 
     values.forEach((value, index) => {
       if (index === COUNTRY_FIELD_INDEX) {
         this.selectObject.setValue(value);
+        this.selectObject.dispatchEvent(new Event('change'));
         return;
       }
 

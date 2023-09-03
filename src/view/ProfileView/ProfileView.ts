@@ -7,6 +7,7 @@ import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAd
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
+import { CustomerDataResponse } from '../../types';
 import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
@@ -94,6 +95,35 @@ export default class ProfileView {
       return;
     }
 
+    const response = await this.sendExistingChanges();
+    const billingResponse = await this.sendNewBillingAddresses();
+    const shippingResponse = await this.sendNewShippingAddresses();
+
+    if ('message' in response) {
+      this.showErrors(response.message);
+      return;
+    }
+
+    if ('message' in billingResponse) {
+      this.showErrors(billingResponse.message);
+      return;
+    }
+
+    if ('message' in shippingResponse) {
+      this.showErrors(shippingResponse.message);
+      return;
+    }
+
+    setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
+
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.showSuccessMessage();
+    });
+
+    this.updateView(response);
+  }
+
+  private async sendExistingChanges(): Promise<CustomerDataResponse | Error> {
     const userInfoCredentials = this.userInfo.collectCredentials();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
@@ -106,23 +136,19 @@ export default class ProfileView {
       .updateBirthDate(formattedDate)
       .sendUpdateRequest();
 
-    if ('message' in response) {
-      this.showErrors(response.message);
-    } else {
-      setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
+    return response;
+  }
 
-      this.buttonsViews.forEach((buttonsView) => {
-        buttonsView.showSuccessMessage();
-      });
+  private async sendNewBillingAddresses(): Promise<CustomerDataResponse | Error> {
+    const newBillingAddresses = this.billingAddresses.getNewAddressesData();
+    const response = await new Customer().addBillingAddresses(newBillingAddresses);
+    return response;
+  }
 
-      const userInfoData = [response.email, response.firstName, response.lastName];
-
-      if (response.dateOfBirth) {
-        userInfoData.push(response.dateOfBirth);
-      }
-
-      this.updateInfo(userInfoData);
-    }
+  private async sendNewShippingAddresses(): Promise<CustomerDataResponse | Error> {
+    const newShippingAddresses = this.shippingAddresses.getNewAddressesData();
+    const response = await new Customer().addShippingAddresses(newShippingAddresses);
+    return response;
   }
 
   private validateFields(): boolean {
@@ -135,6 +161,18 @@ export default class ProfileView {
     }
 
     return true;
+  }
+
+  private updateView(response: CustomerDataResponse): void {
+    const userInfoData = [response.email, response.firstName, response.lastName];
+
+    if (response.dateOfBirth) {
+      userInfoData.push(response.dateOfBirth);
+    }
+
+    this.updateInfo(userInfoData);
+    this.billingAddresses.addAddresses();
+    this.shippingAddresses.addAddresses();
   }
 
   private updateInfo(userInfoData: string[]): void {

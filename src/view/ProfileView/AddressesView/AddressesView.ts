@@ -62,6 +62,21 @@ export default abstract class AddressesView {
     this.view.dataset.edit = 'false';
   }
 
+  public getNewAddressesData(): Address[] {
+    return this.newAddresses.map((newAddress) => newAddress.getData());
+  }
+
+  public addAddresses(): void {
+    this.newAddresses.forEach((newAddress) => {
+      const addressData = newAddress.getData();
+      const addressInfo = [addressData.streetName, addressData.city, addressData.country, addressData.postalCode];
+      newAddress.updateView(addressInfo);
+    });
+
+    this.addresses = this.addresses.concat(this.newAddresses);
+    this.newAddresses = [];
+  }
+
   private configureTitle(): void {
     const title = this.view.querySelector(`[${DataAttrs.ADDRESSES_TITLE}]`);
     const titlePrefix = `${this.type[0].toUpperCase()}${this.type.slice(1)}`;
@@ -73,17 +88,19 @@ export default abstract class AddressesView {
 
   private configureAddButton(): void {
     const addButton = this.view.querySelector(`[${DataAttrs.ADD_ADDRESS_BUTTON}]`);
-    addButton?.addEventListener('click', this.addAddress.bind(this));
+    addButton?.addEventListener('click', this.addAddress.bind(this, true));
   }
 
-  private addAddress(): void {
+  private addAddress(isEdit = false): void {
     const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
     const newAddress = new AddressView().buildView(
       DEFAULT_ADDRESS_DATA,
       `-${this.type}-${(this.biggestAddressId += 1)}`
     );
 
-    newAddress.enterEditMode();
+    if (isEdit) {
+      newAddress.enterEditMode();
+    }
 
     this.newAddresses.push(newAddress);
     addressesList?.append(newAddress.getView());
