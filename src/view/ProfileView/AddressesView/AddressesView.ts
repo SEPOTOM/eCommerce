@@ -30,6 +30,14 @@ export default abstract class AddressesView {
     return this.view;
   }
 
+  public enterEditMode(): void {
+    this.view.dataset.edit = 'true';
+  }
+
+  public exitEditMode(): void {
+    this.view.dataset.edit = 'false';
+  }
+
   private configureTitle(): void {
     const title = this.view.querySelector(`[${DataAttrs.ADDRESSES_TITLE}]`);
     const titlePrefix = `${this.type[0].toUpperCase()}${this.type.slice(1)}`;

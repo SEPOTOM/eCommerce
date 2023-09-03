@@ -72,12 +72,16 @@ export default class ProfileView {
     this.view.dataset.edit = 'true';
 
     this.userInfo.enterEditMode();
+    this.billingAddresses.enterEditMode();
+    this.shippingAddresses.enterEditMode();
   }
 
   private exitEditMode(): void {
     this.view.dataset.edit = 'false';
 
     this.userInfo.exitEditMode();
+    this.billingAddresses.exitEditMode();
+    this.shippingAddresses.exitEditMode();
 
     this.hideMessages();
   }
