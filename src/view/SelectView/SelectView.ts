@@ -26,4 +26,8 @@ export default class SelectView {
   public getValue(): string {
     return this.select.value;
   }
+
+  public setValue(value: string) {
+    this.select.value = value;
+  }
 }
