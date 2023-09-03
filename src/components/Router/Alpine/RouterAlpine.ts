@@ -20,8 +20,8 @@ const RouterAlpine = {
 
   init(): void {
     this.createRoutingPath();
-    this.handleLocation();
     this.checkCustomerLogin();
+    this.handleLocation();
 
     window.addEventListener('popstate', () => {
       this.handleLocation();
