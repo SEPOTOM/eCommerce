@@ -1,7 +1,7 @@
 import HomepageView from './HomepageView';
 
 describe('Main [Home page] test', (): void => {
-  it('-- сlass "HomepageView" should be defined', (): void => {
+  it('-- class "HomepageView" should be defined', (): void => {
     expect(HomepageView).toBeDefined();
   });
 

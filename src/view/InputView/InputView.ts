@@ -1,5 +1,5 @@
-import Converter from '../../../components/Converter/Converter';
-import { InputOptions, PatternAndMessage } from '../types';
+import Converter from '../../components/Converter/Converter';
+import { InputOptions, PatternAndMessage } from '../../types';
 import HTML from './InputView.html';
 
 export default class InputView {
@@ -44,6 +44,18 @@ export default class InputView {
         }
       }
     }
+  }
+
+  public makeSmall(): void {
+    this.input.dataset.small = 'true';
+  }
+
+  public makeErrorDynamic(): void {
+    this.errorBlock.dataset.dynamic = 'true';
+  }
+
+  public setValue(value: string): void {
+    this.input.value = value;
   }
 
   protected isValid(regExp: RegExp): boolean {

@@ -1,5 +1,41 @@
 <section
-  class="flex flex-col gap-y-3 px-5 py-5 border-y-2 border-gray-400 lg:col-start-1 lg:col-end-3 md:border-x-2 md:rounded-xl"
+  class="group/edit flex flex-col gap-y-3 px-5 py-5 border-y-2 border-gray-400 lg:col-start-1 lg:col-end-3 md:border-x-2 md:rounded-xl"
+  data-edit="false"
 >
   <h2 class="flex items-center gap-x-3 mb-2 text-4xl font-bold whitespace-nowrap">User Info</h2>
+  <div class="flex flex-col gap-y-3 group-data-[edit=true]/edit:hidden" data-info-block></div>
+  <div class="flex-col gap-y-3 hidden group-data-[edit=true]/edit:flex" data-edit-block>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="email"
+        data-label-profile
+        >Email:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="first-name"
+        data-label-profile
+        >First name:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="last-name"
+        data-label-profile
+        >Last name:</label
+      >
+    </div>
+    <div class="flex gap-x-1" data-row-profile>
+      <label
+        class="min-w-[110px] mt-1 mr-2 text-lg text-gray-600 font-semibold underline"
+        for="birth-date"
+        data-label-profile
+        >Date of birth:</label
+      >
+    </div>
+  </div>
 </section>

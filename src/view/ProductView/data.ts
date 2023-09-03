@@ -10,6 +10,7 @@ const currencyName = {
 
 enum ProductElements {
   PRODUCT_NAME = 'product-name',
+  PRODUCT_SLIDER = 'slider-component',
   PRODUCT_PICTURES = 'product-pictures',
   PRODUCT_RIGHT_ARROW = 'right-arrow',
   PRODUCT_LEFT_ARROW = 'left-arrow',
@@ -22,6 +23,6 @@ enum ProductElements {
   PRODUCT_WRAPPER = 'product-wrapper',
 }
 
-const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3'];
+const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];
 
 export { currencySymbol, currencyName, categoryStyles, ProductElements };
