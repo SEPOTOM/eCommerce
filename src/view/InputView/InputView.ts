@@ -58,6 +58,10 @@ export default class InputView {
     this.input.value = value;
   }
 
+  public hideError(): void {
+    this.errorBlock.innerHTML = '';
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }

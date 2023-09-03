@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
-import { CustomerDataResponse } from '../../types';
+import { CustomerDataResponse, IError } from '../../types';
 import {
   UpdateAction,
   EmailUpdateAction,
@@ -9,6 +9,7 @@ import {
   LastNameUpdateAction,
   BirthDateUpdateAction,
   UpdateRequest,
+  PasswordData,
 } from './types';
 import { UpdateActions } from './data';
 
@@ -16,6 +17,10 @@ enum ErrorMessages {
   SERVER = 'Failed to connect to the server.',
   LOG_IN = 'Please, log in first.',
   TRY_LATER = 'Please, check your connection or try again later.',
+}
+
+enum ErrorsCodes {
+  INVALID_CURRENT_PASSWORD = 'InvalidCurrentPassword',
 }
 
 export default class Customer {
@@ -56,6 +61,43 @@ export default class Customer {
 
   public static setVersion(version: number): void {
     this.version = version;
+  }
+
+  public static async changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<CustomerDataResponse | Error> {
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (!tokens) {
+      return new Error(ErrorMessages.LOG_IN);
+    }
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/password`;
+    const bearerToken = tokens.access_token;
+    const bodyData: PasswordData = { currentPassword, newPassword, version: this.version };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyData),
+      });
+      const data: CustomerDataResponse | IError = await response.json();
+
+      if ('errors' in data) {
+        return this.getError(data);
+      }
+
+      this.setVersion(data.version);
+
+      return data;
+    } catch (err) {
+      return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
+    }
   }
 
   public updateEmail(email: string): Customer {
@@ -131,5 +173,15 @@ export default class Customer {
     } catch (err) {
       return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
     }
+  }
+
+  private static getError(data: IError): Error {
+    const error = data.errors[0];
+
+    if (error.code === ErrorsCodes.INVALID_CURRENT_PASSWORD) {
+      return new Error(error.message);
+    }
+
+    return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
   }
 }
