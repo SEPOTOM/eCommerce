@@ -9,7 +9,7 @@ import {
   LastNameUpdateAction,
   BirthDateUpdateAction,
   AddressAddAction,
-  IdAddressAddAction,
+  IdAddressAction,
   AddressUpdateAction,
   UpdateRequest,
 } from './types';
@@ -119,6 +119,19 @@ export default class Customer {
     return this;
   }
 
+  public deleteAddresses(addresses: Address[]): Customer {
+    addresses.forEach((address) => {
+      const action: IdAddressAction = {
+        addressId: `${address.id}`,
+        action: Actions.REMOVE_ADDRESS,
+      };
+
+      this.actions.push(action);
+    });
+
+    return this;
+  }
+
   public async addBillingAddresses(billingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
     const billingActions = this.getAddressesActions(billingAddresses);
     const billingResponse = await this.sendUpdateRequest(billingActions);
@@ -129,7 +142,7 @@ export default class Customer {
 
     const untypedBillingAddresses = this.getUntypedAddresses(billingResponse);
     const billingSetActions = untypedBillingAddresses.map((address) => {
-      const action: IdAddressAddAction = {
+      const action: IdAddressAction = {
         action: Actions.ADD_BILLING_ADDRESS,
         addressId: `${address.id}`,
       };
@@ -156,7 +169,7 @@ export default class Customer {
 
     const untypedShippingAddresses = this.getUntypedAddresses(shippingResponse);
     const shippingSetActions = untypedShippingAddresses.map((address) => {
-      const action: IdAddressAddAction = {
+      const action: IdAddressAction = {
         action: Actions.ADD_SHIPPING_ADDRESS,
         addressId: `${address.id}`,
       };

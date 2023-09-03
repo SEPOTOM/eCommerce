@@ -30,7 +30,7 @@ export interface AddressAddAction extends Action {
   address: Address;
 }
 
-export interface IdAddressAddAction extends Action {
+export interface IdAddressAction extends Action {
   addressId: string;
 }
 
