@@ -22,4 +22,8 @@ export default class SelectView {
 
     return this.select;
   }
+
+  public getValue(): string {
+    return this.select.value;
+  }
 }
