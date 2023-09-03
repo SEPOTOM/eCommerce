@@ -28,6 +28,8 @@ export default abstract class AddressesView {
 
   private addresses: AddressView[] = [];
 
+  private biggestAddressId = 0;
+
   constructor(private type: string) {}
 
   public buildView(customerData: CustomerDataResponse): HTMLElement {
@@ -63,7 +65,12 @@ export default abstract class AddressesView {
 
   private addAddress(): void {
     const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
-    const newAddress = new AddressView().buildView(DEFAULT_ADDRESS_DATA);
+    const newAddress = new AddressView().buildView(
+      DEFAULT_ADDRESS_DATA,
+      `-${this.type}-${(this.biggestAddressId += 1)}`
+    );
+
+    newAddress.enterEditMode();
 
     this.addresses.push(newAddress);
     addressesList?.append(newAddress.getView());
@@ -81,7 +88,7 @@ export default abstract class AddressesView {
       const addressData = customerData.addresses.find((address) => address.id === id);
 
       if (addressData) {
-        const address = new AddressView().buildView(addressData);
+        const address = new AddressView().buildView(addressData, `-${this.type}-${(this.biggestAddressId += 1)}`);
         const addressView = address.getView();
 
         if (id === customerData[defaultId]) {
