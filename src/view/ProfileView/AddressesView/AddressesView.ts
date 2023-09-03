@@ -44,12 +44,20 @@ export default abstract class AddressesView {
   }
 
   public enterEditMode(): void {
+    this.addresses.forEach((address) => {
+      address.enterEditMode();
+    });
+
     this.view.dataset.edit = 'true';
   }
 
   public exitEditMode(): void {
     this.removeNewAddresses();
     this.newAddresses = [];
+
+    this.addresses.forEach((address) => {
+      address.exitEditMode();
+    });
 
     this.view.dataset.edit = 'false';
   }

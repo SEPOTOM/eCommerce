@@ -21,6 +21,8 @@ export default class AddressView {
 
   private inputObjects: InputView[] = [];
 
+  private paragraphsObjects: ParagraphView[] = [];
+
   public buildView(addressData: Address, determinant = ''): AddressView {
     this.configureInfoBlock(addressData);
     this.configureEditBlock(determinant);
@@ -41,6 +43,9 @@ export default class AddressView {
   }
 
   public enterEditMode(): void {
+    const infoValues = this.getInfoValues();
+    this.setEditValues(infoValues);
+
     this.view.dataset.edit = 'true';
   }
 
@@ -63,7 +68,9 @@ export default class AddressView {
     ];
 
     contents.forEach(([label, content]) => {
-      infoBlock?.append(new ParagraphView().buildView(label, content));
+      const paragraphsObject = new ParagraphView();
+      this.paragraphsObjects.push(paragraphsObject);
+      infoBlock?.append(paragraphsObject.buildView(label, content));
     });
   }
 
@@ -143,5 +150,25 @@ export default class AddressView {
     this.postalCodeInputObject?.setErrorMessage(PostalCodeErrorMessages[countryCode]);
 
     this.postalCodeInputObject?.validateInput();
+  }
+
+  private getInfoValues(): string[] {
+    return this.paragraphsObjects.map((paragraphObject) => paragraphObject.getContent());
+  }
+
+  private setEditValues(values: string[]): void {
+    let inputIndex = 0;
+
+    values.forEach((value, index) => {
+      if (index === COUNTRY_FIELD_INDEX) {
+        this.selectObject.setValue(value);
+        return;
+      }
+
+      const input = this.inputObjects[inputIndex];
+      input.setValue(value);
+
+      inputIndex += 1;
+    });
   }
 }
