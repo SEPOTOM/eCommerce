@@ -30,4 +30,8 @@ export default class SelectView {
   public setValue(value: string) {
     this.select.value = value;
   }
+
+  public dispatchEvent(event: Event): void {
+    this.select.dispatchEvent(event);
+  }
 }
