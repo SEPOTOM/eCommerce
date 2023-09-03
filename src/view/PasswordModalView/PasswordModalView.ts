@@ -132,8 +132,7 @@ export default class PasswordModalView {
     this.showSuccessMessage();
 
     setTimeout(() => {
-      this.hide();
-      this.clear();
+      this.remove();
 
       Tokens.setCustomerTokens(tokens);
       Router.toProfilePage();
@@ -192,5 +191,9 @@ export default class PasswordModalView {
     this.inputsObjects.forEach((inputObject) => {
       inputObject.validateInput();
     });
+  }
+
+  private remove(): void {
+    this.view.remove();
   }
 }

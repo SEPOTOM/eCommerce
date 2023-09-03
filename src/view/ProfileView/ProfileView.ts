@@ -54,9 +54,7 @@ export default class ProfileView {
       this.view.append(this.shippingAddresses.buildView(customerData));
       this.view.append(this.buttonsViews[1].buildView());
 
-      if (!this.hasModal()) {
-        document.body.append(this.passwordModal.buildView());
-      }
+      document.body.append(this.passwordModal.buildView());
 
       this.configureButtons();
     } else {
