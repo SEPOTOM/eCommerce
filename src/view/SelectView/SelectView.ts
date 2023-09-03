@@ -5,6 +5,10 @@ import HTML from './SelectView.html';
 export default class SelectView {
   private select = Converter.htmlToElement<HTMLSelectElement>(HTML) || document.createElement('select');
 
+  public makeSmall(): void {
+    this.select.dataset.small = 'true';
+  }
+
   public buildSelectView(values: Record<string, string>, id?: string): HTMLSelectElement {
     const entries = Object.entries(values);
     entries.forEach(([key, value]) => {
