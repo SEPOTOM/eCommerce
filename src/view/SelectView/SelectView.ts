@@ -1,4 +1,4 @@
-import Converter from '../../../components/Converter/Converter';
+import Converter from '../../components/Converter/Converter';
 import OptionView from './OptionView.ts/OptionView';
 import HTML from './SelectView.html';
 
