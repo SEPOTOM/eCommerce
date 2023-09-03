@@ -66,6 +66,14 @@ export default class InputView {
     return this.input.value;
   }
 
+  public disable(): void {
+    this.input.disabled = true;
+  }
+
+  public enable(): void {
+    this.input.disabled = false;
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }
