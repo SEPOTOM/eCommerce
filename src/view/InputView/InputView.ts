@@ -58,6 +58,14 @@ export default class InputView {
     this.input.value = value;
   }
 
+  public getAttr(attrName: string): string {
+    return this.input.getAttribute(attrName) || '';
+  }
+
+  public getValue(): string {
+    return this.input.value;
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }
