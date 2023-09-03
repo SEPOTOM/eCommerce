@@ -45,6 +45,7 @@ export default class AddressView {
   public enterEditMode(): void {
     const infoValues = this.getInfoValues();
     this.setEditValues(infoValues);
+    this.validateFields();
 
     this.view.dataset.edit = 'true';
   }
@@ -169,6 +170,12 @@ export default class AddressView {
       input.setValue(value);
 
       inputIndex += 1;
+    });
+  }
+
+  private validateFields(): void {
+    this.inputObjects.forEach((inputObject) => {
+      inputObject.validateInput();
     });
   }
 }
