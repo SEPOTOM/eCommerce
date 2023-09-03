@@ -28,6 +28,8 @@ export default abstract class AddressesView {
 
   private addresses: AddressView[] = [];
 
+  private newAddresses: AddressView[] = [];
+
   private biggestAddressId = 0;
 
   constructor(private type: string) {}
@@ -46,6 +48,9 @@ export default abstract class AddressesView {
   }
 
   public exitEditMode(): void {
+    this.removeNewAddresses();
+    this.newAddresses = [];
+
     this.view.dataset.edit = 'false';
   }
 
@@ -72,7 +77,7 @@ export default abstract class AddressesView {
 
     newAddress.enterEditMode();
 
-    this.addresses.push(newAddress);
+    this.newAddresses.push(newAddress);
     addressesList?.append(newAddress.getView());
 
     this.colorAddresses();
@@ -108,7 +113,9 @@ export default abstract class AddressesView {
   }
 
   private colorAddresses(): void {
-    this.addresses.forEach((address, index) => {
+    const totalAddresses = [...this.addresses, ...this.newAddresses];
+
+    totalAddresses.forEach((address, index) => {
       if (address.isDefault()) {
         return;
       }
@@ -121,5 +128,11 @@ export default abstract class AddressesView {
 
   private setHaveDefault(): void {
     this.view.dataset.haveDefault = 'true';
+  }
+
+  private removeNewAddresses(): void {
+    this.newAddresses.forEach((newAddress) => {
+      newAddress.remove();
+    });
   }
 }

@@ -48,6 +48,10 @@ export default class AddressView {
     this.view.dataset.edit = 'false';
   }
 
+  public remove(): void {
+    this.view.remove();
+  }
+
   private configureInfoBlock(addressData: Address): void {
     const infoBlock = this.view.querySelector(`[${DataAttrs.INFO_BLOCK}]`);
 
