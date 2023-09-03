@@ -90,6 +90,11 @@ export default class AddressView {
 
   public exitEditMode(): void {
     this.view.dataset.edit = 'false';
+    this.makeExisting();
+  }
+
+  public needToDelete(): boolean {
+    return this.view.dataset.deleted === 'true';
   }
 
   public remove(): void {
@@ -122,6 +127,8 @@ export default class AddressView {
       this.configureLabels(labels, determinant);
       this.configureSelect(rows[COUNTRY_FIELD_INDEX], labels[COUNTRY_FIELD_INDEX]);
       this.configureInputs(rows, labels);
+      this.configureDeleteButton();
+      this.configureRestoreButton();
     }
   }
 
@@ -182,6 +189,16 @@ export default class AddressView {
     row.append(select);
   }
 
+  private configureDeleteButton(): void {
+    const deleteButton = this.view.querySelector(`[${DataAttrs.DELETE_BUTTON}]`);
+    deleteButton?.addEventListener('click', this.makeDeleted.bind(this));
+  }
+
+  private configureRestoreButton(): void {
+    const restoreButton = this.view.querySelector(`[${DataAttrs.RESTORE_BUTTON}]`);
+    restoreButton?.addEventListener('click', this.makeExisting.bind(this));
+  }
+
   private changePostalCodeValidation(): void {
     const countryCode = this.selectObject.getValue();
 
@@ -215,6 +232,30 @@ export default class AddressView {
   private validateFields(): void {
     this.inputObjects.forEach((inputObject) => {
       inputObject.validateInput();
+    });
+  }
+
+  private makeDeleted(): void {
+    this.disableFields();
+    this.view.dataset.deleted = 'true';
+  }
+
+  private makeExisting(): void {
+    this.enableFields();
+    this.view.dataset.deleted = 'false';
+  }
+
+  private disableFields(): void {
+    this.selectObject.disable();
+    this.inputObjects.forEach((inputObject) => {
+      inputObject.disable();
+    });
+  }
+
+  private enableFields(): void {
+    this.selectObject.enable();
+    this.inputObjects.forEach((inputObject) => {
+      inputObject.enable();
     });
   }
 }

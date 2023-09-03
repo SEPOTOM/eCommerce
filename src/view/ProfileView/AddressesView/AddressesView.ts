@@ -70,6 +70,20 @@ export default abstract class AddressesView {
     return this.newAddresses.map((newAddress) => newAddress.getData());
   }
 
+  public getDeletedAddresses(): Address[] {
+    return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
+  }
+
+  public deleteAddresses(): void {
+    this.addresses = this.addresses.filter((address) => {
+      if (address.needToDelete()) {
+        address.remove();
+        return false;
+      }
+      return true;
+    });
+  }
+
   public addAddresses(): void {
     this.updateAddresses(this.newAddresses);
 

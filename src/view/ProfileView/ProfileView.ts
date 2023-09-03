@@ -127,6 +127,8 @@ export default class ProfileView {
     const userInfoCredentials = this.userInfo.collectCredentials();
     const billingAddresses = this.billingAddresses.getCurrentAddressesData();
     const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
+    const deletedBillingAddresses = this.billingAddresses.getDeletedAddresses();
+    const deletedShippingAddresses = this.shippingAddresses.getDeletedAddresses();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
@@ -138,6 +140,8 @@ export default class ProfileView {
       .updateBirthDate(formattedDate)
       .updateAddresses(billingAddresses)
       .updateAddresses(shippingAddresses)
+      .deleteAddresses(deletedBillingAddresses)
+      .deleteAddresses(deletedShippingAddresses)
       .sendUpdateRequest();
 
     return response;
@@ -175,6 +179,8 @@ export default class ProfileView {
     }
 
     this.updateInfo(userInfoData);
+    this.billingAddresses.deleteAddresses();
+    this.shippingAddresses.deleteAddresses();
     // The reverse method is needed because
     // new addresses are added to the beginning of the array on the server,
     // and on the page new addresses are added to the end
