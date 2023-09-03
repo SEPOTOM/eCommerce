@@ -8,7 +8,7 @@ import {
   INavigationLevel2,
   IRouteProductLink,
   IShortProductsJSON,
-  IAllProducts
+  IAllProducts,
 } from './types/types';
 
 export default class Navigation {
@@ -35,7 +35,7 @@ export default class Navigation {
   public createProductsLinks(json: IShortProductsJSON[]): IRouteProductLink[] {
     const productLinks: IRouteProductLink[] = [];
 
-    json.forEach((item): void => {
+    json.forEach((item: IShortProductsJSON): void => {
       productLinks.push({
         link: `/${item.key}`,
         productId: item.id,
@@ -68,7 +68,7 @@ export default class Navigation {
 
   public createMenu(json: ISingleCategory[]): INavigationLevel1[] {
     let level1: INavigationLevel1[] = this.createMenuLevel1(json);
-    let level2: INavigationLevel2[] = this.createMenuLevel2(json);
+    const level2: INavigationLevel2[] = this.createMenuLevel2(json);
 
     level1 = this.combineMenuLevels(level1, level2);
 
@@ -133,6 +133,6 @@ export default class Navigation {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    };
   }
 }

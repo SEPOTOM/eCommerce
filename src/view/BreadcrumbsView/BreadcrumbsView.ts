@@ -1,6 +1,8 @@
+import Alpine from 'alpinejs';
 import BreadcrumbsViewHTML from './BreadcrumbsView.html';
-import { IBreadCrumbsLink, ICategoryInfoJSON, INavigationLevel1 } from './types/types';
+/* eslint-disable import/no-cycle */
 import CatalogView from '../CatalogView/CatalogView';
+import { IBreadCrumbsLink, ICategoryInfoJSON } from './types/types';
 
 export default class BreadcrumbsView {
   public draw(array: IBreadCrumbsLink[]): void {
@@ -10,7 +12,7 @@ export default class BreadcrumbsView {
     breadcrumbs.innerHTML = BreadcrumbsViewHTML;
   }
 
-  public static clear() {
+  public static clear(): void {
     const breadcrumbs: HTMLElement = document.querySelector('[data-element="breadcrumbs"]')!;
     breadcrumbs.innerHTML = '';
     localStorage.removeItem('category-path');
@@ -32,22 +34,24 @@ export default class BreadcrumbsView {
 
     // if current have a parent category
     if (json.parent) {
-      new CatalogView().getCategoryCommonInfoJSON(json.parent.id, token).then((parentJSON: ICategoryInfoJSON | null) => {
-        if (!parentJSON) return;
+      new CatalogView()
+        .getCategoryCommonInfoJSON(json.parent.id, token)
+        .then((parentJSON: ICategoryInfoJSON | null): void => {
+          if (!parentJSON) return;
 
-        breadcrumb.push({
-          name: json.name['en-US'],
-          link: `/${json.key}`,
+          breadcrumb.push({
+            name: json.name['en-US'],
+            link: `/${json.key}`,
+          });
+
+          breadcrumb.unshift({
+            name: parentJSON.name['en-US'],
+            link: `/${parentJSON.key}`,
+          });
+
+          localStorage.setItem('category-path', JSON.stringify(breadcrumb));
+          new BreadcrumbsView().draw(breadcrumb);
         });
-
-        breadcrumb.unshift({
-          name: parentJSON.name['en-US'],
-          link: `/${parentJSON.key}`,
-        });
-
-        localStorage.setItem('category-path', JSON.stringify(breadcrumb));
-        new BreadcrumbsView().draw(breadcrumb);
-      })
     }
   }
 

@@ -1,22 +1,16 @@
-import Page404View from './../../../view/Page404View/Page404View';
-import LoginView from './../../..//view/LoginView/LoginView';
-import HomepageView from './../../..//view/HomepageView/HomepageView';
-import RegistrationView from './../../..//view/RegistrationView/RegistrationView';
-import ProfileView from './../../..//view/ProfileView/ProfileView';
-import CatalogView from './../../..//view/CatalogView/CatalogView';
-import BreadcrumbsView from './../../..//view/BreadcrumbsView/BreadcrumbsView';
-import ProductView from './../../..//view/ProductView/ProductView';
-
+import Page404View from '../../../view/Page404View/Page404View';
 /* eslint-disable import/no-cycle */
-// import routers from '../../../data/routers';
+import LoginView from '../../../view/LoginView/LoginView';
+import HomepageView from '../../../view/HomepageView/HomepageView';
+import RegistrationView from '../../../view/RegistrationView/RegistrationView';
+import ProfileView from '../../../view/ProfileView/ProfileView';
+import CatalogView from '../../../view/CatalogView/CatalogView';
+import BreadcrumbsView from '../../../view/BreadcrumbsView/BreadcrumbsView';
+import ProductView from '../../../view/ProductView/ProductView';
 import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
-
-// import links
 import Navigation from '../../../api/Navigation/Navigation';
-
-// Types
-import { INavigation, IRouteProductLink } from './../../../api/Navigation/types/types';
+import { INavigation, IRouteProductLink } from '../../../api/Navigation/types/types';
 
 const RouterAlpine = {
   isCustomerLogin: false,
@@ -73,6 +67,7 @@ const RouterAlpine = {
     });
   },
 
+  /* eslint-disable max-lines-per-function */
   createRoutingPath(): void {
     this.routers['404'] = () => {
       new Page404View().draw();
@@ -102,6 +97,7 @@ const RouterAlpine = {
     // Create category links & menu
     new Navigation().getCategoryJSON(this.token).then((json): void => {
       // create menu
+      /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
       this.menu = new Navigation().createMenu(json?.results!);
 
       // create category roitung

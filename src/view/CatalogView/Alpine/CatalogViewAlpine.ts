@@ -1,12 +1,10 @@
 /* eslint-disable import/no-cycle */
-// import Catalog from '../../../api/Catalog/Catalog';
-import BreadcrumbsView from '../../BreadcrumbsView/BreadcrumbsView';
 import { IAllProducts, IShortProductsJSON } from '../types/types';
 
 // Import images placeholder if product don't have an image
 import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
 
-import { CTP_API_URL, CTP_PROJECT_KEY } from './../../../api/APIClients/JSNinjas';
+import { CTP_API_URL, CTP_PROJECT_KEY } from '../../../api/APIClients/JSNinjas';
 
 const CategoryViewAlpine = {
   title: null,
@@ -15,6 +13,7 @@ const CategoryViewAlpine = {
   products: [],
   urlPath: '',
   searchRequest: '',
+  searchResultCount: 0,
   filterQuery: '',
   filterActiveProps: {},
   filterAllProps: {},
@@ -30,39 +29,47 @@ const CategoryViewAlpine = {
     this.filterAllProps = {};
     this.getProductsByQuery();
 
-    setTimeout(() => { this.isLoading = true }, delay);
+    setTimeout(() => {
+      this.isLoading = true;
+    }, delay);
   },
 
   getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
-    fetch(`${this.urlPath}${filterQuery}${sortQuery}`, this.setBodyRequest()).then((resp) => resp.json()).then((json: IAllProducts): void => {
-      this.setProductData(json.results);
-    });
+    try {
+      fetch(`${this.urlPath}${filterQuery}${sortQuery}`, this.setBodyRequest())
+        .then((resp) => resp.json())
+        .then((json: IAllProducts): void => {
+          this.setProductData(json.results);
+        });
+    } catch {
+      /* eslint-disable no-empty */
+    }
   },
 
   setProductData(json: IShortProductsJSON[]): void {
     this.products = [];
-    
-    json.forEach((item): void => {
-        // get product information
-        this.products.push({
-            id: item.id,
-            link: `/${item.key}`,
-            name: item.name['en-US'],
-            description: item.description['en-US'] || '',
-            image: item.masterVariant.images.length ? item.masterVariant.images[0].url : imgProductPlaceholder,
-            attributes: item.masterVariant?.attributes || [],
-            onStock: item.masterVariant?.availability?.isOnStock || false,
-            price: item.masterVariant.prices.length
-              ? (item.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
-              : null,
-            discount:
-              item.masterVariant.prices.length && item.masterVariant.prices[0].discounted
-                ? (item.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
-                : null,
-            currency: item.masterVariant.prices.length ? item.masterVariant.prices[0].value.currencyCode : null,
-        });
 
-        this.getAllFilterProps(item);
+    json.forEach((item): void => {
+      // get product information
+      this.products.push({
+        id: item.id,
+        link: `/${item.key}`,
+        name: item.name['en-US'],
+        description: item.description['en-US'] || '',
+        image: item.masterVariant.images.length ? item.masterVariant.images[0].url : imgProductPlaceholder,
+        attributes: item.masterVariant?.attributes || [],
+        onStock: item.masterVariant?.availability?.isOnStock || false,
+        price: item.masterVariant.prices.length
+          ? (item.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
+          : null,
+        discount:
+          item.masterVariant.prices.length && item.masterVariant.prices[0].discounted
+            ? (item.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
+            : null,
+        currency: item.masterVariant.prices.length ? item.masterVariant.prices[0].value.currencyCode : null,
+      });
+
+      this.getAllFilterProps(item);
     });
   },
 
@@ -71,13 +78,17 @@ const CategoryViewAlpine = {
       json.masterVariant?.attributes.forEach((attr) => {
         if (attr.name !== 'transmission') {
           // if filter prop not exist
+          /* eslint-disable no-prototype-builtins */
           if (!this.filterAllProps.hasOwnProperty(attr.name)) {
+            /* eslint-disable no-prototype-builtins */
             this.filterAllProps[attr.name] = [];
             this.filterActiveProps[attr.name] = 0;
           }
 
           // save only uniqe value
-          if (!this.filterAllProps[attr.name].filter((item: any) => item.name === attr.value).length) {
+          if (
+            !this.filterAllProps[attr.name].filter((item: { [key: string]: string }) => item.name === attr.value).length
+          ) {
             this.filterAllProps[attr.name].push({
               name: attr.value,
               action: `&filter=variants.attributes.${attr.name}:`,
@@ -85,7 +96,7 @@ const CategoryViewAlpine = {
             });
           }
         }
-      })
+      });
     }
   },
 
@@ -96,9 +107,9 @@ const CategoryViewAlpine = {
   },
 
   filterBy(prop: string, index: number, value: string, filterQuery: string): void {
-    this.filterAllProps[prop][index]['active'] = !this.filterAllProps[prop][index]['active'];
+    this.filterAllProps[prop][index].active = !this.filterAllProps[prop][index].active;
 
-    if (this.filterAllProps[prop][index]['active']) {
+    if (this.filterAllProps[prop][index].active) {
       this.filterActiveProps[prop] += 1;
     } else {
       this.filterActiveProps[prop] -= 1;
@@ -108,51 +119,59 @@ const CategoryViewAlpine = {
       if (this.filterActiveProps[prop]) {
         this.filterQuery += `${filterQuery}"${value}"`;
       }
-    } else {
-      if (this.filterActiveProps[prop]) {
-        if (!this.filterQuery.includes(value)) {
-          this.filterQuery = this.filterQuery.replace(filterQuery, `${filterQuery}"${value}",`);
-        } else {
-          this.filterQuery = this.filterQuery.replace(`"${value}",`, '');
-          this.filterQuery = this.filterQuery.replace(`,"${value}"`, '');
-        }
+    } else if (this.filterActiveProps[prop]) {
+      if (!this.filterQuery.includes(value)) {
+        this.filterQuery = this.filterQuery.replace(filterQuery, `${filterQuery}"${value}",`);
       } else {
-        this.filterQuery = this.filterQuery.replace(`${filterQuery}"${value}"`, '');
+        this.filterQuery = this.filterQuery.replace(`"${value}",`, '');
+        this.filterQuery = this.filterQuery.replace(`,"${value}"`, '');
       }
+    } else {
+      this.filterQuery = this.filterQuery.replace(`${filterQuery}"${value}"`, '');
     }
 
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
-  clearFilter() {
+  clearFilter(): void {
     this.filterQuery = '';
 
-    for (let key in this.filterActiveProps) {
+    /* eslint-disable no-restricted-syntax, guard-for-in */
+    for (const key in this.filterActiveProps) {
       this.filterActiveProps[key] = 0;
     }
 
-    for (let key in this.filterAllProps) {
-      for (let obj in this.filterAllProps[key]) {
-        this.filterAllProps[key][obj]['active'] = false;
+    for (const key in this.filterAllProps) {
+      for (const obj in this.filterAllProps[key]) {
+        this.filterAllProps[key][obj].active = false;
       }
     }
 
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
-  quickSearch() {
-    fetch(`${this.urlPath}${this.searchRequest ? `&fuzzy=true&fuzzyLevel=0&text.en-US="${this.searchRequest}"` : ''}`, this.setBodyRequest())
-    .then((resp) => resp.json())
-    .then((json: IAllProducts): void => {
-      if (json.results.length) {
-        this.setProductData(json.results);
-      } else {
-        this.getProductsByQuery();
-      }
-    })
+  quickSearch(): void {
+    try {
+      fetch(
+        `${this.urlPath}${this.searchRequest ? `&fuzzy=true&fuzzyLevel=0&text.en-US="${this.searchRequest}"` : ''}`,
+        this.setBodyRequest()
+      )
+        .then((resp) => resp.json())
+        .then((json: IAllProducts): void => {
+          if (json.results.length) {
+            this.searchResultCount = json.results.length;
+            this.setProductData(json.results);
+          } else {
+            this.searchResultCount = 0;
+            this.getProductsByQuery();
+          }
+        });
+    } catch {
+      /* eslint-disable no-empty */
+    }
   },
 
-  clearQuickSearch() {
+  clearQuickSearch(): void {
     this.searchRequest = '';
     this.getProductsByQuery();
   },

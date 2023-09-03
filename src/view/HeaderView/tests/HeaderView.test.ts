@@ -1,5 +1,5 @@
-import HeaderView from './HeaderView';
-import HeaderViewAlpine from './Alpine/HeaderViewAlpine';
+import HeaderView from '../HeaderView';
+import HeaderViewAlpine from '../Alpine/HeaderViewAlpine';
 
 describe('Main [Header] test', (): void => {
   it('-- сlass "HeaderView" should be defined', (): void => {
@@ -14,6 +14,5 @@ describe('Main [Header] test', (): void => {
   it('-- Alpine "HeaderView" object, all properties exist & some return nothing', () => {
     expect(HeaderViewAlpine()).toHaveProperty('showMobileMenu');
     expect(HeaderViewAlpine()).toHaveProperty('showAccountDropdown');
-    // expect(HeaderViewAlpine()).toHaveProperty('menu');
   });
 });

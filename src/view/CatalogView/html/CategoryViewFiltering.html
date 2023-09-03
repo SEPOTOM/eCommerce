@@ -1,171 +1,231 @@
 <div data-element="filtering-wrapper" class="mb-10">
-    <div class="flex justify-between items-center relative pt-14 sm:pt-0">
-        <div class="flex gap-5 items-center">
-            <div x-data="{ show: false }">
-                <span class="flex gap-2 items-center px-4 py-1 bg-red-600 rounded-xl cursor-pointer tracking-widest
-                            text-white transition-colors duration-300 hover:bg-red-700"
-                    :class="{ 'opacity-50 pointer-events-none': !Object.values(filterActiveProps).length }"
-                    @click="show = !show">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                    </svg>           
-                    Filter
-                </span>
-    
-                <div       
-                    class="fixed top-0 bottom-0 left-0 z-[51] flex flex-col gap-5 w-full max-w-[280px] p-5 bg-white text-sm"
-                    x-show="show"
-                    x-transition:enter="transform transition ease-in-out duration-300"
-                    x-transition:enter-start="-translate-x-full"
-                    x-transition:enter-end="translate-x-0"
-                    x-transition:leave="transform transition ease-in-out duration-300"
-                    x-transition:leave-start="translate-x-0"
-                    x-transition:leave-end="-translate-x-full">
-    
-                    <template x-for="prop in Object.keys(filterAllProps)">
-                        <div>
-                            <h3 class="pb-2 mb-3 border-b border-gray-200 text-xl capitalize" x-text="prop"></h3>
-                            <div class="inline-flex flex-col gap-1">
-                                <template x-for="(value, index) in filterAllProps[prop]">
-                                    <span 
-                                        class="inline-flex gap-3 items-center cursor-pointer"
-                                        @click="() => { filterBy(prop, index, value.name, value.action) }">
-    
-                                        <span class="inline-block w-4 h-4 border border-gray-300 rounded p-[1px]">
-                                            <svg class="w-full h-full transition-opacity duration-300 opacity-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                 :class="{ 'opacity-100': value.active }">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                            </svg>
-                                        </span>
-                                        
-                                        <span x-text="value.name"></span>
-                                    </span>
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-    
-                    <div class="mt-auto pt-7 grid gap-3">
-                        <span class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center 
-                                    text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer" 
-                            @click="() => { show = false; clearFilter() }">
-                            Clear all
-                        </span>
+  <div class="flex justify-between items-center relative pt-14 sm:pt-0">
+    <div class="flex gap-5 items-center">
+      <div x-data="{ show: false }">
+        <span
+          class="flex gap-2 items-center px-4 py-1 bg-red-600 rounded-xl cursor-pointer tracking-widest text-white transition-colors duration-300 hover:bg-red-700"
+          :class="{ 'opacity-50 pointer-events-none': !Object.values(filterActiveProps).length }"
+          @click="show = !show"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+            />
+          </svg>
+          Filter
+        </span>
 
-                        <span
-                            class="px-3 pt-1 pb-2 bg-gray-100 rounded-lg font-medium text-center 
-                                transition-colors duration-300 hover:bg-gray-200 cursor-pointer""
-                            @click="() => { show = false }">
-                            Close
-                        </span>
-                    </div>
-                </div>
-    
-                <span
-                    class="fixed top-0 right-0 bottom-0 left-0 z-50 bg-black/40 cursor-pointer"
-                    @click="show = !show"
-                    x-show="show"
-                    x-transition:enter="ease-in-out duration-300"
-                    x-transition:enter-start="opacity-0 invisible"
-                    x-transition:enter-end="opacity-100 visible"
-                    x-transition:leave="ease-in-out duration-300"
-                    x-transition:leave-start="opacity-100 visible"
-                    x-transition:leave-end="opacity-0 invisible"
-                    data-element="filter-overlay"
-                >
-                </span>
-            </div>
+        <div
+          class="fixed top-0 bottom-0 left-0 z-[51] flex flex-col gap-5 w-full max-w-[280px] p-5 bg-white text-sm overflow-y-auto"
+          x-show="show"
+          x-transition:enter="transform transition ease-in-out duration-300"
+          x-transition:enter-start="-translate-x-full"
+          x-transition:enter-end="translate-x-0"
+          x-transition:leave="transform transition ease-in-out duration-300"
+          x-transition:leave-start="translate-x-0"
+          x-transition:leave-end="-translate-x-full"
+        >
+          <template x-for="prop in Object.keys(filterAllProps)">
+            <div>
+              <h3 class="pb-2 mb-3 border-b border-gray-200 text-xl capitalize" x-text="prop"></h3>
+              <div class="inline-flex flex-col gap-1">
+                <template x-for="(value, index) in filterAllProps[prop]">
+                  <span
+                    class="inline-flex gap-3 items-center cursor-pointer"
+                    @click="() => { filterBy(prop, index, value.name, value.action) }"
+                  >
+                    <span class="inline-block w-4 h-4 border border-gray-300 rounded p-[1px]">
+                      <svg
+                        class="w-full h-full transition-opacity duration-300 opacity-0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        :class="{ 'opacity-100': value.active }"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </span>
 
-            <div class="absolute top-0 w-full sm:relative sm:top-auto">
-                <input 
-                    class="w-full h-[34px] min-w-[280px] pt-1.5 pb-2 pl-3 pr-10 border border-gray-200 rounded-lg text-xs outline-none
-                            transition-all duration-300 focus:border-gray-400"
-                    x-model="searchRequest"
-                    @input="quickSearch"
-                    type="text" placeholder="Quick search by category" />
-                <span class="absolute top-0 right-1 w-8 h-[34px] flex items-center justify-center cursor-pointer text-gray-400
-                            opacity-0 invisible transition-all duration-300 hover:text-gray-600"
-                    :class="{ '!opacity-100 !visible': searchRequest }"
-                    @click="clearQuickSearch">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>                      
-                </span>
+                    <span x-text="value.name"></span>
+                  </span>
+                </template>
+              </div>
             </div>
+          </template>
+
+          <div class="mt-auto pt-7 grid gap-3">
+            <span
+              class="px-3 pt-1 pb-2 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+              @click="() => { show = false; clearFilter() }"
+            >
+              Clear all
+            </span>
+
+            <span
+              class="px-3 pt-1 pb-2 bg-gray-100 rounded-lg font-medium text-center transition-colors duration-300 hover:bg-gray-200 cursor-pointer"
+              @click="() => { show = false }"
+            >
+              Close
+            </span>
+          </div>
         </div>
 
-        <div class="relative" x-data="{ show: false }">
-            <div class="flex gap-2 cursor-pointer group" 
-                @click="show = !show"
-                @click.outside="show = false">
-                <span class="flex gap-2 items-center">
-                    <svg class="w-5 h-5 transition-colors duration-300 group-hover:text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                    </svg>              
-                    <b class="font-medium">Sort by:</b>
-                </span>
-                <span class="transition-colors duration-300 group-hover:text-blue-700"
-                    x-text="sortActive"></span>
-            </div>
+        <span
+          class="fixed top-0 right-0 bottom-0 left-0 z-50 bg-black/40 cursor-pointer"
+          @click="show = !show"
+          x-show="show"
+          x-transition:enter="ease-in-out duration-300"
+          x-transition:enter-start="opacity-0 invisible"
+          x-transition:enter-end="opacity-100 visible"
+          x-transition:leave="ease-in-out duration-300"
+          x-transition:leave-start="opacity-100 visible"
+          x-transition:leave-end="opacity-0 invisible"
+          data-element="filter-overlay"
+        >
+        </span>
+      </div>
 
-            <div class="absolute top-11 right-0 z-10 flex flex-col gap-1 bg-white text-sm border opacity-0 invisible transition-all duration-300"
-                :class="{ '!top-8 !opacity-100 !visible': show }">
-                <span class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
-                    :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
-                    @click="sortBy('name.en-US', 'asc', 'Name (asc)')">
-                    Name (asc)
-                </span>
-                <span class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
-                    :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
-                    @click="sortBy('name.en-US', 'desc', 'Name (desc)')">
-                    Name (desc)
-                </span>
-                <span class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
-                    :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
-                    @click="sortBy('price', 'asc', 'Price (asc)')">
-                    Price (asc)
-                </span>
-                <span class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
-                    :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
-                    @click="sortBy('price', 'desc', 'Price (desc)')">
-                    Price (desc)
-                </span>
-            </div>
-        </div>
+      <div class="absolute top-0 w-full sm:relative sm:top-auto">
+        <input
+          class="w-full h-[34px] min-w-[280px] pt-1.5 pb-2 pl-3 pr-10 border border-gray-200 rounded-lg text-xs outline-none transition-all duration-300 focus:border-gray-400"
+          x-model="searchRequest"
+          @input="quickSearch"
+          type="text"
+          placeholder="Quick search by category"
+        />
+        <span
+          class="absolute top-0 right-1 w-8 h-[34px] flex items-center justify-center cursor-pointer text-gray-400 opacity-0 invisible transition-all duration-300 hover:text-gray-600"
+          :class="{ '!opacity-100 !visible': searchRequest }"
+          @click="clearQuickSearch"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </span>
+
+        <template x-if="searchResultCount">
+          <span
+            class="absolute top-9 right-3 text-xs text-gray-400 whitespace-nowrap sm:right-auto sm:left-2"
+            x-text="'matches found - ' + searchResultCount"
+          ></span>
+        </template>
+      </div>
     </div>
 
-    <template x-if="Object.values(filterActiveProps).reduce((a, b) => a + b, 0)">
-        <div class="flex gap-4 pt-3 mt-3 border-t border-gray-200">
-            <span class="text-sm font-medium whitespace-nowrap">Active filter:</span>
-    
-            <div class="flex items-center gap-2 flex-wrap">
-                <template x-for="prop in Object.keys(filterAllProps)">
-                    <template x-for="(value, index) in filterAllProps[prop]">
-                        <template x-if="value.active">
-                            <span 
-                                class="flex items-center gap-2 pt-0.5 pr-2 pb-1 pl-3 bg-blue-100/50 text-blue-600 text-xs rounded-md border border-blue-400 cursor-pointer
-                                        transition-all duration-300 hover:bg-blue-100"
-                                @click="() => { filterBy(prop, index, value.name, value.action) }">
-                                
-                                <span class="inline-flex gap-1">
-                                    <span x-text="prop + ':'" class="capitalize"></span>
-                                    <span x-text="value.name"></span>
-                                </span>
-                                <svg class="w-4 h-4 relative top-[1px]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>                          
-                            </span>
-                        </template>
-                    </template>
-                </template>
+    <div class="relative" x-data="{ show: false }">
+      <div class="flex gap-2 cursor-pointer group" @click="show = !show" @click.outside="show = false">
+        <span class="flex gap-2 items-center">
+          <svg
+            class="w-5 h-5 transition-colors duration-300 group-hover:text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+            />
+          </svg>
+          <b class="font-medium">Sort by:</b>
+        </span>
+        <span class="transition-colors duration-300 group-hover:text-blue-700" x-text="sortActive"></span>
+      </div>
 
-                <span 
-                    class="flex items-center pt-0.5 px-3 pb-1 bg-red-200 text-red-600 text-xs rounded-md border border-red-400 cursor-pointer
-                            transition-all duration-300 hover:bg-red-300/80"
-                    @click="clearFilter">
-                    Clear all
+      <div
+        class="absolute top-11 right-0 z-10 flex flex-col gap-1 bg-white text-sm border opacity-0 invisible transition-all duration-300"
+        :class="{ '!top-8 !opacity-100 !visible': show }"
+      >
+        <span
+          class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
+          :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
+          @click="sortBy('name.en-US', 'asc', 'Name (asc)')"
+        >
+          Name (asc)
+        </span>
+        <span
+          class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
+          :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
+          @click="sortBy('name.en-US', 'desc', 'Name (desc)')"
+        >
+          Name (desc)
+        </span>
+        <span
+          class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
+          :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
+          @click="sortBy('price', 'asc', 'Price (asc)')"
+        >
+          Price (asc)
+        </span>
+        <span
+          class="py-1.5 px-3 transition-colors duration-300 cursor-pointer hover:bg-blue-100/50 hover:text-blue-600"
+          :class="{ 'bg-blue-100/50 text-blue-600 pointer-events-none': $el.textContent.trim() == sortActive }"
+          @click="sortBy('price', 'desc', 'Price (desc)')"
+        >
+          Price (desc)
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <template x-if="Object.values(filterActiveProps).reduce((a, b) => a + b, 0)">
+    <div class="flex gap-4 pt-3 mt-3 border-t border-gray-200">
+      <span class="text-sm font-medium whitespace-nowrap">Active filter:</span>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <template x-for="prop in Object.keys(filterAllProps)">
+          <template x-for="(value, index) in filterAllProps[prop]">
+            <template x-if="value.active">
+              <span
+                class="flex items-center gap-2 pt-0.5 pr-2 pb-1 pl-3 bg-blue-100/50 text-blue-600 text-xs rounded-md border border-blue-400 cursor-pointer transition-all duration-300 hover:bg-blue-100"
+                @click="() => { filterBy(prop, index, value.name, value.action) }"
+              >
+                <span class="inline-flex gap-1">
+                  <span x-text="prop + ':'" class="capitalize"></span>
+                  <span x-text="value.name"></span>
                 </span>
-            </div>
-        </div>
-    </template>
+                <svg
+                  class="w-4 h-4 relative top-[1px]"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </span>
+            </template>
+          </template>
+        </template>
+
+        <span
+          class="flex items-center pt-0.5 px-3 pb-1 bg-red-200 text-red-600 text-xs rounded-md border border-red-400 cursor-pointer transition-all duration-300 hover:bg-red-300/80"
+          @click="clearFilter"
+        >
+          Clear all
+        </span>
+      </div>
+    </div>
+  </template>
 </div>

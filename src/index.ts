@@ -11,7 +11,6 @@ const app = new App();
 
 // Get access token once when app loading
 Tokens.getClientAccessToken().then((token) => {
-    app.loadDefaultPage();
-    app.runRoute(token);
+  app.loadDefaultPage();
+  app.runRoute(token);
 });
-
