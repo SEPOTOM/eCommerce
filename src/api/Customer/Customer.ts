@@ -3,14 +3,14 @@ import Tokens from '../../components/Tokens/Tokens';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import { CustomerDataResponse } from '../../types';
 import {
-  UpdateAction,
+  Action,
   EmailUpdateAction,
   FirstNameUpdateAction,
   LastNameUpdateAction,
   BirthDateUpdateAction,
   UpdateRequest,
 } from './types';
-import { UpdateActions } from './data';
+import { Actions } from './data';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server.',
@@ -19,7 +19,7 @@ enum ErrorMessages {
 }
 
 export default class Customer {
-  private updateActions: UpdateAction[] = [];
+  private actions: Action[] = [];
 
   private static version: number = 0;
 
@@ -61,10 +61,10 @@ export default class Customer {
   public updateEmail(email: string): Customer {
     const action: EmailUpdateAction = {
       email,
-      action: UpdateActions.EMAIL,
+      action: Actions.EMAIL,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -72,10 +72,10 @@ export default class Customer {
   public updateFirstName(firstName: string): Customer {
     const action: FirstNameUpdateAction = {
       firstName,
-      action: UpdateActions.FIRST_NAME,
+      action: Actions.FIRST_NAME,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -83,10 +83,10 @@ export default class Customer {
   public updateLastName(lastName: string): Customer {
     const action: LastNameUpdateAction = {
       lastName,
-      action: UpdateActions.LAST_NAME,
+      action: Actions.LAST_NAME,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -94,10 +94,10 @@ export default class Customer {
   public updateBirthDate(formattedBirthDate: string): Customer {
     const action: BirthDateUpdateAction = {
       dateOfBirth: formattedBirthDate,
-      action: UpdateActions.BIRTH_DATE,
+      action: Actions.BIRTH_DATE,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -108,7 +108,7 @@ export default class Customer {
       const bearerToken = (await Tokens.getCustomerTokens()).access_token;
       const bodyData: UpdateRequest = {
         version: Customer.version,
-        actions: this.updateActions,
+        actions: this.actions,
       };
 
       const response = await fetch(endpoint, {
