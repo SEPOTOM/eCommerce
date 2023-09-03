@@ -24,6 +24,8 @@ export default class AddressView {
   private paragraphsObjects: ParagraphView[] = [];
 
   public buildView(addressData: Address, determinant = ''): AddressView {
+    this.view.dataset.id = `${addressData.id}`;
+
     this.configureInfoBlock(addressData);
     this.configureEditBlock(determinant);
 
@@ -40,6 +42,7 @@ export default class AddressView {
       streetName: '',
       city: '',
       postalCode: '',
+      id: this.view.dataset.id,
     };
 
     this.inputObjects.forEach((inputObject) => {
@@ -63,6 +66,10 @@ export default class AddressView {
     data.forEach((fieldData, index) => {
       this.paragraphsObjects[index].setContent(fieldData);
     });
+  }
+
+  public updateId(id: string): void {
+    this.view.dataset.id = id;
   }
 
   public makeDefault(): void {

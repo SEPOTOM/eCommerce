@@ -125,6 +125,8 @@ export default class ProfileView {
 
   private async sendExistingChanges(): Promise<CustomerDataResponse | Error> {
     const userInfoCredentials = this.userInfo.collectCredentials();
+    const billingAddresses = this.billingAddresses.getCurrentAddressesData();
+    const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
@@ -134,6 +136,8 @@ export default class ProfileView {
       .updateFirstName(userInfoCredentials.firstName)
       .updateLastName(userInfoCredentials.lastName)
       .updateBirthDate(formattedDate)
+      .updateAddresses(billingAddresses)
+      .updateAddresses(shippingAddresses)
       .sendUpdateRequest();
 
     return response;
@@ -171,6 +175,11 @@ export default class ProfileView {
     }
 
     this.updateInfo(userInfoData);
+    // The reverse method is needed because
+    // new addresses are added to the beginning of the array on the server,
+    // and on the page new addresses are added to the end
+    this.billingAddresses.updateExistingAddresses(response.billingAddressIds.reverse());
+    this.shippingAddresses.updateExistingAddresses(response.shippingAddressIds.reverse());
     this.billingAddresses.addAddresses();
     this.shippingAddresses.addAddresses();
   }

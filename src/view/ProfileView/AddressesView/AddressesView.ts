@@ -62,19 +62,34 @@ export default abstract class AddressesView {
     this.view.dataset.edit = 'false';
   }
 
+  public getCurrentAddressesData(): Address[] {
+    return this.addresses.map((newAddress) => newAddress.getData());
+  }
+
   public getNewAddressesData(): Address[] {
     return this.newAddresses.map((newAddress) => newAddress.getData());
   }
 
   public addAddresses(): void {
-    this.newAddresses.forEach((newAddress) => {
-      const addressData = newAddress.getData();
-      const addressInfo = [addressData.streetName, addressData.city, addressData.country, addressData.postalCode];
-      newAddress.updateView(addressInfo);
-    });
+    this.updateAddresses(this.newAddresses);
 
     this.addresses = this.addresses.concat(this.newAddresses);
     this.newAddresses = [];
+  }
+
+  public updateExistingAddresses(ids: string[]): void {
+    this.updateAddresses(this.addresses);
+    this.addresses.forEach((address, index) => {
+      address.updateId(ids[index]);
+    });
+  }
+
+  private updateAddresses(addresses: AddressView[]): void {
+    addresses.forEach((address) => {
+      const addressData = address.getData();
+      const addressInfo = [addressData.streetName, addressData.city, addressData.country, addressData.postalCode];
+      address.updateView(addressInfo);
+    });
   }
 
   private configureTitle(): void {
@@ -114,7 +129,10 @@ export default abstract class AddressesView {
     const addressIds = this.type === AddressTypes.BILLING ? Ids.BILLING : Ids.SHIPPING;
     const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
 
-    customerData[addressIds].forEach((id: string) => {
+    // The reverse method is needed because
+    // new addresses are added to the beginning of the array on the server,
+    // and on the page new addresses are added to the end
+    customerData[addressIds].reverse().forEach((id: string) => {
       const addressData = customerData.addresses.find((address) => address.id === id);
 
       if (addressData) {
