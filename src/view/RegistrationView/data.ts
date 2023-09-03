@@ -6,13 +6,6 @@ enum InputTypes {
   PASSWORD = 'password',
 }
 
-export const DEFAULT_COUNTRY = 'US';
-
-export const Countries = {
-  US: 'The United States',
-  UK: 'The United Kingdom',
-};
-
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   EMAIL: [
     [RegExps.AT_SYMBOL, ErrorMessages.ONE_AT_SYMBOL],
