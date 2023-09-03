@@ -4,8 +4,9 @@ import InputView from '../../InputView/InputView';
 import DynamicInputView from '../../InputView/DynamicInputView/DynamicInputView';
 import SelectView from '../../SelectView/SelectView';
 import { EventCallback, Address } from '../../../types';
-import { PostalCodeRegExps, PostalCodeErrorMessages, AddressInputsOptions, DataAttrs } from '../data';
+import { AddressInputsOptions, DataAttrs } from '../data';
 import { Countries, DEFAULT_COUNTRY } from '../../../data/countries';
+import { PostalCodeErrorMessages, PostalCodeRegExps } from '../../../data/validation';
 
 const POSTAL_CODE_INPUT_INDEX = 2;
 const USE_AS_CHECKBOX_INDEX = 0;
