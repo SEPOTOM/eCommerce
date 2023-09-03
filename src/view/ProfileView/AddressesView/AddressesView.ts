@@ -67,6 +67,7 @@ export default abstract class AddressesView {
   }
 
   public getNewAddressesData(): Address[] {
+    this.newAddresses = this.newAddresses.filter((address) => !address.needToDelete());
     return this.newAddresses.map((newAddress) => newAddress.getData());
   }
 
@@ -126,6 +127,8 @@ export default abstract class AddressesView {
       DEFAULT_ADDRESS_DATA,
       `-${this.type}-${(this.biggestAddressId += 1)}`
     );
+
+    newAddress.makeNew();
 
     if (isEdit) {
       newAddress.enterEditMode();

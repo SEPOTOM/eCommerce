@@ -76,6 +76,16 @@ export default class AddressView {
     this.view.dataset.default = 'true';
   }
 
+  public makeNew(): void {
+    this.view.dataset.new = 'true';
+  }
+
+  public makeExisting(): void {
+    this.enableFields();
+    this.view.dataset.deleted = 'false';
+    this.view.dataset.new = 'false';
+  }
+
   public isDefault(): boolean {
     return this.view.dataset.default === 'true';
   }
@@ -236,13 +246,12 @@ export default class AddressView {
   }
 
   private makeDeleted(): void {
+    if (this.isNew()) {
+      this.remove();
+    }
+
     this.disableFields();
     this.view.dataset.deleted = 'true';
-  }
-
-  private makeExisting(): void {
-    this.enableFields();
-    this.view.dataset.deleted = 'false';
   }
 
   private disableFields(): void {
@@ -257,5 +266,9 @@ export default class AddressView {
     this.inputObjects.forEach((inputObject) => {
       inputObject.enable();
     });
+  }
+
+  private isNew(): boolean {
+    return this.view.dataset.new === 'true';
   }
 }
