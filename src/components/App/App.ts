@@ -8,7 +8,7 @@ export default class App {
     BreadcrumbsView.clear();
   }
 
-  public runRoute(): void {
-    new Router().initRoute();
+  public runRoute(token: string): void {
+    new Router().initRoute(token);
   }
 }

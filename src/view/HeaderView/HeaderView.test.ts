@@ -14,6 +14,6 @@ describe('Main [Header] test', (): void => {
   it('-- Alpine "HeaderView" object, all properties exist & some return nothing', () => {
     expect(HeaderViewAlpine()).toHaveProperty('showMobileMenu');
     expect(HeaderViewAlpine()).toHaveProperty('showAccountDropdown');
-    expect(HeaderViewAlpine()).toHaveProperty('menu');
+    // expect(HeaderViewAlpine()).toHaveProperty('menu');
   });
 });

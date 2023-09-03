@@ -1,18 +1,31 @@
+import Page404View from './../../../view/Page404View/Page404View';
+import LoginView from './../../..//view/LoginView/LoginView';
+import HomepageView from './../../..//view/HomepageView/HomepageView';
+import RegistrationView from './../../..//view/RegistrationView/RegistrationView';
+import ProfileView from './../../..//view/ProfileView/ProfileView';
+import CatalogView from './../../..//view/CatalogView/CatalogView';
+import BreadcrumbsView from './../../..//view/BreadcrumbsView/BreadcrumbsView';
+import ProductView from './../../..//view/ProductView/ProductView';
+
 /* eslint-disable import/no-cycle */
-import routers from '../../../data/routers';
+// import routers from '../../../data/routers';
 import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
-import { AlpineRouter } from '../../../types';
 
 // import links
 import Navigation from '../../../api/Navigation/Navigation';
-import Catalog from '../../../api/Catalog/Catalog';
 
-const RouterAlpine: AlpineRouter = {
+// Types
+import { INavigation, IRouteProductLink } from './../../../api/Navigation/types/types';
+
+const RouterAlpine = {
   isCustomerLogin: false,
   activeItemMenu: -1,
+  routers: {},
+  menu: null,
 
   init(): void {
+    this.createRoutingPath();
     this.handleLocation();
     this.checkCustomerLogin();
 
@@ -45,16 +58,12 @@ const RouterAlpine: AlpineRouter = {
     Tokens.getCustomerTokens().then((data) => {
       this.isCustomerLogin = !!data?.access_token;
 
-      Navigation.allCategoryLinks.then(() => {
-        Catalog.productLinks.then(() => {
-          if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
-            Router.toHomePage();
-          } else {
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            routers[path] ? routers[path]() : routers['404']();
-          }
-        });
-      });
+      if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
+        Router.toHomePage();
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this.routers[path] ? this.routers[path]() : this.routers['404']();
+      }
     });
   },
 
@@ -63,7 +72,51 @@ const RouterAlpine: AlpineRouter = {
       this.isCustomerLogin = !!data?.access_token;
     });
   },
+
+  createRoutingPath(): void {
+    this.routers['404'] = () => {
+      new Page404View().draw();
+      BreadcrumbsView.clear();
+    };
+
+    this.routers['/'] = () => {
+      new HomepageView().draw();
+      BreadcrumbsView.clear();
+    };
+
+    this.routers['/login'] = () => {
+      LoginView.draw();
+      BreadcrumbsView.clear();
+    };
+
+    this.routers['/registration'] = () => {
+      RegistrationView.draw();
+      BreadcrumbsView.clear();
+    };
+
+    this.routers['/profile'] = () => {
+      new ProfileView().draw();
+      BreadcrumbsView.clear();
+    };
+
+    // Create category links & menu
+    new Navigation().getCategoryJSON(this.token).then((json): void => {
+      // create menu
+      this.menu = new Navigation().createMenu(json?.results!);
+
+      // create category roitung
+      new Navigation().createRouteCategoryLinks(json?.results!).forEach((data: INavigation) => {
+        if (data.categoryId) this.routers[data.link] = () => new CatalogView().draw(data.categoryId!, this.token);
+      });
+    });
+
+    new Navigation().getAllproductJSON(this.token).then((json): void => {
+      new Navigation().createProductsLinks(json?.results!).forEach((data: IRouteProductLink) => {
+        this.routers[data.link] = () => new ProductView().draw(data.productId);
+      });
+    });
+  },
 };
 
 /* eslint-disable max-lines-per-function */
-export default () => RouterAlpine;
+export default RouterAlpine;

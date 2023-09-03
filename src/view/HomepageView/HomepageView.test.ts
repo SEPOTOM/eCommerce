@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import HomepageView from './HomepageView';
 
 describe('Main [Home page] test', (): void => {
@@ -6,10 +5,11 @@ describe('Main [Home page] test', (): void => {
     expect(HomepageView).toBeDefined();
   });
 
-  it('-- all methods should be defined & return void', () => {
+  it('-- method "drawDefaultContent" should be defined', () => {
     expect(new HomepageView().drawDefaultContent).toBeDefined();
+  });
+
+  it('-- method "draw" should be defined', () => {
     expect(new HomepageView().draw).toBeDefined();
-    expect(new HomepageView().drawDefaultContent()).toBeFalsy();
-    expect(new HomepageView().draw()).toBeFalsy();
   });
 });

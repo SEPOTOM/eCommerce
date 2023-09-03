@@ -4,9 +4,9 @@ import RouterAlpine from './Alpine/RouterAlpine';
 import { AlpineRouter } from '../../types';
 
 export default class Router {
-  public initRoute(): void {
+  public initRoute(token: string): void {
     document.body.setAttribute('x-data', 'Router()');
-    Alpine.data('Router', RouterAlpine);
+    Alpine.data('Router', () => ({token, ...RouterAlpine}));
   }
 
   public static isCustomerLogin(): void {
