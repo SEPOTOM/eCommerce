@@ -13,6 +13,7 @@ export enum DataAttrs {
   ROW = 'data-row-profile',
   LABEL = 'data-label-profile',
   VALID = 'data-valid',
+  ADD_ADDRESS_BUTTON = 'data-add-address-button',
 }
 
 export enum ParagraphLabels {

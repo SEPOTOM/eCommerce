@@ -1,8 +1,16 @@
 import Converter from '../../../components/Converter/Converter';
 import HTML from './AddressesView.html';
 import AddressView from './AddressView/AddressView';
-import { CustomerDataResponse } from '../../../types';
+import { CustomerDataResponse, Address } from '../../../types';
 import { DataAttrs, AddressTypes } from '../data';
+import { DEFAULT_COUNTRY } from '../../../data/countries';
+
+const DEFAULT_ADDRESS_DATA: Address = {
+  streetName: '',
+  city: '',
+  country: DEFAULT_COUNTRY,
+  postalCode: '',
+};
 
 enum ClassNames {
   GRAY_BG = 'bg-gray-100',
@@ -25,6 +33,7 @@ export default abstract class AddressesView {
   public buildView(customerData: CustomerDataResponse): HTMLElement {
     this.configureTitle();
     this.configureList(customerData);
+    this.configureAddButton();
     this.colorAddresses();
 
     return this.view;
@@ -45,6 +54,21 @@ export default abstract class AddressesView {
     if (title) {
       title.textContent = `${titlePrefix} ${title.textContent}`;
     }
+  }
+
+  private configureAddButton(): void {
+    const addButton = this.view.querySelector(`[${DataAttrs.ADD_ADDRESS_BUTTON}]`);
+    addButton?.addEventListener('click', this.addAddress.bind(this));
+  }
+
+  private addAddress(): void {
+    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const newAddress = new AddressView().buildView(DEFAULT_ADDRESS_DATA);
+
+    this.addresses.push(newAddress);
+    addressesList?.append(newAddress.getView());
+
+    this.colorAddresses();
   }
 
   private configureList(customerData: CustomerDataResponse): void {
