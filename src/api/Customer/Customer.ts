@@ -174,6 +174,91 @@ export default class Customer {
     return this;
   }
 
+  public setDefaultBilling(id: string): Customer {
+    const action: IdAddressAction = {
+      addressId: id,
+      action: Actions.SET_DEFAULT_BILLING,
+    };
+
+    this.actions.push(action);
+
+    return this;
+  }
+
+  public setDefaultShipping(id: string): Customer {
+    const action: IdAddressAction = {
+      addressId: id,
+      action: Actions.SET_DEFAULT_SHIPPING,
+    };
+
+    this.actions.push(action);
+
+    return this;
+  }
+
+  public removeDefaultBilling(id: string): Customer {
+    const removeAction: IdAddressAction = {
+      action: Actions.REMOVE_BILLING_ID,
+      addressId: id,
+    };
+    this.actions.push(removeAction);
+
+    const addBillingAction: IdAddressAction = {
+      action: Actions.ADD_BILLING_ADDRESS,
+      addressId: id,
+    };
+    this.actions.push(addBillingAction);
+
+    return this;
+  }
+
+  public removeDefaultShipping(id: string): Customer {
+    const removeAction: IdAddressAction = {
+      action: Actions.REMOVE_SHIPPING_ID,
+      addressId: id,
+    };
+    this.actions.push(removeAction);
+
+    const addShippingAction: IdAddressAction = {
+      action: Actions.ADD_SHIPPING_ADDRESS,
+      addressId: id,
+    };
+    this.actions.push(addShippingAction);
+
+    return this;
+  }
+
+  public async deleteDefaultAddresses(billingId?: string, shippingId?: string): Promise<CustomerDataResponse | Error> {
+    const removeIdsResponse = await this.removeDefaultIds(billingId, shippingId);
+
+    if ('message' in removeIdsResponse) {
+      return removeIdsResponse;
+    }
+
+    this.actions = [];
+
+    if (billingId) {
+      const billingRemove: IdAddressAction = {
+        action: Actions.REMOVE_ADDRESS,
+        addressId: billingId,
+      };
+
+      this.actions.push(billingRemove);
+    }
+
+    if (shippingId) {
+      const shippingRemove: IdAddressAction = {
+        action: Actions.REMOVE_ADDRESS,
+        addressId: shippingId,
+      };
+
+      this.actions.push(shippingRemove);
+    }
+
+    const removeAddressesResponse = await this.sendUpdateRequest();
+    return removeAddressesResponse;
+  }
+
   public async addBillingAddresses(billingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
     const billingActions = this.getAddressesActions(billingAddresses);
     const billingResponse = await this.sendUpdateRequest(billingActions);
@@ -257,6 +342,28 @@ export default class Customer {
     } catch (err) {
       return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
     }
+  }
+
+  private async removeDefaultIds(billingId?: string, shippingId?: string): Promise<CustomerDataResponse | Error> {
+    if (billingId) {
+      const billingRemoveId: IdAddressAction = {
+        action: Actions.REMOVE_BILLING_ID,
+        addressId: billingId,
+      };
+
+      this.actions.push(billingRemoveId);
+    }
+
+    if (shippingId) {
+      const shippingRemoveId: IdAddressAction = {
+        action: Actions.REMOVE_SHIPPING_ID,
+        addressId: shippingId,
+      };
+
+      this.actions.push(shippingRemoveId);
+    }
+
+    return this.sendUpdateRequest();
   }
 
   private static getError(data: IError): Error {

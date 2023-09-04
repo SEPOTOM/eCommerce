@@ -62,6 +62,10 @@ export default class AddressView {
     return data;
   }
 
+  public getId(): string | null {
+    return this.view.dataset.id || null;
+  }
+
   public updateView(data: string[]): void {
     data.forEach((fieldData, index) => {
       this.paragraphsObjects[index].setContent(fieldData);
@@ -74,6 +78,10 @@ export default class AddressView {
 
   public makeDefault(): void {
     this.view.dataset.default = 'true';
+  }
+
+  public makeUsual(): void {
+    this.view.dataset.default = 'false';
   }
 
   public makeNew(): void {

@@ -30,6 +30,10 @@ export default abstract class AddressesView {
 
   private newAddresses: AddressView[] = [];
 
+  private originalDefaultAddress = new AddressView();
+
+  private prevDefaultAddress: AddressView | string = new AddressView();
+
   private biggestAddressId = 0;
 
   constructor(private type: string) {}
@@ -37,6 +41,7 @@ export default abstract class AddressesView {
   public buildView(customerData: CustomerDataResponse): HTMLElement {
     const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
 
+    this.configureView();
     this.configureTitle();
     this.configureList(customerData, defaultId);
     this.configureAddButton();
@@ -50,6 +55,8 @@ export default abstract class AddressesView {
       address.enterEditMode();
     });
 
+    this.setHaveNoDefault();
+
     this.view.dataset.edit = 'true';
   }
 
@@ -60,6 +67,18 @@ export default abstract class AddressesView {
     this.addresses.forEach((address) => {
       address.exitEditMode();
     });
+
+    if (this.haveDefaultAddress()) {
+      this.setHaveDefault();
+    } else {
+      this.setHaveNoDefault();
+    }
+
+    if (this.prevDefaultAddress instanceof AddressView) {
+      this.prevDefaultAddress.makeUsual();
+      this.prevDefaultAddress = this.originalDefaultAddress;
+      this.originalDefaultAddress.makeDefault();
+    }
 
     this.view.dataset.edit = 'false';
   }
@@ -74,7 +93,13 @@ export default abstract class AddressesView {
   }
 
   public getDeletedAddresses(): Address[] {
-    return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
+    return this.addresses
+      .filter((address) => address.needToDelete() && !address.isDefault())
+      .map((address) => address.getData());
+  }
+
+  public getDefaultAddress(): AddressView | string {
+    return this.prevDefaultAddress;
   }
 
   public addAddresses(): void {
@@ -104,6 +129,10 @@ export default abstract class AddressesView {
     });
   }
 
+  private configureView(): void {
+    this.view.addEventListener('click', this.handleDefaultAddresses.bind(this));
+  }
+
   private configureTitle(): void {
     const title = this.view.querySelector(`[${DataAttrs.ADDRESSES_TITLE}]`);
     const titlePrefix = `${this.type[0].toUpperCase()}${this.type.slice(1)}`;
@@ -116,25 +145,6 @@ export default abstract class AddressesView {
   private configureAddButton(): void {
     const addButton = this.view.querySelector(`[${DataAttrs.ADD_ADDRESS_BUTTON}]`);
     addButton?.addEventListener('click', this.addAddress.bind(this, true));
-  }
-
-  private addAddress(isEdit = false): void {
-    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
-    const newAddress = new AddressView().buildView(
-      DEFAULT_ADDRESS_DATA,
-      `-${this.type}-${(this.biggestAddressId += 1)}`
-    );
-
-    newAddress.makeNew();
-
-    if (isEdit) {
-      newAddress.enterEditMode();
-    }
-
-    this.newAddresses.push(newAddress);
-    addressesList?.append(newAddress.getView());
-
-    this.colorAddresses();
   }
 
   private configureList(
@@ -156,6 +166,9 @@ export default abstract class AddressesView {
         const addressView = address.getView();
 
         if (id === customerData[defaultId]) {
+          this.originalDefaultAddress = address;
+          this.prevDefaultAddress = address;
+
           address.makeDefault();
 
           list?.prepend(addressView);
@@ -171,14 +184,29 @@ export default abstract class AddressesView {
     });
   }
 
+  private addAddress(isEdit = false): void {
+    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const newAddress = new AddressView().buildView(
+      DEFAULT_ADDRESS_DATA,
+      `-${this.type}-${(this.biggestAddressId += 1)}`
+    );
+
+    newAddress.makeNew();
+
+    if (isEdit) {
+      newAddress.enterEditMode();
+    }
+
+    this.newAddresses.push(newAddress);
+    addressesList?.append(newAddress.getView());
+
+    this.colorAddresses();
+  }
+
   private colorAddresses(): void {
     const totalAddresses = [...this.addresses, ...this.newAddresses];
 
     totalAddresses.forEach((address, index) => {
-      if (address.isDefault()) {
-        return;
-      }
-
       if (index % 2 === 0) {
         address.getView().classList.add(ClassNames.GRAY_BG);
       }
@@ -189,9 +217,61 @@ export default abstract class AddressesView {
     this.view.dataset.haveDefault = 'true';
   }
 
+  private setHaveNoDefault(): void {
+    this.view.dataset.haveDefault = 'false';
+  }
+
   private removeNewAddresses(): void {
     this.newAddresses.forEach((newAddress) => {
       newAddress.remove();
     });
+  }
+
+  private handleDefaultAddresses(e: Event): void {
+    if (e.target instanceof HTMLButtonElement) {
+      const button = e.target;
+
+      if (button.hasAttribute(DataAttrs.MAKE_DEFAULT_BUTTON)) {
+        this.handleAddDefault(button);
+      } else if (button.hasAttribute(DataAttrs.MAKE_USUAL_BUTTON)) {
+        this.handleRemoveDefault(button);
+      }
+    }
+  }
+
+  private haveDefaultAddress(): boolean {
+    for (let i = 0; i < this.addresses.length; i += 1) {
+      if (this.addresses[i].isDefault()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private handleAddDefault(button: HTMLButtonElement): void {
+    const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
+    const addressObject = this.addresses.find((address) => address.getView() === addressView);
+
+    if (addressObject) {
+      if (this.prevDefaultAddress instanceof AddressView) {
+        this.prevDefaultAddress.makeUsual();
+      }
+
+      this.prevDefaultAddress = addressObject;
+
+      this.prevDefaultAddress.makeDefault();
+    }
+  }
+
+  private handleRemoveDefault(button: HTMLButtonElement): void {
+    const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
+    const addressObject = this.addresses.find((address) => address.getView() === addressView);
+
+    if (addressObject && this.prevDefaultAddress instanceof AddressView) {
+      this.prevDefaultAddress.makeUsual();
+
+      this.prevDefaultAddress = addressObject.getId() || '';
+    }
   }
 }
