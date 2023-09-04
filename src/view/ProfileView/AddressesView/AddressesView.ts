@@ -83,11 +83,13 @@ export default abstract class AddressesView {
   }
 
   public getDeletedAddresses(): Address[] {
-    return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
+    return this.addresses
+      .filter((address) => address.needToDelete() && !address.isDefault())
+      .map((address) => address.getData());
   }
 
-  public getDefaultAddressId(): string | null {
-    return this.prevDefaultAddress.getId();
+  public getDefaultAddress(): AddressView {
+    return this.prevDefaultAddress;
   }
 
   public addAddresses(): void {

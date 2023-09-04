@@ -104,6 +104,7 @@ export default class ProfileView {
     }
 
     const response = await this.sendExistingChanges();
+    const defaultResponse = await this.deleteDefaultAddresses();
     const billingResponse = await this.sendNewBillingAddresses();
     const shippingResponse = await this.sendNewShippingAddresses();
 
@@ -111,12 +112,14 @@ export default class ProfileView {
       this.showErrors(response.message);
       return;
     }
-
+    if (defaultResponse && 'message' in defaultResponse) {
+      this.showErrors(defaultResponse.message);
+      return;
+    }
     if (billingResponse && 'message' in billingResponse) {
       this.showErrors(billingResponse.message);
       return;
     }
-
     if (shippingResponse && 'message' in shippingResponse) {
       this.showErrors(shippingResponse.message);
       return;
@@ -138,8 +141,8 @@ export default class ProfileView {
     const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
     const deletedBillingAddresses = this.billingAddresses.getDeletedAddresses();
     const deletedShippingAddresses = this.shippingAddresses.getDeletedAddresses();
-    const defaultBillingId = this.billingAddresses.getDefaultAddressId();
-    const defaultShippingId = this.shippingAddresses.getDefaultAddressId();
+    const defaultBillingId = this.billingAddresses.getDefaultAddress().getId();
+    const defaultShippingId = this.shippingAddresses.getDefaultAddress().getId();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
@@ -165,6 +168,27 @@ export default class ProfileView {
     const response = await request.sendUpdateRequest();
 
     return response;
+  }
+
+  private async deleteDefaultAddresses(): Promise<CustomerDataResponse | Error | null> {
+    const defaultBillingAddress = this.billingAddresses.getDefaultAddress();
+    const defaultShippingAddress = this.shippingAddresses.getDefaultAddress();
+    let billingId: string | undefined;
+    let shippingId: string | undefined;
+
+    if (defaultBillingAddress.needToDelete()) {
+      billingId = defaultBillingAddress.getId() || undefined;
+    }
+
+    if (defaultShippingAddress.needToDelete()) {
+      shippingId = defaultShippingAddress.getId() || undefined;
+    }
+
+    if (billingId || shippingId) {
+      return new Customer().deleteDefaultAddresses(billingId, shippingId);
+    }
+
+    return null;
   }
 
   private async sendNewBillingAddresses(): Promise<CustomerDataResponse | Error | null> {
