@@ -1,7 +1,8 @@
 import Alpine from 'alpinejs';
 import BreadcrumbsViewHTML from './BreadcrumbsView.html';
-import { IBreadCrumbsLink, ICategoryInfoJSON, INavigationLevel1 } from './types/types';
-import Navigation from '../../api/Navigation/Navigation';
+/* eslint-disable import/no-cycle */
+import CatalogView from '../CatalogView/CatalogView';
+import { IBreadCrumbsLink, ICategoryInfoJSON } from './types/types';
 
 export default class BreadcrumbsView {
   public draw(array: IBreadCrumbsLink[]): void {
@@ -17,45 +18,41 @@ export default class BreadcrumbsView {
     localStorage.removeItem('category-path');
   }
 
-  public static async createCategoryPath(json: ICategoryInfoJSON | null): Promise<void> {
-    if (!json) return;
+  public static getCategoryLink(json: ICategoryInfoJSON, token: string): void {
+    const breadcrumb: IBreadCrumbsLink[] = [];
 
-    Navigation.menu.then((data: INavigationLevel1[]): void => {
-      const categoryId = json.id;
-      const parentId = json?.parent?.id;
-      const breadcrumb: IBreadCrumbsLink[] = [];
-
-      if (parentId) {
-        const parent: INavigationLevel1[] = data.filter((item: INavigationLevel1) => item.categoryId === parentId);
-        breadcrumb.push({
-          name: parent[0].text,
-          link: parent[0].link,
-        });
-      }
-
-      if (categoryId && parentId) {
-        const parent: INavigationLevel1[] = data.filter((item: INavigationLevel1) => item.categoryId === parentId);
-        const category: INavigationLevel1[] = parent[0].children!.filter(
-          (item: INavigationLevel1) => item.categoryId === categoryId
-        );
-
-        breadcrumb.push({
-          name: category[0].text,
-          link: category[0].link,
-        });
-      }
-
-      if (categoryId && !parentId) {
-        const category: INavigationLevel1[] = data.filter((item: INavigationLevel1) => item.categoryId === categoryId);
-        breadcrumb.push({
-          name: category[0].text,
-          link: category[0].link,
-        });
-      }
+    // create current category link
+    if (!json.parent) {
+      breadcrumb.push({
+        name: json.name['en-US'],
+        link: `/${json.key}`,
+      });
 
       localStorage.setItem('category-path', JSON.stringify(breadcrumb));
       new BreadcrumbsView().draw(breadcrumb);
-    });
+    }
+
+    // if current have a parent category
+    if (json.parent) {
+      new CatalogView()
+        .getCategoryCommonInfoJSON(json.parent.id, token)
+        .then((parentJSON: ICategoryInfoJSON | null): void => {
+          if (!parentJSON) return;
+
+          breadcrumb.push({
+            name: json.name['en-US'],
+            link: `/${json.key}`,
+          });
+
+          breadcrumb.unshift({
+            name: parentJSON.name['en-US'],
+            link: `/${parentJSON.key}`,
+          });
+
+          localStorage.setItem('category-path', JSON.stringify(breadcrumb));
+          new BreadcrumbsView().draw(breadcrumb);
+        });
+    }
   }
 
   public static async createProductPath(productLink: IBreadCrumbsLink): Promise<void> {

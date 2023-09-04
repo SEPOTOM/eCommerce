@@ -1,13 +1,4 @@
-import {
-  CTP_AUTH_URL,
-  CTP_API_URL,
-  CTP_PROJECT_KEY,
-  CTP_CLIENT_ID,
-  CTP_CLIENT_SECRET,
-  CTP_SCOPES,
-} from '../APIClients/JSNinjas';
-import Authorization from '../Authorization/Authorization';
-
+import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas';
 import {
   IAllCategories,
   INavigation,
@@ -15,43 +6,55 @@ import {
   IBodyRequest,
   INavigationLevel1,
   INavigationLevel2,
+  IRouteProductLink,
+  IShortProductsJSON,
+  IAllProducts,
 } from './types/types';
 
 export default class Navigation {
-  static allCategoryLinks = new Navigation().createRouteCategoryLinks();
-
-  static menu = new Navigation().createMenu();
-
-  private async getCategoryJSON(): Promise<IAllCategories | null> {
-    const TOKEN: string = await this.getBearerToken();
+  public async getCategoryJSON(token: string): Promise<IAllCategories | null> {
     const URL: string = `${CTP_API_URL}/${CTP_PROJECT_KEY}/categories`;
-    const BODY: IBodyRequest = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
-    };
 
     try {
-      return await fetch(URL, BODY).then((resp) => resp.json());
+      return await fetch(URL, this.setBodyRequest(token)).then((resp) => resp.json());
     } catch {
       return null;
     }
   }
 
-  public async createRouteCategoryLinks(): Promise<INavigation[]> {
-    const JSON: IAllCategories | null = await this.getCategoryJSON();
+  public async getAllproductJSON(token: string): Promise<IAllProducts | null> {
+    const URL: string = `${CTP_API_URL}/${CTP_PROJECT_KEY}/products`;
+
+    try {
+      return await fetch(URL, this.setBodyRequest(token)).then((resp) => resp.json());
+    } catch {
+      return null;
+    }
+  }
+
+  public createProductsLinks(json: IShortProductsJSON[]): IRouteProductLink[] {
+    const productLinks: IRouteProductLink[] = [];
+
+    json.forEach((item: IShortProductsJSON): void => {
+      productLinks.push({
+        link: `/${item.key}`,
+        productId: item.id,
+      });
+    });
+
+    return productLinks;
+  }
+
+  public createRouteCategoryLinks(json: ISingleCategory[]): INavigation[] {
     const navigation: INavigation[] = [];
 
     // Get links from CommerceTools
-    JSON?.results.forEach((data: ISingleCategory): void => {
-      const item: INavigation = {
+    json.forEach((data: ISingleCategory): void => {
+      navigation.push({
         text: data.name['en-US'],
         link: `/${data.key}`,
         categoryId: data.id,
-      };
-
-      navigation.push(item);
+      });
     });
 
     // Add additional links
@@ -63,36 +66,11 @@ export default class Navigation {
     return navigation;
   }
 
-  public async createMenu(): Promise<INavigation[]> {
-    const JSON: IAllCategories | null = await this.getCategoryJSON();
-    const level1: INavigationLevel1[] = [];
-    const level2: INavigationLevel2[] = [];
+  public createMenu(json: ISingleCategory[]): INavigationLevel1[] {
+    let level1: INavigationLevel1[] = this.createMenuLevel1(json);
+    const level2: INavigationLevel2[] = this.createMenuLevel2(json);
 
-    JSON?.results.forEach((data: ISingleCategory): void => {
-      if (!data.parent) {
-        level1.push({
-          text: data.name['en-US'],
-          link: `/${data.key}`,
-          categoryId: data.id,
-          children: [],
-        });
-      } else {
-        level2.push({
-          text: data.name['en-US'],
-          link: `/${data.key}`,
-          categoryId: data.id,
-          parentId: data.parent.id,
-        });
-      }
-    });
-
-    for (let i = 0; i < level2.length; i += 1) {
-      for (let j = 0; j < level1.length; j += 1) {
-        if (level2[i].parentId === level1[j].categoryId) {
-          level1[j].children!.push(level2[i]);
-        }
-      }
-    }
+    level1 = this.combineMenuLevels(level1, level2);
 
     // Add additional links
     level1.push({
@@ -103,14 +81,58 @@ export default class Navigation {
     return level1;
   }
 
-  private async getBearerToken(): Promise<string> {
-    const endpoint = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
-    const basicToken = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
-    const data = await Authorization.loginClient(endpoint, basicToken);
+  private createMenuLevel1(array: ISingleCategory[]): INavigationLevel1[] {
+    const result: INavigationLevel1[] = [];
 
-    if ('message' in data) {
-      return '';
+    array.forEach((item: ISingleCategory): void => {
+      if (!item.parent) {
+        result.push({
+          text: item.name['en-US'],
+          link: `/${item.key}`,
+          categoryId: item.id,
+          children: [],
+        });
+      }
+    });
+
+    return result;
+  }
+
+  private createMenuLevel2(array: ISingleCategory[]): INavigationLevel2[] {
+    const result: INavigationLevel2[] = [];
+
+    array.forEach((item: ISingleCategory): void => {
+      if (item.parent) {
+        result.push({
+          text: item.name['en-US'],
+          link: `/${item.key}`,
+          categoryId: item.id,
+          parentId: item.parent.id,
+        });
+      }
+    });
+
+    return result;
+  }
+
+  private combineMenuLevels(lvl1: INavigationLevel1[], lvl2: INavigationLevel2[]): INavigationLevel1[] {
+    for (let i = 0; i < lvl2.length; i += 1) {
+      for (let j = 0; j < lvl1.length; j += 1) {
+        if (lvl2[i].parentId === lvl1[j].categoryId) {
+          lvl1[j].children!.push(lvl2[i]);
+        }
+      }
     }
-    return data.access_token;
+
+    return lvl1;
+  }
+
+  private setBodyRequest(token: string): IBodyRequest {
+    return {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
   }
 }
