@@ -19,7 +19,7 @@ const RouterAlpine = {
   menu: null,
 
   init(): void {
-    const delay = 200;
+    const delay = 500;
 
     this.createRoutingPath();
     this.checkCustomerLogin();
