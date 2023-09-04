@@ -62,6 +62,22 @@ export default class InputView {
     this.errorBlock.innerHTML = '';
   }
 
+  public getAttr(attrName: string): string {
+    return this.input.getAttribute(attrName) || '';
+  }
+
+  public getValue(): string {
+    return this.input.value;
+  }
+
+  public disable(): void {
+    this.input.disabled = true;
+  }
+
+  public enable(): void {
+    this.input.disabled = false;
+  }
+
   protected isValid(regExp: RegExp): boolean {
     return regExp.test(this.input.value);
   }

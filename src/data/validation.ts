@@ -35,3 +35,13 @@ export enum InputTypes {
   EMAIL = 'email',
   PASSWORD = 'password',
 }
+
+export const PostalCodeRegExps: Record<string, RegExp> = {
+  US: /(^\d{5}$)|(^\d{5}-\d{4}$)/,
+  GB: /(^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$)/,
+};
+
+export const PostalCodeErrorMessages: Record<string, string> = {
+  US: 'Incorrect format (e.g., 90210)',
+  GB: 'Incorrect format (e.g., SW1 2AA)',
+};

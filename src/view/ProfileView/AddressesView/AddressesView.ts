@@ -1,8 +1,16 @@
 import Converter from '../../../components/Converter/Converter';
 import HTML from './AddressesView.html';
 import AddressView from './AddressView/AddressView';
-import { CustomerDataResponse } from '../../../types';
+import { CustomerDataResponse, Address } from '../../../types';
 import { DataAttrs, AddressTypes } from '../data';
+import { DEFAULT_COUNTRY } from '../../../data/countries';
+
+const DEFAULT_ADDRESS_DATA: Address = {
+  streetName: '',
+  city: '',
+  country: DEFAULT_COUNTRY,
+  postalCode: '',
+};
 
 enum ClassNames {
   GRAY_BG = 'bg-gray-100',
@@ -20,14 +28,80 @@ export default abstract class AddressesView {
 
   private addresses: AddressView[] = [];
 
+  private newAddresses: AddressView[] = [];
+
+  private biggestAddressId = 0;
+
   constructor(private type: string) {}
 
   public buildView(customerData: CustomerDataResponse): HTMLElement {
+    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
+
     this.configureTitle();
-    this.configureList(customerData);
+    this.configureList(customerData, defaultId);
+    this.configureAddButton();
     this.colorAddresses();
 
     return this.view;
+  }
+
+  public enterEditMode(): void {
+    this.addresses.forEach((address) => {
+      address.enterEditMode();
+    });
+
+    this.view.dataset.edit = 'true';
+  }
+
+  public exitEditMode(): void {
+    this.removeNewAddresses();
+    this.newAddresses = [];
+
+    this.addresses.forEach((address) => {
+      address.exitEditMode();
+    });
+
+    this.view.dataset.edit = 'false';
+  }
+
+  public getCurrentAddressesData(): Address[] {
+    return this.addresses.map((newAddress) => newAddress.getData());
+  }
+
+  public getNewAddressesData(): Address[] {
+    this.newAddresses = this.newAddresses.filter((address) => !address.needToDelete());
+    return this.newAddresses.map((newAddress) => newAddress.getData());
+  }
+
+  public getDeletedAddresses(): Address[] {
+    return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
+  }
+
+  public addAddresses(): void {
+    this.updateAddresses(this.newAddresses);
+
+    this.addresses = this.addresses.concat(this.newAddresses);
+    this.newAddresses = [];
+  }
+
+  public updateView(response: CustomerDataResponse) {
+    const list = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
+
+    if (list) {
+      this.addresses = [];
+      list.innerHTML = '';
+      this.configureList(response, defaultId);
+      this.colorAddresses();
+    }
+  }
+
+  private updateAddresses(addresses: AddressView[]): void {
+    addresses.forEach((address) => {
+      const addressData = address.getData();
+      const addressInfo = [addressData.streetName, addressData.city, addressData.country, addressData.postalCode];
+      address.updateView(addressInfo);
+    });
   }
 
   private configureTitle(): void {
@@ -39,17 +113,46 @@ export default abstract class AddressesView {
     }
   }
 
-  private configureList(customerData: CustomerDataResponse): void {
+  private configureAddButton(): void {
+    const addButton = this.view.querySelector(`[${DataAttrs.ADD_ADDRESS_BUTTON}]`);
+    addButton?.addEventListener('click', this.addAddress.bind(this, true));
+  }
+
+  private addAddress(isEdit = false): void {
+    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const newAddress = new AddressView().buildView(
+      DEFAULT_ADDRESS_DATA,
+      `-${this.type}-${(this.biggestAddressId += 1)}`
+    );
+
+    newAddress.makeNew();
+
+    if (isEdit) {
+      newAddress.enterEditMode();
+    }
+
+    this.newAddresses.push(newAddress);
+    addressesList?.append(newAddress.getView());
+
+    this.colorAddresses();
+  }
+
+  private configureList(
+    customerData: CustomerDataResponse,
+    defaultId: Ids.DEFAULT_BILLING | Ids.DEFAULT_SHIPPING
+  ): void {
     const list = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
 
     const addressIds = this.type === AddressTypes.BILLING ? Ids.BILLING : Ids.SHIPPING;
-    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
 
-    customerData[addressIds].forEach((id: string) => {
+    // The reverse method is needed because
+    // new addresses are added to the beginning of the array on the server,
+    // and on the page new addresses are added to the end
+    customerData[addressIds].reverse().forEach((id: string) => {
       const addressData = customerData.addresses.find((address) => address.id === id);
 
       if (addressData) {
-        const address = new AddressView().buildView(addressData);
+        const address = new AddressView().buildView(addressData, `-${this.type}-${(this.biggestAddressId += 1)}`);
         const addressView = address.getView();
 
         if (id === customerData[defaultId]) {
@@ -69,7 +172,9 @@ export default abstract class AddressesView {
   }
 
   private colorAddresses(): void {
-    this.addresses.forEach((address, index) => {
+    const totalAddresses = [...this.addresses, ...this.newAddresses];
+
+    totalAddresses.forEach((address, index) => {
       if (address.isDefault()) {
         return;
       }
@@ -82,5 +187,11 @@ export default abstract class AddressesView {
 
   private setHaveDefault(): void {
     this.view.dataset.haveDefault = 'true';
+  }
+
+  private removeNewAddresses(): void {
+    this.newAddresses.forEach((newAddress) => {
+      newAddress.remove();
+    });
   }
 }

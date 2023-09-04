@@ -8,6 +8,7 @@ import ShippingAddressesView from './AddressesView/ShippingAddressesView/Shippin
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
 import PasswordModalView from '../PasswordModalView/PasswordModalView';
+import { CustomerDataResponse } from '../../types';
 import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
 const EXIT_EDIT_MODE_DELAY = 1000;
@@ -80,12 +81,16 @@ export default class ProfileView {
     this.view.dataset.edit = 'true';
 
     this.userInfo.enterEditMode();
+    this.billingAddresses.enterEditMode();
+    this.shippingAddresses.enterEditMode();
   }
 
   private exitEditMode(): void {
     this.view.dataset.edit = 'false';
 
     this.userInfo.exitEditMode();
+    this.billingAddresses.exitEditMode();
+    this.shippingAddresses.exitEditMode();
 
     this.hideMessages();
   }
@@ -98,7 +103,41 @@ export default class ProfileView {
       return;
     }
 
+    const response = await this.sendExistingChanges();
+    const billingResponse = await this.sendNewBillingAddresses();
+    const shippingResponse = await this.sendNewShippingAddresses();
+
+    if ('message' in response) {
+      this.showErrors(response.message);
+      return;
+    }
+
+    if (billingResponse && 'message' in billingResponse) {
+      this.showErrors(billingResponse.message);
+      return;
+    }
+
+    if (shippingResponse && 'message' in shippingResponse) {
+      this.showErrors(shippingResponse.message);
+      return;
+    }
+
+    setTimeout(() => {
+      this.updateView(shippingResponse || billingResponse || response);
+      this.exitEditMode();
+    }, EXIT_EDIT_MODE_DELAY);
+
+    this.buttonsViews.forEach((buttonsView) => {
+      buttonsView.showSuccessMessage();
+    });
+  }
+
+  private async sendExistingChanges(): Promise<CustomerDataResponse | Error> {
     const userInfoCredentials = this.userInfo.collectCredentials();
+    const billingAddresses = this.billingAddresses.getCurrentAddressesData();
+    const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
+    const deletedBillingAddresses = this.billingAddresses.getDeletedAddresses();
+    const deletedShippingAddresses = this.shippingAddresses.getDeletedAddresses();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
@@ -108,25 +147,35 @@ export default class ProfileView {
       .updateFirstName(userInfoCredentials.firstName)
       .updateLastName(userInfoCredentials.lastName)
       .updateBirthDate(formattedDate)
+      .updateAddresses(billingAddresses)
+      .updateAddresses(shippingAddresses)
+      .deleteAddresses(deletedBillingAddresses)
+      .deleteAddresses(deletedShippingAddresses)
       .sendUpdateRequest();
 
-    if ('message' in response) {
-      this.showErrors(response.message);
-    } else {
-      setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
+    return response;
+  }
 
-      this.buttonsViews.forEach((buttonsView) => {
-        buttonsView.showSuccessMessage();
-      });
+  private async sendNewBillingAddresses(): Promise<CustomerDataResponse | Error | null> {
+    const newBillingAddresses = this.billingAddresses.getNewAddressesData();
 
-      const userInfoData = [response.email, response.firstName, response.lastName];
-
-      if (response.dateOfBirth) {
-        userInfoData.push(response.dateOfBirth);
-      }
-
-      this.updateInfo(userInfoData);
+    if (newBillingAddresses.length > 0) {
+      const response = await new Customer().addBillingAddresses(newBillingAddresses);
+      return response;
     }
+
+    return null;
+  }
+
+  private async sendNewShippingAddresses(): Promise<CustomerDataResponse | Error | null> {
+    const newShippingAddresses = this.shippingAddresses.getNewAddressesData();
+
+    if (newShippingAddresses.length > 0) {
+      const response = await new Customer().addShippingAddresses(newShippingAddresses);
+      return response;
+    }
+
+    return null;
   }
 
   private validateFields(): boolean {
@@ -139,6 +188,18 @@ export default class ProfileView {
     }
 
     return true;
+  }
+
+  private updateView(response: CustomerDataResponse): void {
+    const userInfoData = [response.email, response.firstName, response.lastName];
+
+    if (response.dateOfBirth) {
+      userInfoData.push(response.dateOfBirth);
+    }
+
+    this.updateInfo(userInfoData);
+    this.billingAddresses.updateView(response);
+    this.shippingAddresses.updateView(response);
   }
 
   private updateInfo(userInfoData: string[]): void {

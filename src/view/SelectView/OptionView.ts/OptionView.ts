@@ -1,4 +1,4 @@
-import Converter from '../../../../components/Converter/Converter';
+import Converter from '../../../components/Converter/Converter';
 import HTML from './OptionView.html';
 
 export default class OptionView {

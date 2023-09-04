@@ -1,17 +1,20 @@
 /* eslint-disable import/no-cycle */
 import Tokens from '../../components/Tokens/Tokens';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
-import { CustomerDataResponse, IError } from '../../types';
+import { CustomerDataResponse, IError, Address } from '../../types';
 import {
-  UpdateAction,
+  Action,
   EmailUpdateAction,
   FirstNameUpdateAction,
   LastNameUpdateAction,
   BirthDateUpdateAction,
+  AddressAddAction,
+  IdAddressAction,
+  AddressUpdateAction,
   UpdateRequest,
   PasswordData,
 } from './types';
-import { UpdateActions } from './data';
+import { Actions } from './data';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server.',
@@ -24,7 +27,7 @@ enum ErrorsCodes {
 }
 
 export default class Customer {
-  private updateActions: UpdateAction[] = [];
+  private actions: Action[] = [];
 
   private static version: number = 0;
 
@@ -103,10 +106,10 @@ export default class Customer {
   public updateEmail(email: string): Customer {
     const action: EmailUpdateAction = {
       email,
-      action: UpdateActions.EMAIL,
+      action: Actions.EMAIL,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -114,10 +117,10 @@ export default class Customer {
   public updateFirstName(firstName: string): Customer {
     const action: FirstNameUpdateAction = {
       firstName,
-      action: UpdateActions.FIRST_NAME,
+      action: Actions.FIRST_NAME,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -125,10 +128,10 @@ export default class Customer {
   public updateLastName(lastName: string): Customer {
     const action: LastNameUpdateAction = {
       lastName,
-      action: UpdateActions.LAST_NAME,
+      action: Actions.LAST_NAME,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
@@ -136,21 +139,102 @@ export default class Customer {
   public updateBirthDate(formattedBirthDate: string): Customer {
     const action: BirthDateUpdateAction = {
       dateOfBirth: formattedBirthDate,
-      action: UpdateActions.BIRTH_DATE,
+      action: Actions.BIRTH_DATE,
     };
 
-    this.updateActions.push(action);
+    this.actions.push(action);
 
     return this;
   }
 
-  public async sendUpdateRequest(): Promise<CustomerDataResponse | Error> {
+  public updateAddresses(addresses: Address[]): Customer {
+    addresses.forEach((address) => {
+      const action: AddressUpdateAction = {
+        address,
+        addressId: `${address.id}`,
+        action: Actions.CHANGE_ADDRESS,
+      };
+
+      this.actions.push(action);
+    });
+
+    return this;
+  }
+
+  public deleteAddresses(addresses: Address[]): Customer {
+    addresses.forEach((address) => {
+      const action: IdAddressAction = {
+        addressId: `${address.id}`,
+        action: Actions.REMOVE_ADDRESS,
+      };
+
+      this.actions.push(action);
+    });
+
+    return this;
+  }
+
+  public async addBillingAddresses(billingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
+    const billingActions = this.getAddressesActions(billingAddresses);
+    const billingResponse = await this.sendUpdateRequest(billingActions);
+
+    if (billingResponse instanceof Error) {
+      return billingResponse;
+    }
+
+    const untypedBillingAddresses = this.getUntypedAddresses(billingResponse);
+    const billingSetActions = untypedBillingAddresses.map((address) => {
+      const action: IdAddressAction = {
+        action: Actions.ADD_BILLING_ADDRESS,
+        addressId: `${address.id}`,
+      };
+
+      return action;
+    });
+
+    const billingSetResponse = this.sendUpdateRequest(billingSetActions);
+
+    if (billingSetResponse instanceof Error) {
+      return billingSetResponse;
+    }
+
+    return billingSetResponse;
+  }
+
+  public async addShippingAddresses(shippingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
+    const shippingActions = this.getAddressesActions(shippingAddresses);
+    const shippingResponse = await this.sendUpdateRequest(shippingActions);
+
+    if (shippingResponse instanceof Error) {
+      return shippingResponse;
+    }
+
+    const untypedShippingAddresses = this.getUntypedAddresses(shippingResponse);
+    const shippingSetActions = untypedShippingAddresses.map((address) => {
+      const action: IdAddressAction = {
+        action: Actions.ADD_SHIPPING_ADDRESS,
+        addressId: `${address.id}`,
+      };
+
+      return action;
+    });
+
+    const shippingSetResponse = this.sendUpdateRequest(shippingSetActions);
+
+    if (shippingSetResponse instanceof Error) {
+      return shippingSetResponse;
+    }
+
+    return shippingSetResponse;
+  }
+
+  public async sendUpdateRequest(actions = this.actions): Promise<CustomerDataResponse | Error> {
     try {
       const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me`;
       const bearerToken = (await Tokens.getCustomerTokens()).access_token;
       const bodyData: UpdateRequest = {
+        actions,
         version: Customer.version,
-        actions: this.updateActions,
       };
 
       const response = await fetch(endpoint, {
@@ -183,5 +267,23 @@ export default class Customer {
     }
 
     return new Error(`${ErrorMessages.SERVER} ${ErrorMessages.TRY_LATER}`);
+  }
+
+  private getAddressesActions(addresses: Address[]): Action[] {
+    return addresses.map((address) => {
+      const action: AddressAddAction = {
+        address,
+        action: Actions.ADD_ADDRESS,
+      };
+
+      return action;
+    });
+  }
+
+  private getUntypedAddresses(data: CustomerDataResponse): Address[] {
+    return data.addresses.filter(
+      (address) =>
+        !data.shippingAddressIds.includes(`${address.id}`) && !data.billingAddressIds.includes(`${address.id}`)
+    );
   }
 }

@@ -1,13 +1,6 @@
 import { PatternAndMessage, InputOptions } from '../../types';
 import { RegExps, ErrorMessages, InputTypes } from '../../data/validation';
 
-export const DEFAULT_COUNTRY = 'US';
-
-export const Countries = {
-  US: 'The United States',
-  UK: 'The United Kingdom',
-};
-
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   EMAIL: [
     [RegExps.AT_SYMBOL, ErrorMessages.ONE_AT_SYMBOL],
@@ -47,16 +40,6 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.WORDS, ErrorMessages.WORDS],
   ],
   POSTAL_CODES: [[RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE]],
-};
-
-export const PostalCodeRegExps: Record<string, RegExp> = {
-  US: /(^\d{5}$)|(^\d{5}-\d{4}$)/,
-  UK: /(^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$)/,
-};
-
-export const PostalCodeErrorMessages: Record<string, string> = {
-  US: 'Incorrect format (e.g., 90210)',
-  UK: 'Incorrect format (e.g., SW1 2AA)',
 };
 
 export const UserInfoInputsOptions: InputOptions[] = [
