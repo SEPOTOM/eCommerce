@@ -55,6 +55,8 @@ export default abstract class AddressesView {
       address.enterEditMode();
     });
 
+    this.setHaveNoDefault();
+
     this.view.dataset.edit = 'true';
   }
 
@@ -65,6 +67,12 @@ export default abstract class AddressesView {
     this.addresses.forEach((address) => {
       address.exitEditMode();
     });
+
+    if (this.haveDefaultAddress()) {
+      this.setHaveDefault();
+    } else {
+      this.setHaveNoDefault();
+    }
 
     this.prevDefaultAddress.makeUsual();
     this.prevDefaultAddress = this.originalDefaultAddress;
@@ -207,6 +215,10 @@ export default abstract class AddressesView {
     this.view.dataset.haveDefault = 'true';
   }
 
+  private setHaveNoDefault(): void {
+    this.view.dataset.haveDefault = 'false';
+  }
+
   private removeNewAddresses(): void {
     this.newAddresses.forEach((newAddress) => {
       newAddress.remove();
@@ -230,5 +242,15 @@ export default abstract class AddressesView {
         }
       }
     }
+  }
+
+  private haveDefaultAddress(): boolean {
+    for (let i = 0; i < this.addresses.length; i += 1) {
+      if (this.addresses[i].isDefault()) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

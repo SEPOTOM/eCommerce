@@ -126,8 +126,8 @@ export default class ProfileView {
     }
 
     setTimeout(() => {
-      this.exitEditMode();
       this.updateView(shippingResponse || billingResponse || response);
+      this.exitEditMode();
     }, EXIT_EDIT_MODE_DELAY);
 
     this.buttonsViews.forEach((buttonsView) => {
