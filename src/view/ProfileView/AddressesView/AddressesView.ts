@@ -35,8 +35,10 @@ export default abstract class AddressesView {
   constructor(private type: string) {}
 
   public buildView(customerData: CustomerDataResponse): HTMLElement {
+    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
+
     this.configureTitle();
-    this.configureList(customerData);
+    this.configureList(customerData, defaultId);
     this.configureAddButton();
     this.colorAddresses();
 
@@ -75,16 +77,6 @@ export default abstract class AddressesView {
     return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
   }
 
-  public deleteAddresses(): void {
-    this.addresses = this.addresses.filter((address) => {
-      if (address.needToDelete()) {
-        address.remove();
-        return false;
-      }
-      return true;
-    });
-  }
-
   public addAddresses(): void {
     this.updateAddresses(this.newAddresses);
 
@@ -92,11 +84,16 @@ export default abstract class AddressesView {
     this.newAddresses = [];
   }
 
-  public updateExistingAddresses(ids: string[]): void {
-    this.updateAddresses(this.addresses);
-    this.addresses.forEach((address, index) => {
-      address.updateId(ids[index]);
-    });
+  public updateView(response: CustomerDataResponse) {
+    const list = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
+
+    if (list) {
+      this.addresses = [];
+      list.innerHTML = '';
+      this.configureList(response, defaultId);
+      this.colorAddresses();
+    }
   }
 
   private updateAddresses(addresses: AddressView[]): void {
@@ -140,11 +137,13 @@ export default abstract class AddressesView {
     this.colorAddresses();
   }
 
-  private configureList(customerData: CustomerDataResponse): void {
+  private configureList(
+    customerData: CustomerDataResponse,
+    defaultId: Ids.DEFAULT_BILLING | Ids.DEFAULT_SHIPPING
+  ): void {
     const list = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
 
     const addressIds = this.type === AddressTypes.BILLING ? Ids.BILLING : Ids.SHIPPING;
-    const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
 
     // The reverse method is needed because
     // new addresses are added to the beginning of the array on the server,

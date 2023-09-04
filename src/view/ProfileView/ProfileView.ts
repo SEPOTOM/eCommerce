@@ -122,13 +122,14 @@ export default class ProfileView {
       return;
     }
 
-    setTimeout(this.exitEditMode.bind(this), EXIT_EDIT_MODE_DELAY);
+    setTimeout(() => {
+      this.updateView(shippingResponse || billingResponse || response);
+      this.exitEditMode();
+    }, EXIT_EDIT_MODE_DELAY);
 
     this.buttonsViews.forEach((buttonsView) => {
       buttonsView.showSuccessMessage();
     });
-
-    this.updateView(response);
   }
 
   private async sendExistingChanges(): Promise<CustomerDataResponse | Error> {
@@ -197,15 +198,8 @@ export default class ProfileView {
     }
 
     this.updateInfo(userInfoData);
-    this.billingAddresses.deleteAddresses();
-    this.shippingAddresses.deleteAddresses();
-    // The reverse method is needed because
-    // new addresses are added to the beginning of the array on the server,
-    // and on the page new addresses are added to the end
-    this.billingAddresses.updateExistingAddresses(response.billingAddressIds.reverse());
-    this.shippingAddresses.updateExistingAddresses(response.shippingAddressIds.reverse());
-    this.billingAddresses.addAddresses();
-    this.shippingAddresses.addAddresses();
+    this.billingAddresses.updateView(response);
+    this.shippingAddresses.updateView(response);
   }
 
   private updateInfo(userInfoData: string[]): void {
