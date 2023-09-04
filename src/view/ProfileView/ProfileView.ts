@@ -112,12 +112,12 @@ export default class ProfileView {
       return;
     }
 
-    if ('message' in billingResponse) {
+    if (billingResponse && 'message' in billingResponse) {
       this.showErrors(billingResponse.message);
       return;
     }
 
-    if ('message' in shippingResponse) {
+    if (shippingResponse && 'message' in shippingResponse) {
       this.showErrors(shippingResponse.message);
       return;
     }
@@ -155,16 +155,26 @@ export default class ProfileView {
     return response;
   }
 
-  private async sendNewBillingAddresses(): Promise<CustomerDataResponse | Error> {
+  private async sendNewBillingAddresses(): Promise<CustomerDataResponse | Error | null> {
     const newBillingAddresses = this.billingAddresses.getNewAddressesData();
-    const response = await new Customer().addBillingAddresses(newBillingAddresses);
-    return response;
+
+    if (newBillingAddresses.length > 0) {
+      const response = await new Customer().addBillingAddresses(newBillingAddresses);
+      return response;
+    }
+
+    return null;
   }
 
-  private async sendNewShippingAddresses(): Promise<CustomerDataResponse | Error> {
+  private async sendNewShippingAddresses(): Promise<CustomerDataResponse | Error | null> {
     const newShippingAddresses = this.shippingAddresses.getNewAddressesData();
-    const response = await new Customer().addShippingAddresses(newShippingAddresses);
-    return response;
+
+    if (newShippingAddresses.length > 0) {
+      const response = await new Customer().addShippingAddresses(newShippingAddresses);
+      return response;
+    }
+
+    return null;
   }
 
   private validateFields(): boolean {
