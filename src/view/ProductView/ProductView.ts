@@ -21,8 +21,12 @@ import { currencySymbol, currencyName, categoryStyles, ProductElements } from '.
 
 const accessToken = 'access_token';
 
+const sliderClickDelay = 1100;
+
 export default class ProductView {
   private static activeImage: number = 0;
+
+  private lastTimeClick: number = Date.now();
 
   public draw(id: string): void {
     const main: HTMLElement = document.querySelector('main')!;
@@ -92,11 +96,29 @@ export default class ProductView {
 
     (htmlSlider.lastChild as HTMLElement).addEventListener('click', () => {
       const modal = new ProductModalView();
-      modal.showProductModal(
-        (htmlSlider.lastChild as Node).cloneNode(true) as HTMLElement,
-        imagesArray,
-        productSlider.activeImage
-      );
+      if (Date.now() - this.lastTimeClick >= sliderClickDelay) {
+        modal.showProductModal(
+          (htmlSlider.lastChild as Node).cloneNode(true) as HTMLElement,
+          imagesArray,
+          productSlider.activeImage
+        );
+        this.lastTimeClick = Date.now();
+      }
+    });
+
+    this.setLastTimeClick();
+  }
+
+  private setLastTimeClick(): void {
+    const leftButton = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
+    const rightButton = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
+
+    leftButton.addEventListener('click', () => {
+      this.lastTimeClick = Date.now();
+    });
+
+    rightButton.addEventListener('click', () => {
+      this.lastTimeClick = Date.now();
     });
   }
 
