@@ -7,6 +7,8 @@ import Converter from '../../../components/Converter/Converter';
 import { IImages } from '../../../types';
 import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 
+const mainSliderClickDelay = 200;
+
 export default class Slider {
   public activeImage: number = 0;
 
@@ -167,7 +169,7 @@ export default class Slider {
         setTimeout(() => {
           this.setActiveImage(slider, this.activeImage);
           this.setArrowStyles(slider, maxIndex);
-        }, 200);
+        }, mainSliderClickDelay);
       }
     });
 
@@ -177,7 +179,7 @@ export default class Slider {
         setTimeout(() => {
           this.setArrowStyles(slider, maxIndex);
           this.setActiveImage(slider, this.activeImage);
-        }, 200);
+        }, mainSliderClickDelay);
       }
     });
   }
@@ -203,14 +205,14 @@ export default class Slider {
     leftButton.addEventListener('click', () => {
       const currentPosition = Number(slidingPart.style.left.slice(0, slidingPart.style.left.length - 2));
       if (Math.abs(currentPosition) > SLIDE_WIDTH) {
-        /*eslint-disable no-param-reassign*/
+        /* eslint-disable no-param-reassign */
         slidingPart.style.left = `${String(currentPosition + SLIDE_WIDTH)}px`;
-        /*eslint-enable no-param-reassign*/
+        /* eslint-enable no-param-reassign */
         this.setActiveArrow(rightButton);
       } else {
-        /*eslint-disable no-param-reassign*/
+        /* eslint-disable no-param-reassign */
         slidingPart.style.left = `${String(currentPosition + Math.abs(currentPosition))}px`;
-        /*eslint-enable no-param-reassign*/
+        /* eslint-enable no-param-reassign */
         this.setInactiveArrow(leftButton);
         if (pictureAmount > 1) {
           this.setActiveArrow(rightButton);
@@ -235,14 +237,14 @@ export default class Slider {
         slideRightCriteria &&
         Slider.previousSlideCriteria
       ) {
-        /*eslint-disable no-param-reassign*/
+        /* eslint-disable no-param-reassign */
         slidingPart.style.left = `${String(currentPosition - SLIDE_WIDTH)}px`;
-        /*eslint-enable no-param-reassign*/
+        /* eslint-enable no-param-reassign */
         this.setActiveArrow(leftButton);
       } else if (smallShiftAmount <= SLIDE_WIDTH && smallShiftAmount > 0) {
-        /*eslint-disable no-param-reassign*/
+        /* eslint-disable no-param-reassign */
         slidingPart.style.left = `${String(currentPosition - smallShiftAmount)}px`;
-        /*eslint-enable no-param-reassign*/
+        /* eslint-enable no-param-reassign */
         this.setInactiveArrow(rightButton);
         this.setActiveArrow(leftButton);
       }
