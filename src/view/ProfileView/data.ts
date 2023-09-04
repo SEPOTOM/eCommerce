@@ -12,6 +12,7 @@ export enum DataAttrs {
   DELETE_BUTTON = 'data-delete-button',
   RESTORE_BUTTON = 'data-restore-button',
   MAKE_DEFAULT_BUTTON = 'data-make-default-button',
+  MAKE_USUAL_BUTTON = 'data-make-usual-button',
   INFO_BLOCK = 'data-info-block',
   EDIT_BLOCK = 'data-edit-block',
   ADDRESS_BLOCK = 'data-address-block',

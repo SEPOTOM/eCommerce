@@ -8,6 +8,7 @@ import ShippingAddressesView from './AddressesView/ShippingAddressesView/Shippin
 import ErrorView from './ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
 import PasswordModalView from '../PasswordModalView/PasswordModalView';
+import AddressView from './AddressesView/AddressView/AddressView';
 import { CustomerDataResponse } from '../../types';
 import { DataAttrs, BIRTH_DATE_INPUT_INDEX } from './data';
 
@@ -105,6 +106,7 @@ export default class ProfileView {
 
     const response = await this.sendExistingChanges();
     const defaultResponse = await this.deleteDefaultAddresses();
+    const removeDefaultResponse = await this.removeDefaultAddresses();
     const billingResponse = await this.sendNewBillingAddresses();
     const shippingResponse = await this.sendNewShippingAddresses();
 
@@ -114,6 +116,10 @@ export default class ProfileView {
     }
     if (defaultResponse && 'message' in defaultResponse) {
       this.showErrors(defaultResponse.message);
+      return;
+    }
+    if (removeDefaultResponse && 'message' in removeDefaultResponse) {
+      this.showErrors(removeDefaultResponse.message);
       return;
     }
     if (billingResponse && 'message' in billingResponse) {
@@ -126,7 +132,7 @@ export default class ProfileView {
     }
 
     setTimeout(() => {
-      this.updateView(shippingResponse || billingResponse || response);
+      this.updateView(shippingResponse || billingResponse || removeDefaultResponse || defaultResponse || response);
       this.exitEditMode();
     }, EXIT_EDIT_MODE_DELAY);
 
@@ -141,8 +147,8 @@ export default class ProfileView {
     const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
     const deletedBillingAddresses = this.billingAddresses.getDeletedAddresses();
     const deletedShippingAddresses = this.shippingAddresses.getDeletedAddresses();
-    const defaultBillingId = this.billingAddresses.getDefaultAddress().getId();
-    const defaultShippingId = this.shippingAddresses.getDefaultAddress().getId();
+    const defaultBillingAddress = this.billingAddresses.getDefaultAddress();
+    const defaultShippingAddress = this.shippingAddresses.getDefaultAddress();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
@@ -157,12 +163,20 @@ export default class ProfileView {
       .deleteAddresses(deletedBillingAddresses)
       .deleteAddresses(deletedShippingAddresses);
 
-    if (defaultBillingId) {
-      request.setDefaultBilling(defaultBillingId);
+    if (defaultBillingAddress instanceof AddressView) {
+      const id = defaultBillingAddress.getId();
+
+      if (id) {
+        request.setDefaultBilling(id);
+      }
     }
 
-    if (defaultShippingId) {
-      request.setDefaultShipping(defaultShippingId);
+    if (defaultShippingAddress instanceof AddressView) {
+      const id = defaultShippingAddress.getId();
+
+      if (id) {
+        request.setDefaultShipping(id);
+      }
     }
 
     const response = await request.sendUpdateRequest();
@@ -176,16 +190,37 @@ export default class ProfileView {
     let billingId: string | undefined;
     let shippingId: string | undefined;
 
-    if (defaultBillingAddress.needToDelete()) {
+    if (defaultBillingAddress instanceof AddressView && defaultBillingAddress.needToDelete()) {
       billingId = defaultBillingAddress.getId() || undefined;
     }
 
-    if (defaultShippingAddress.needToDelete()) {
+    if (defaultShippingAddress instanceof AddressView && defaultShippingAddress.needToDelete()) {
       shippingId = defaultShippingAddress.getId() || undefined;
     }
 
     if (billingId || shippingId) {
       return new Customer().deleteDefaultAddresses(billingId, shippingId);
+    }
+
+    return null;
+  }
+
+  private async removeDefaultAddresses(): Promise<CustomerDataResponse | Error | null> {
+    const defaultBillingAddressId = this.billingAddresses.getDefaultAddress();
+    const defaultShippingAddressId = this.shippingAddresses.getDefaultAddress();
+
+    const request = new Customer();
+
+    if (typeof defaultBillingAddressId === 'string') {
+      request.removeDefaultBilling(defaultBillingAddressId);
+    }
+
+    if (typeof defaultShippingAddressId === 'string') {
+      request.removeDefaultShipping(defaultShippingAddressId);
+    }
+
+    if (typeof defaultBillingAddressId === 'string' || typeof defaultShippingAddressId === 'string') {
+      return request.sendUpdateRequest();
     }
 
     return null;
@@ -262,10 +297,5 @@ export default class ProfileView {
       buttonsView.hideSuccessMessage();
       buttonsView.hideErrorMessage();
     });
-  }
-
-  private hasModal(): boolean {
-    const modal = document.querySelector(`[${DataAttrs.MODAL_CONTENT}]`);
-    return !!modal;
   }
 }

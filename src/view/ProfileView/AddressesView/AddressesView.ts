@@ -32,7 +32,7 @@ export default abstract class AddressesView {
 
   private originalDefaultAddress = new AddressView();
 
-  private prevDefaultAddress = new AddressView();
+  private prevDefaultAddress: AddressView | string = new AddressView();
 
   private biggestAddressId = 0;
 
@@ -74,9 +74,11 @@ export default abstract class AddressesView {
       this.setHaveNoDefault();
     }
 
-    this.prevDefaultAddress.makeUsual();
-    this.prevDefaultAddress = this.originalDefaultAddress;
-    this.originalDefaultAddress.makeDefault();
+    if (this.prevDefaultAddress instanceof AddressView) {
+      this.prevDefaultAddress.makeUsual();
+      this.prevDefaultAddress = this.originalDefaultAddress;
+      this.originalDefaultAddress.makeDefault();
+    }
 
     this.view.dataset.edit = 'false';
   }
@@ -96,7 +98,7 @@ export default abstract class AddressesView {
       .map((address) => address.getData());
   }
 
-  public getDefaultAddress(): AddressView {
+  public getDefaultAddress(): AddressView | string {
     return this.prevDefaultAddress;
   }
 
@@ -145,25 +147,6 @@ export default abstract class AddressesView {
     addButton?.addEventListener('click', this.addAddress.bind(this, true));
   }
 
-  private addAddress(isEdit = false): void {
-    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
-    const newAddress = new AddressView().buildView(
-      DEFAULT_ADDRESS_DATA,
-      `-${this.type}-${(this.biggestAddressId += 1)}`
-    );
-
-    newAddress.makeNew();
-
-    if (isEdit) {
-      newAddress.enterEditMode();
-    }
-
-    this.newAddresses.push(newAddress);
-    addressesList?.append(newAddress.getView());
-
-    this.colorAddresses();
-  }
-
   private configureList(
     customerData: CustomerDataResponse,
     defaultId: Ids.DEFAULT_BILLING | Ids.DEFAULT_SHIPPING
@@ -201,6 +184,25 @@ export default abstract class AddressesView {
     });
   }
 
+  private addAddress(isEdit = false): void {
+    const addressesList = this.view.querySelector(`[${DataAttrs.ADDRESSES_LIST}]`);
+    const newAddress = new AddressView().buildView(
+      DEFAULT_ADDRESS_DATA,
+      `-${this.type}-${(this.biggestAddressId += 1)}`
+    );
+
+    newAddress.makeNew();
+
+    if (isEdit) {
+      newAddress.enterEditMode();
+    }
+
+    this.newAddresses.push(newAddress);
+    addressesList?.append(newAddress.getView());
+
+    this.colorAddresses();
+  }
+
   private colorAddresses(): void {
     const totalAddresses = [...this.addresses, ...this.newAddresses];
 
@@ -230,16 +232,9 @@ export default abstract class AddressesView {
       const button = e.target;
 
       if (button.hasAttribute(DataAttrs.MAKE_DEFAULT_BUTTON)) {
-        const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
-        const addressObject = this.addresses.find((address) => address.getView() === addressView);
-
-        if (addressObject) {
-          this.prevDefaultAddress.makeUsual();
-
-          this.prevDefaultAddress = addressObject;
-
-          this.prevDefaultAddress.makeDefault();
-        }
+        this.handleAddDefault(button);
+      } else if (button.hasAttribute(DataAttrs.MAKE_USUAL_BUTTON)) {
+        this.handleRemoveDefault(button);
       }
     }
   }
@@ -252,5 +247,31 @@ export default abstract class AddressesView {
     }
 
     return false;
+  }
+
+  private handleAddDefault(button: HTMLButtonElement): void {
+    const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
+    const addressObject = this.addresses.find((address) => address.getView() === addressView);
+
+    if (addressObject) {
+      if (this.prevDefaultAddress instanceof AddressView) {
+        this.prevDefaultAddress.makeUsual();
+      }
+
+      this.prevDefaultAddress = addressObject;
+
+      this.prevDefaultAddress.makeDefault();
+    }
+  }
+
+  private handleRemoveDefault(button: HTMLButtonElement): void {
+    const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
+    const addressObject = this.addresses.find((address) => address.getView() === addressView);
+
+    if (addressObject && this.prevDefaultAddress instanceof AddressView) {
+      this.prevDefaultAddress.makeUsual();
+
+      this.prevDefaultAddress = addressObject.getId() || '';
+    }
   }
 }
