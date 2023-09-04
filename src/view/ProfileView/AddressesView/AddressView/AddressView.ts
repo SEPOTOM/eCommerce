@@ -76,6 +76,10 @@ export default class AddressView {
     this.view.dataset.default = 'true';
   }
 
+  public makeUsual(): void {
+    this.view.dataset.default = 'false';
+  }
+
   public makeNew(): void {
     this.view.dataset.new = 'true';
   }

@@ -30,6 +30,10 @@ export default abstract class AddressesView {
 
   private newAddresses: AddressView[] = [];
 
+  private originalDefaultAddress = new AddressView();
+
+  private prevDefaultAddress = new AddressView();
+
   private biggestAddressId = 0;
 
   constructor(private type: string) {}
@@ -37,6 +41,7 @@ export default abstract class AddressesView {
   public buildView(customerData: CustomerDataResponse): HTMLElement {
     const defaultId = this.type === AddressTypes.BILLING ? Ids.DEFAULT_BILLING : Ids.DEFAULT_SHIPPING;
 
+    this.configureView();
     this.configureTitle();
     this.configureList(customerData, defaultId);
     this.configureAddButton();
@@ -60,6 +65,10 @@ export default abstract class AddressesView {
     this.addresses.forEach((address) => {
       address.exitEditMode();
     });
+
+    this.prevDefaultAddress.makeUsual();
+    this.prevDefaultAddress = this.originalDefaultAddress;
+    this.originalDefaultAddress.makeDefault();
 
     this.view.dataset.edit = 'false';
   }
@@ -102,6 +111,10 @@ export default abstract class AddressesView {
       const addressInfo = [addressData.streetName, addressData.city, addressData.country, addressData.postalCode];
       address.updateView(addressInfo);
     });
+  }
+
+  private configureView(): void {
+    this.view.addEventListener('click', this.handleDefaultAddresses.bind(this));
   }
 
   private configureTitle(): void {
@@ -156,6 +169,9 @@ export default abstract class AddressesView {
         const addressView = address.getView();
 
         if (id === customerData[defaultId]) {
+          this.originalDefaultAddress = address;
+          this.prevDefaultAddress = address;
+
           address.makeDefault();
 
           list?.prepend(addressView);
@@ -175,10 +191,6 @@ export default abstract class AddressesView {
     const totalAddresses = [...this.addresses, ...this.newAddresses];
 
     totalAddresses.forEach((address, index) => {
-      if (address.isDefault()) {
-        return;
-      }
-
       if (index % 2 === 0) {
         address.getView().classList.add(ClassNames.GRAY_BG);
       }
@@ -193,5 +205,24 @@ export default abstract class AddressesView {
     this.newAddresses.forEach((newAddress) => {
       newAddress.remove();
     });
+  }
+
+  private handleDefaultAddresses(e: Event): void {
+    if (e.target instanceof HTMLButtonElement) {
+      const button = e.target;
+
+      if (button.hasAttribute(DataAttrs.MAKE_DEFAULT_BUTTON)) {
+        const addressView = button.closest(`[${DataAttrs.ADDRESS_BLOCK}]`);
+        const addressObject = this.addresses.find((address) => address.getView() === addressView);
+
+        if (addressObject) {
+          this.prevDefaultAddress.makeUsual();
+
+          this.prevDefaultAddress = addressObject;
+
+          this.prevDefaultAddress.makeDefault();
+        }
+      }
+    }
   }
 }
