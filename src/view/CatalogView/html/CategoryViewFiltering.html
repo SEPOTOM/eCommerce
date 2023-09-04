@@ -102,7 +102,7 @@
           x-model="searchRequest"
           @input="quickSearch"
           type="text"
-          placeholder="Quick search by category"
+          placeholder="Quick search by product name"
         />
         <span
           class="absolute top-0 right-1 w-8 h-[34px] flex items-center justify-center cursor-pointer text-gray-400 opacity-0 invisible transition-all duration-300 hover:text-gray-600"
@@ -121,7 +121,7 @@
           </svg>
         </span>
 
-        <template x-if="searchResultCount">
+        <template x-if="searchRequest">
           <span
             class="absolute top-9 right-3 text-xs text-gray-400 whitespace-nowrap sm:right-auto sm:left-2"
             x-text="'matches found - ' + searchResultCount"

@@ -19,9 +19,13 @@ const RouterAlpine = {
   menu: null,
 
   init(): void {
+    const delay = 200;
+
     this.createRoutingPath();
     this.checkCustomerLogin();
-    this.handleLocation();
+    setTimeout(() => {
+      this.handleLocation();
+    }, delay);
 
     window.addEventListener('popstate', () => {
       this.handleLocation();
