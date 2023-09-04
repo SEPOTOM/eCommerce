@@ -26,7 +26,11 @@ const sliderClickDelay = 1200;
 export default class ProductView {
   private static activeImage: number = 0;
 
-  private lastTimeClick: number = Date.now();
+  private lastTimeClick: number;
+
+  constructor() {
+    this.lastTimeClick = Date.now();
+  }
 
   public draw(id: string): void {
     const main: HTMLElement = document.querySelector('main')!;
@@ -113,13 +117,15 @@ export default class ProductView {
     const leftButton = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_LEFT}`) as HTMLElement;
     const rightButton = document.querySelector(`#${SliderSelectors.SLIDER_MAIN_RIGHT}`) as HTMLElement;
 
-    leftButton.addEventListener('click', () => {
-      this.lastTimeClick = Date.now();
-    });
+    if (leftButton && rightButton) {
+      leftButton.addEventListener('click', () => {
+        this.lastTimeClick = Date.now();
+      });
 
-    rightButton.addEventListener('click', () => {
-      this.lastTimeClick = Date.now();
-    });
+      rightButton.addEventListener('click', () => {
+        this.lastTimeClick = Date.now();
+      });
+    }
   }
 
   private widenDescription(): void {
