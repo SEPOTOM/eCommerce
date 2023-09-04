@@ -13,7 +13,14 @@
     class="hidden gap-1 px-5 py-5 border-y lg:grid-cols-1 md:grid-cols-2 group-data-[edit=true]/address:grid"
     data-edit-block
   >
-    <div class="flex justify-end mb-2 lg:col-end-2 md:col-start-1 md:col-end-3">
+    <div class="flex justify-end mb-2 lg:col-end-2 md:col-start-1 md:col-end-3 md:gap-x-3">
+      <button
+        class="px-1 text-blue-900 font-bold border-2 border-blue-900 transition-colors duration-300 hover:text-white hover:bg-blue-900 md:rounded-lg group-data-[default=true]/address:hidden group-data-[deleted=true]/address:hidden group-data-[new=true]/address:hidden"
+        type="button"
+        data-make-default-button
+      >
+        Make default
+      </button>
       <button
         class="p-1 text-red-600 border-2 border-red-600 transition-colors duration-300 hover:text-white hover:bg-red-600 md:rounded-lg group-data-[deleted=true]/address:hidden"
         type="button"
