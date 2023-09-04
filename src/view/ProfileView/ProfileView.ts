@@ -123,8 +123,8 @@ export default class ProfileView {
     }
 
     setTimeout(() => {
-      this.updateView(shippingResponse || billingResponse || response);
       this.exitEditMode();
+      this.updateView(shippingResponse || billingResponse || response);
     }, EXIT_EDIT_MODE_DELAY);
 
     this.buttonsViews.forEach((buttonsView) => {
@@ -138,11 +138,13 @@ export default class ProfileView {
     const shippingAddresses = this.shippingAddresses.getCurrentAddressesData();
     const deletedBillingAddresses = this.billingAddresses.getDeletedAddresses();
     const deletedShippingAddresses = this.shippingAddresses.getDeletedAddresses();
+    const defaultBillingId = this.billingAddresses.getDefaultAddressId();
+    const defaultShippingId = this.shippingAddresses.getDefaultAddressId();
 
     const [month, day, year] = userInfoCredentials.birthDate.split('/');
     const formattedDate = `${year}-${month}-${day}`;
 
-    const response = await new Customer()
+    const request = new Customer()
       .updateEmail(userInfoCredentials.email)
       .updateFirstName(userInfoCredentials.firstName)
       .updateLastName(userInfoCredentials.lastName)
@@ -150,8 +152,17 @@ export default class ProfileView {
       .updateAddresses(billingAddresses)
       .updateAddresses(shippingAddresses)
       .deleteAddresses(deletedBillingAddresses)
-      .deleteAddresses(deletedShippingAddresses)
-      .sendUpdateRequest();
+      .deleteAddresses(deletedShippingAddresses);
+
+    if (defaultBillingId) {
+      request.setDefaultBilling(defaultBillingId);
+    }
+
+    if (defaultShippingId) {
+      request.setDefaultShipping(defaultShippingId);
+    }
+
+    const response = await request.sendUpdateRequest();
 
     return response;
   }

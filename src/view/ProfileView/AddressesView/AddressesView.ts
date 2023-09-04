@@ -86,6 +86,10 @@ export default abstract class AddressesView {
     return this.addresses.filter((address) => address.needToDelete()).map((address) => address.getData());
   }
 
+  public getDefaultAddressId(): string | null {
+    return this.prevDefaultAddress.getId();
+  }
+
   public addAddresses(): void {
     this.updateAddresses(this.newAddresses);
 
