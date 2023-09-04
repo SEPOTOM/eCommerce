@@ -119,6 +119,11 @@ export default abstract class AddressesView {
       this.configureList(response, defaultId);
       this.colorAddresses();
     }
+
+    if (!response[defaultId]) {
+      this.originalDefaultAddress = new AddressView();
+      this.prevDefaultAddress = new AddressView();
+    }
   }
 
   private updateAddresses(addresses: AddressView[]): void {
