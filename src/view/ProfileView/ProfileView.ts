@@ -96,6 +96,17 @@ export default class ProfileView {
     this.hideMessages();
   }
 
+  private getTotalResponse(responses: (CustomerDataResponse | Error | null)[]): CustomerDataResponse | Error | null {
+    for (let i = 0; i <= responses.length; i += 1) {
+      const response = responses[i];
+      if (response && 'message' in response) {
+        return response;
+      }
+    }
+
+    return responses.find((response) => response) || responses[responses.length - 1];
+  }
+
   private async sendChanges(): Promise<void> {
     this.hideMessages();
 
@@ -110,29 +121,25 @@ export default class ProfileView {
     const billingResponse = await this.sendNewBillingAddresses();
     const shippingResponse = await this.sendNewShippingAddresses();
 
-    if ('message' in response) {
-      this.showErrors(response.message);
+    const totalResponse = this.getTotalResponse([
+      shippingResponse,
+      billingResponse,
+      removeDefaultResponse,
+      defaultResponse,
+      response,
+    ]);
+
+    if (!totalResponse) {
       return;
     }
-    if (defaultResponse && 'message' in defaultResponse) {
-      this.showErrors(defaultResponse.message);
-      return;
-    }
-    if (removeDefaultResponse && 'message' in removeDefaultResponse) {
-      this.showErrors(removeDefaultResponse.message);
-      return;
-    }
-    if (billingResponse && 'message' in billingResponse) {
-      this.showErrors(billingResponse.message);
-      return;
-    }
-    if (shippingResponse && 'message' in shippingResponse) {
-      this.showErrors(shippingResponse.message);
+
+    if ('message' in totalResponse) {
+      this.showErrors(totalResponse.message);
       return;
     }
 
     setTimeout(() => {
-      this.updateView(shippingResponse || billingResponse || removeDefaultResponse || defaultResponse || response);
+      this.updateView(totalResponse);
       this.exitEditMode();
     }, EXIT_EDIT_MODE_DELAY);
 
@@ -165,7 +172,6 @@ export default class ProfileView {
 
     if (defaultBillingAddress instanceof AddressView) {
       const id = defaultBillingAddress.getId();
-
       if (id) {
         request.setDefaultBilling(id);
       }
@@ -173,7 +179,6 @@ export default class ProfileView {
 
     if (defaultShippingAddress instanceof AddressView) {
       const id = defaultShippingAddress.getId();
-
       if (id) {
         request.setDefaultShipping(id);
       }
