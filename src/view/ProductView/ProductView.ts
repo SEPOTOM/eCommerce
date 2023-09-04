@@ -21,7 +21,7 @@ import { currencySymbol, currencyName, categoryStyles, ProductElements } from '.
 
 const accessToken = 'access_token';
 
-const sliderClickDelay = 1100;
+const sliderClickDelay = 1200;
 
 export default class ProductView {
   private static activeImage: number = 0;
