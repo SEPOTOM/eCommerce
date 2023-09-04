@@ -11,4 +11,6 @@ export enum Actions {
   REMOVE_ADDRESS = 'removeAddress',
   SET_DEFAULT_BILLING = 'setDefaultBillingAddress',
   SET_DEFAULT_SHIPPING = 'setDefaultShippingAddress',
+  REMOVE_BILLING_ID = 'removeBillingAddressId',
+  REMOVE_SHIPPING_ID = 'removeShippingAddressId',
 }
