@@ -7,6 +7,8 @@ import Converter from '../../../components/Converter/Converter';
 import { IImages } from '../../../types';
 import { SliderSelectors, SLIDE_WIDTH, SLIDER_INITIAL_POSITION } from './data';
 
+const mainSliderClickDelay = 200;
+
 export default class Slider {
   public activeImage: number = 0;
 
@@ -167,7 +169,7 @@ export default class Slider {
         setTimeout(() => {
           this.setActiveImage(slider, this.activeImage);
           this.setArrowStyles(slider, maxIndex);
-        }, 300);
+        }, mainSliderClickDelay);
       }
     });
 
@@ -175,9 +177,9 @@ export default class Slider {
       if (this.activeImage + 1 < maxIndex) {
         this.activeImage += 1;
         setTimeout(() => {
-          this.setActiveImage(slider, this.activeImage);
           this.setArrowStyles(slider, maxIndex);
-        }, 300);
+          this.setActiveImage(slider, this.activeImage);
+        }, mainSliderClickDelay);
       }
     });
   }
