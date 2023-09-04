@@ -12,17 +12,3 @@ export interface ICategoryInfoJSON {
     id: string;
   };
 }
-
-export interface INavigationLevel1 {
-  text: string;
-  link: string;
-  categoryId?: string;
-  children?: INavigationLevel2[];
-}
-
-export interface INavigationLevel2 {
-  text: string;
-  link: string;
-  categoryId: string;
-  parentId: string;
-}

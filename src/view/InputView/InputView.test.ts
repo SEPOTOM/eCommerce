@@ -26,4 +26,8 @@ describe('InputView class', () => {
   it('an instance must have a setValue method', () => {
     expect(instance.setValue).toBeDefined();
   });
+
+  it('an instance must have a hideError method', () => {
+    expect(instance.hideError).toBeDefined();
+  });
 });

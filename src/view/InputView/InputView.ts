@@ -58,6 +58,10 @@ export default class InputView {
     this.input.value = value;
   }
 
+  public hideError(): void {
+    this.errorBlock.innerHTML = '';
+  }
+
   public getAttr(attrName: string): string {
     return this.input.getAttribute(attrName) || '';
   }

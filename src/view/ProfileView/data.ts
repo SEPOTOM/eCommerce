@@ -8,6 +8,7 @@ export enum DataAttrs {
   CANCEL_BUTTON = 'data-cancel-button',
   SAVE_BUTTON = 'data-save-button',
   EDIT_BUTTON = 'data-edit-button',
+  CHANGE_PASSWORD_BUTTON = 'data-change-password-button',
   DELETE_BUTTON = 'data-delete-button',
   RESTORE_BUTTON = 'data-restore-button',
   INFO_BLOCK = 'data-info-block',
@@ -15,6 +16,7 @@ export enum DataAttrs {
   ROW = 'data-row-profile',
   LABEL = 'data-label-profile',
   VALID = 'data-valid',
+  MODAL_CONTENT = 'data-modal-content',
   ADD_ADDRESS_BUTTON = 'data-add-address-button',
 }
 

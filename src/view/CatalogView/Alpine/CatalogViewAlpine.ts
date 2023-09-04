@@ -1,63 +1,198 @@
 /* eslint-disable import/no-cycle */
-import Catalog from '../../../api/Catalog/Catalog';
-import BreadcrumbsView from '../../BreadcrumbsView/BreadcrumbsView';
-import { ICategoryInfoJSON, IAlpineComponent, IShortProductsJSON } from '../types/types';
+import { IAllProducts, IShortProductsJSON } from '../types/types';
 
 // Import images placeholder if product don't have an image
 import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
 
-const CategoryViewAlpine: IAlpineComponent = {
+import { CTP_API_URL, CTP_PROJECT_KEY } from '../../../api/APIClients/JSNinjas';
+
+const CategoryViewAlpine = {
   title: null,
   description: null,
+  isLoading: false,
   products: [],
-  isLoading: true,
+  urlPath: '',
+  searchRequest: '',
+  searchRequestNeedClear: false,
+  searchResultCount: 0,
+  filterQuery: '',
+  filterActiveProps: {},
+  filterAllProps: {},
+  sortQuery: '',
+  sortActive: 'default',
 
   /* eslint-disable max-lines-per-function */
   init(): void {
-    const delay: number = 1000;
+    const delay = 1000;
+    this.urlPath = `${CTP_API_URL}/${CTP_PROJECT_KEY}/product-projections/search?filter=categories.id:"${this.categoryId}"`;
+    this.filterQuery = '';
+    this.filterActiveProps = {};
+    this.filterAllProps = {};
+    this.getProductsByQuery();
 
     setTimeout(() => {
-      this.isLoading = false;
+      this.isLoading = true;
     }, delay);
+  },
 
-    Catalog.getCategoryInfoJSON(this.categoryId).then((json: ICategoryInfoJSON | null): void => {
-      if (!json) return;
+  getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
+    try {
+      fetch(`${this.urlPath}${filterQuery}${sortQuery}`, this.setBodyRequest())
+        .then((resp) => resp.json())
+        .then((json: IAllProducts): void => {
+          this.setProductData(json.results);
+        });
+    } catch {
+      /* eslint-disable no-empty */
+    }
+  },
 
-      this.title = json.name['en-US'];
-      this.description = json.description['en-US'];
+  setProductData(json: IShortProductsJSON[]): void {
+    this.products = [];
 
-      BreadcrumbsView.createCategoryPath(json);
+    json.forEach((item): void => {
+      // get product information
+      this.products.push({
+        id: item.id,
+        link: `/${item.key}`,
+        name: item.name['en-US'],
+        description: item.description['en-US'] || '',
+        image: item.masterVariant.images.length ? item.masterVariant.images[0].url : imgProductPlaceholder,
+        attributes: item.masterVariant?.attributes || [],
+        onStock: item.masterVariant?.availability?.isOnStock || false,
+        price: item.masterVariant.prices.length
+          ? (item.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
+          : null,
+        discount:
+          item.masterVariant.prices.length && item.masterVariant.prices[0].discounted
+            ? (item.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
+            : null,
+        currency: item.masterVariant.prices.length ? item.masterVariant.prices[0].value.currencyCode : null,
+      });
+
+      this.getAllFilterProps(item);
     });
+  },
 
-    Catalog.getAllProductsJSON().then((json: IShortProductsJSON | null): void => {
-      if (!json) return;
+  getAllFilterProps(json: IShortProductsJSON): void {
+    if (json.masterVariant?.attributes) {
+      json.masterVariant?.attributes.forEach((attr) => {
+        if (attr.name !== 'transmission') {
+          // if filter prop not exist
+          /* eslint-disable no-prototype-builtins */
+          if (!this.filterAllProps.hasOwnProperty(attr.name)) {
+            /* eslint-disable no-prototype-builtins */
+            this.filterAllProps[attr.name] = [];
+            this.filterActiveProps[attr.name] = 0;
+          }
 
-      this.products = [];
-
-      json.results.forEach((item): void => {
-        if (item.masterData.current.categories.some((obj) => obj.id === this.categoryId)) {
-          const { current } = item.masterData;
-
-          this.products.push({
-            id: item.id,
-            link: `/${item.key}`,
-            name: current.name['en-US'],
-            description: current.description['en-US'] || '',
-            image: current.masterVariant.images.length ? current.masterVariant.images[0].url : imgProductPlaceholder,
-            attributes: current.masterVariant?.attributes || [],
-            onStock: current.masterVariant?.availability?.isOnStock || false,
-            price: current.masterVariant.prices.length
-              ? (current.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
-              : null,
-            discount:
-              current.masterVariant.prices.length && current.masterVariant.prices[0].discounted
-                ? (current.masterVariant.prices[0].discounted.value.centAmount / 100).toFixed(2)
-                : null,
-            currency: current.masterVariant.prices.length ? current.masterVariant.prices[0].value.currencyCode : null,
-          });
+          // save only uniqe value
+          if (
+            !this.filterAllProps[attr.name].filter((item: { [key: string]: string }) => item.name === attr.value).length
+          ) {
+            this.filterAllProps[attr.name].push({
+              name: attr.value,
+              action: `&filter=variants.attributes.${attr.name}:`,
+              active: false,
+            });
+          }
         }
       });
+    }
+  },
+
+  sortBy(type: string, direction: string, activeText: string): void {
+    this.sortActive = activeText;
+    this.sortQuery = `&sort=${type} ${direction}`;
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
+  },
+
+  filterBy(prop: string, index: number, value: string, filterQuery: string): void {
+    this.filterAllProps[prop][index].active = !this.filterAllProps[prop][index].active;
+
+    if (this.filterAllProps[prop][index].active) {
+      this.filterActiveProps[prop] += 1;
+    } else {
+      this.filterActiveProps[prop] -= 1;
+    }
+
+    if (!this.filterQuery.includes(filterQuery)) {
+      if (this.filterActiveProps[prop]) {
+        this.filterQuery += `${filterQuery}"${value}"`;
+      }
+    } else if (this.filterActiveProps[prop]) {
+      if (!this.filterQuery.includes(value)) {
+        this.filterQuery = this.filterQuery.replace(filterQuery, `${filterQuery}"${value}",`);
+      } else {
+        this.filterQuery = this.filterQuery.replace(`"${value}",`, '');
+        this.filterQuery = this.filterQuery.replace(`,"${value}"`, '');
+      }
+    } else {
+      this.filterQuery = this.filterQuery.replace(`${filterQuery}"${value}"`, '');
+    }
+
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
+  },
+
+  clearFilter(): void {
+    this.filterQuery = '';
+
+    /* eslint-disable no-restricted-syntax, guard-for-in */
+    for (const key in this.filterActiveProps) {
+      this.filterActiveProps[key] = 0;
+    }
+
+    for (const key in this.filterAllProps) {
+      for (const obj in this.filterAllProps[key]) {
+        this.filterAllProps[key][obj].active = false;
+      }
+    }
+
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
+  },
+
+  quickSearch(): void {
+    try {
+      if (this.searchRequest.length > 2) {
+        fetch(`${this.urlPath}${`&fuzzy=true&fuzzyLevel=1&text.en-US="${this.searchRequest}"`}`, this.setBodyRequest())
+          .then((resp) => resp.json())
+          .then((json: IAllProducts): void => {
+            const array = this.sortQuickSearchByName(json);
+
+            if (array.length) {
+              this.searchResultCount = array.length;
+              this.setProductData(array);
+              this.searchRequestNeedClear = true;
+            } else {
+              this.searchResultCount = 0;
+            }
+
+            if (!this.searchRequest || (this.searchRequestNeedClear && !this.searchResultCount)) {
+              this.getProductsByQuery();
+              this.searchRequestNeedClear = false;
+            }
+          });
+      } else {
+        this.searchResultCount = 0;
+        this.getProductsByQuery();
+      }
+    } catch {
+      /* eslint-disable no-empty */
+    }
+  },
+
+  sortQuickSearchByName(json: IAllProducts): IShortProductsJSON[] {
+    return json.results.filter((product) => {
+      const name = product.name['en-US'].toLowerCase();
+      const text = this.searchRequest.toLowerCase();
+
+      return name.includes(text);
     });
+  },
+
+  clearQuickSearch(): void {
+    this.searchRequest = '';
+    this.getProductsByQuery();
   },
 
   priceConverter(price: string): string {

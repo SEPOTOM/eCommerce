@@ -1,5 +1,4 @@
-import '@testing-library/jest-dom';
-import HomepageView from './HomepageView';
+import HomepageView from '../HomepageView';
 
 describe('Main [Home page] test', (): void => {
   it('-- class "HomepageView" should be defined', (): void => {

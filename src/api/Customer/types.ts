@@ -26,6 +26,12 @@ export interface EmailUpdateAction extends Action {
   email: string;
 }
 
+export interface PasswordData {
+  version: number;
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface AddressAddAction extends Action {
   address: Address;
 }
