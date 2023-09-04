@@ -9,4 +9,6 @@ export enum Actions {
   ADD_SHIPPING_ADDRESS = 'addShippingAddressId',
   CHANGE_ADDRESS = 'changeAddress',
   REMOVE_ADDRESS = 'removeAddress',
+  SET_DEFAULT_BILLING = 'setDefaultBillingAddress',
+  SET_DEFAULT_SHIPPING = 'setDefaultShippingAddress',
 }

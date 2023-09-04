@@ -174,6 +174,28 @@ export default class Customer {
     return this;
   }
 
+  public setDefaultBilling(id: string): Customer {
+    const action: IdAddressAction = {
+      addressId: id,
+      action: Actions.SET_DEFAULT_BILLING,
+    };
+
+    this.actions.push(action);
+
+    return this;
+  }
+
+  public setDefaultShipping(id: string): Customer {
+    const action: IdAddressAction = {
+      addressId: id,
+      action: Actions.SET_DEFAULT_SHIPPING,
+    };
+
+    this.actions.push(action);
+
+    return this;
+  }
+
   public async addBillingAddresses(billingAddresses: Address[]): Promise<CustomerDataResponse | Error> {
     const billingActions = this.getAddressesActions(billingAddresses);
     const billingResponse = await this.sendUpdateRequest(billingActions);
