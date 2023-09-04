@@ -196,6 +196,38 @@ export default class Customer {
     return this;
   }
 
+  public removeDefaultBilling(id: string): Customer {
+    const removeAction: IdAddressAction = {
+      action: Actions.REMOVE_BILLING_ID,
+      addressId: id,
+    };
+    this.actions.push(removeAction);
+
+    const addBillingAction: IdAddressAction = {
+      action: Actions.ADD_BILLING_ADDRESS,
+      addressId: id,
+    };
+    this.actions.push(addBillingAction);
+
+    return this;
+  }
+
+  public removeDefaultShipping(id: string): Customer {
+    const removeAction: IdAddressAction = {
+      action: Actions.REMOVE_SHIPPING_ID,
+      addressId: id,
+    };
+    this.actions.push(removeAction);
+
+    const addShippingAction: IdAddressAction = {
+      action: Actions.ADD_SHIPPING_ADDRESS,
+      addressId: id,
+    };
+    this.actions.push(addShippingAction);
+
+    return this;
+  }
+
   public async deleteDefaultAddresses(billingId?: string, shippingId?: string): Promise<CustomerDataResponse | Error> {
     const removeIdsResponse = await this.removeDefaultIds(billingId, shippingId);
 
