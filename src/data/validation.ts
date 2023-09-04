@@ -34,6 +34,7 @@ export const RegExps = {
 export enum InputTypes {
   EMAIL = 'email',
   PASSWORD = 'password',
+  TEXT = 'text',
 }
 
 export const PostalCodeRegExps: Record<string, RegExp> = {
