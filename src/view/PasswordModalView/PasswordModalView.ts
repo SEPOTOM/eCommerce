@@ -5,7 +5,7 @@ import Authorization from '../../api/Authorization/Authorization';
 import Tokens from '../../components/Tokens/Tokens';
 import Router from '../../components/Router/Router';
 import HTML from './PasswordModalView.html';
-import InputView from '../InputView/InputView';
+import PasswordInputView from '../InputView/PasswordInputView/PasswordInputView';
 import { PasswordData } from './types';
 import { DataAttrs, ModalInputsOptions } from './data';
 
@@ -26,7 +26,7 @@ export default class PasswordModalView {
 
   private errorBlock = this.view.querySelector(`[${DataAttrs.ERROR_BLOCK}]`) || document.createElement('div');
 
-  private inputsObjects: InputView[] = [];
+  private inputsObjects: PasswordInputView[] = [];
 
   public buildView(): HTMLElement {
     this.configureView();
@@ -81,7 +81,7 @@ export default class PasswordModalView {
         value: id,
       };
 
-      const inputObject = new InputView();
+      const inputObject = new PasswordInputView();
 
       this.inputsObjects.push(inputObject);
 
