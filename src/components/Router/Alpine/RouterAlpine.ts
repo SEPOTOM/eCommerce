@@ -58,6 +58,8 @@ const RouterAlpine = {
 
       if (this.isCustomerLogin && (path === '/login' || path === '/registration')) {
         Router.toHomePage();
+      } else if (!this.isCustomerLogin && path === '/profile') {
+        Router.toLoginPage();
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.routers[path] ? this.routers[path]() : this.routers['404']();
