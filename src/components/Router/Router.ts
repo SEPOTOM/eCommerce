@@ -1,20 +1,34 @@
 /* eslint-disable import/no-cycle */
 import Alpine from 'alpinejs';
 import RouterAlpine from './Alpine/RouterAlpine';
+import { AlpineRouter } from '../../types';
 
 export default class Router {
-  public initRoute(): void {
+  public initRoute(token: string): void {
     document.body.setAttribute('x-data', 'Router()');
-    Alpine.data('Router', RouterAlpine);
+    Alpine.data('Router', () => ({ token, ...RouterAlpine }));
   }
 
   public static isCustomerLogin(): void {
-    // TODO: It is necessary to leave such a decision for consideration in the future.
-    // Alpine.$data(document.body).checkCustomerLogin();
-    RouterAlpine().checkCustomerLogin();
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    //  @ts-ignore
+    const router: AlpineRouter = Alpine.$data(document.body);
+    try {
+      router.checkCustomerLogin();
+    } catch (e) {
+      /* eslint-disable no-empty */
+    }
   }
 
   public static toHomePage(): void {
     (document.querySelector('[data-element="header-logo"]') as HTMLElement)?.click();
+  }
+
+  public static toProfilePage(): void {
+    (document.querySelector('[data-element="profile-link"]') as HTMLElement)?.click();
+  }
+
+  public static toLoginPage(): void {
+    (document.querySelector('[data-element="link-login-page"]') as HTMLElement)?.click();
   }
 }
