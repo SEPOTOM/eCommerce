@@ -1,0 +1,32 @@
+<section
+  class="group/addresses flex flex-col gap-y-3 py-5 border-y-2 border-gray-400 md:border-x-2 md:rounded-xl"
+  data-have-default="false"
+  data-edit="false"
+>
+  <h2 class="flex items-center gap-x-3 mb-2 px-5 text-4xl font-bold whitespace-nowrap" data-addresses-title>
+    Addresses
+  </h2>
+  <p
+    class="-mb-3 px-5 text-xl font-medium border-y bg-blue-50 hidden group-data-[have-default=true]/addresses:block lg:block lg:invisible lg:group-data-[have-default=true]/addresses:visible"
+  >
+    Default
+  </p>
+  <ul data-addresses-list></ul>
+  <button
+    class="hidden justify-center items-center gap-x-2 mx-5 px-3 py-1 font-bold text-blue-900 border-2 border-blue-900 transition-colors duration-300 hover:text-white hover:bg-blue-900 md:rounded-lg group-data-[edit=true]/addresses:flex"
+    type="button"
+    data-add-address-button
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+    Add address
+  </button>
+</section>
