@@ -1,3 +1,19 @@
+export interface CartResponse {
+  lineItems: [];
+}
+
+export interface LineItemResponse {
+  quantity: number;
+  name: ILocalizedString;
+  price: PriceResponse;
+  totalPrice: ITypedMoney;
+  variant: IMasterVariant;
+}
+
+export interface PriceResponse {
+  value: ITypedMoney;
+}
+
 export interface CustomerCredentials {
   email: string;
   firstName: string;
