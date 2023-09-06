@@ -14,6 +14,18 @@ export interface PriceResponse {
   value: ITypedMoney;
 }
 
+export interface CartInfo {
+  productsInfo: ProductInfo[];
+}
+
+export interface ProductInfo {
+  imageSrc: string;
+  name: string;
+  quantity: number;
+  individualPrice: string;
+  totalPrice: string;
+}
+
 export interface CustomerCredentials {
   email: string;
   firstName: string;
@@ -286,6 +298,15 @@ enum TokenPayload {
   TOKEN_TYPE = 'token_type',
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload };
+export {
+  IClientLoginResponse,
+  ICustomerLoginResponse,
+  IError,
+  IProduct,
+  IAttributes,
+  IImages,
+  ITypedMoney,
+  TokenPayload,
+};
 
 export type EventCallback = (e: Event) => void;
