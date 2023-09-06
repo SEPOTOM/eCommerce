@@ -1,8 +1,9 @@
 import InputView from '../InputView';
+import DateUtils from '../../../components/DateUtils/DateUtils';
 
 const MONTHS_IN_YEAR = 12;
 const MIN_USER_AGE = 18;
-const MAX_DAYS_IN_MONTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const MAX_DAYS_IN_MONTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const ErrorMessages = {
   MONTH: 'Incorrect month number (MM/DD/YYYY)',
   DAY: 'Incorrect day for the specified month (MM/DD/YYYY)',
@@ -23,7 +24,12 @@ export default class DateInputView extends InputView {
 
       const formattedMonth = month - 1;
 
-      if (day > MAX_DAYS_IN_MONTHS[formattedMonth]) {
+      const maxDaysInMonth =
+        formattedMonth === 1 && new DateUtils().isLeapYear(year)
+          ? MAX_DAYS_IN_MONTHS[formattedMonth] + 1
+          : MAX_DAYS_IN_MONTHS[formattedMonth];
+
+      if (day > maxDaysInMonth) {
         this.makeInputInvalid(ErrorMessages.DAY);
         return;
       }
