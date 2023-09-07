@@ -1,5 +1,5 @@
 export interface CartResponse {
-  lineItems: [];
+  lineItems: LineItemResponse[];
 }
 
 export interface LineItemResponse {
