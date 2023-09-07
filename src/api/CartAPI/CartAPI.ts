@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
 import { CartResponse, IError } from '../../types';

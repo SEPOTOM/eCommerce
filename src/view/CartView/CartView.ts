@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import Converter from '../../components/Converter/Converter';
 import Cart from '../../components/Cart/Cart';
 import HTML from './CartView.html';

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
 import { CartInfo, ProductInfo } from '../../types';
