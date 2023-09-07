@@ -5,13 +5,9 @@ export interface CartResponse {
 export interface LineItemResponse {
   quantity: number;
   name: ILocalizedString;
-  price: PriceResponse;
+  price: IPrices;
   totalPrice: ITypedMoney;
   variant: IMasterVariant;
-}
-
-export interface PriceResponse {
-  value: ITypedMoney;
 }
 
 export interface CartInfo {
@@ -24,6 +20,7 @@ export interface ProductInfo {
   quantity: number;
   individualPrice: string;
   totalPrice: string;
+  discountedIndividualPrice?: string;
 }
 
 export interface CustomerCredentials {

@@ -29,8 +29,11 @@ export default class Converter {
         imageSrc: '',
         name: cartItem.name['en-US'],
         quantity: cartItem.quantity,
-        individualPrice: Formatter.formatPrice(cartItem.price.value),
+        individualPrice: Formatter.formatPrice(cartItem.variant.prices[0].value),
         totalPrice: Formatter.formatPrice(cartItem.totalPrice),
+        discountedIndividualPrice: cartItem.price.discounted?.value
+          ? Formatter.formatPrice(cartItem.price.discounted.value)
+          : undefined,
       };
 
       if (cartItem.variant.images?.length) {
