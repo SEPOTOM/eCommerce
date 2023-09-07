@@ -14,7 +14,13 @@ enum ErrorMessages {
 export default class CartAPI {
   public static async get(): Promise<CartResponse | Error> {
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${TEMPORARY_CART_ID}`;
-    const bearerToken = (await Tokens.getCustomerTokens()).access_token;
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (!tokens) {
+      return new Error(ErrorMessages.SERVER);
+    }
+
+    const bearerToken = tokens.access_token;
 
     try {
       const response = await fetch(endpoint, {
