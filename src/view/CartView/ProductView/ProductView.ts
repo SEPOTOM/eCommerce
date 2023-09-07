@@ -13,6 +13,8 @@ export default class ProductView {
   }
 
   private configureView(productData: ProductInfo): void {
+    this.view.addEventListener('click', this.handleClicks.bind(this));
+
     this.configureImage(productData.imageSrc, productData.name);
     this.configureName(productData.name);
     this.configureQuantity(productData.quantity);
@@ -41,7 +43,7 @@ export default class ProductView {
     const quantityBlock = this.view.querySelector(`[${DataAttrs.PRODUCT_QUANTITY}]`);
 
     if (quantityBlock) {
-      quantityBlock.textContent += ` ${quantity}`;
+      quantityBlock.textContent += `${quantity}`;
     }
   }
 
@@ -66,6 +68,51 @@ export default class ProductView {
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = price;
+    }
+  }
+
+  private enterEditMode(): void {
+    const quantityInfo = this.getQuantityInfo();
+
+    if (quantityInfo) {
+      this.setQuantityValue(quantityInfo);
+    }
+
+    this.view.dataset.edit = 'true';
+  }
+
+  private exitEditMode(): void {
+    this.view.dataset.edit = 'false';
+  }
+
+  private handleClicks(e: Event): void {
+    if (e.target instanceof Element) {
+      const button = e.target.closest('button');
+
+      if (button && button.hasAttribute(DataAttrs.ENTER_EDITING_BUTTON)) {
+        this.enterEditMode();
+      }
+      if (button && button.hasAttribute(DataAttrs.EXIT_EDITING_BUTTON)) {
+        this.exitEditMode();
+      }
+    }
+  }
+
+  private getQuantityInfo(): string | null {
+    const quantityBlock = this.view.querySelector(`[${DataAttrs.PRODUCT_QUANTITY}]`);
+
+    if (quantityBlock) {
+      return quantityBlock.textContent;
+    }
+
+    return null;
+  }
+
+  private setQuantityValue(value: string): void {
+    const quantityInput = this.view.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
+
+    if (quantityInput instanceof HTMLInputElement) {
+      quantityInput.value = value;
     }
   }
 }
