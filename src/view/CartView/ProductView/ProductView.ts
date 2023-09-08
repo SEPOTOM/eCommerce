@@ -13,6 +13,7 @@ export default class ProductView {
   }
 
   private configureView(productData: ProductInfo): void {
+    this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));
 
     this.configureImage(productData.imageSrc, productData.name);
