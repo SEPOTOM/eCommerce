@@ -2,6 +2,7 @@
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
 import { CartResponse, IError } from '../../types';
+import { UpdateRequest, LineItemChangeQuantityAction } from './types';
 
 // In the future, instead of using this constant,
 // the Cart.get method will accept the id as a parameter
@@ -17,6 +18,33 @@ export default class CartAPI {
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${TEMPORARY_CART_ID}`;
     const requestOptions = {
       method: 'GET',
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
+  public static async updateQuantity(
+    quantity: number,
+    lineItemId: string,
+    cartVersion: number
+  ): Promise<CartResponse | Error> {
+    const updateQuantityAction: LineItemChangeQuantityAction = {
+      quantity,
+      lineItemId,
+      action: 'changeLineItemQuantity',
+    };
+    const bodyData: UpdateRequest = {
+      version: cartVersion,
+      actions: [updateQuantityAction],
+    };
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${TEMPORARY_CART_ID}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
     };
 
     return this.sendRequest(endpoint, requestOptions);
