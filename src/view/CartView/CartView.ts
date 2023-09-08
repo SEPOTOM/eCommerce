@@ -12,6 +12,8 @@ export default class CartView {
 
   private cart = new Cart();
 
+  private productsObjects: ProductView[] = [];
+
   constructor() {
     this.configureView();
   }
@@ -40,7 +42,10 @@ export default class CartView {
     const list = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
 
     productsInfo.forEach((productInfo) => {
-      const productItem = new ProductView().buildView(productInfo);
+      const productObject = new ProductView(this.cart);
+      this.productsObjects.push(productObject);
+
+      const productItem = productObject.buildView(productInfo);
       list?.append(productItem);
     });
   }
