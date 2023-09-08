@@ -1,6 +1,6 @@
-import Converter from '../../../components/Converter/Converter';
+import Converter from '../../components/Converter/Converter';
 import HTML from './ErrorView.html';
-import { DataAttrs } from '../data';
+import { DataAttrs } from './data';
 
 export default class ErrorView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');

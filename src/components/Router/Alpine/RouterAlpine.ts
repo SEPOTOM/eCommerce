@@ -7,6 +7,7 @@ import ProfileView from '../../../view/ProfileView/ProfileView';
 import CatalogView from '../../../view/CatalogView/CatalogView';
 import BreadcrumbsView from '../../../view/BreadcrumbsView/BreadcrumbsView';
 import ProductView from '../../../view/ProductView/ProductView';
+import CartView from '../../../view/CartView/CartView';
 import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
 import Navigation from '../../../api/Navigation/Navigation';
@@ -97,6 +98,11 @@ const RouterAlpine = {
 
     this.routers['/profile'] = () => {
       new ProfileView().draw();
+      BreadcrumbsView.clear();
+    };
+
+    this.routers['/cart'] = () => {
+      new CartView().draw();
       BreadcrumbsView.clear();
     };
 

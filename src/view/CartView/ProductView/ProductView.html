@@ -1,0 +1,19 @@
+<li
+  class="flex flex-wrap flex-col gap-6 p-4 text-gray-600 border border-gray-200 rounded-lg bg-white transition-all duration-300 hover:drop-shadow-md hover:border-gray-300 md:flex-row"
+>
+  <div class="relative h-screen max-h-64 md:basis-[200px] md:h-auto md:max-h-none sm:max-h-80">
+    <img class="absolute w-full h-full rounded-lg object-cover" data-product-image />
+  </div>
+  <div class="flex-grow">
+    <h3 class="mb-1 text-2xl font-medium" data-product-name></h3>
+    <p class="mb-1" data-product-quantity>Quantity:</p>
+    <p class="mb-4 text-lg">
+      Price per one:
+      <span class="text-sm font-medium text-gray-800 line-through opacity-50" data-product-old-price></span
+      ><span class="font-medium text-gray-800" data-product-current-price></span>
+    </p>
+    <p class="text-2xl text-right">
+      Total price: <span class="font-medium text-gray-800" data-product-total-price></span>
+    </p>
+  </div>
+</li>
