@@ -180,6 +180,7 @@ export default class ProductView {
     const response = await this.cart.removeProduct(itemId);
 
     if ('message' in response) {
+      this.showDeleteError(ErrorMessages.ERROR);
       return;
     }
 
@@ -208,6 +209,17 @@ export default class ProductView {
     }
   }
 
+  private showDeleteError(message: string): void {
+    const deleteErrorBlock = this.view.querySelector(`[${DataAttrs.DELETE_ERROR}]`);
+
+    if (deleteErrorBlock instanceof HTMLElement) {
+      deleteErrorBlock.textContent = message;
+      deleteErrorBlock.dataset.error = 'true';
+
+      setTimeout(this.hideDeleteError.bind(this), HIDE_ERROR_DELAY);
+    }
+  }
+
   private hideQuantityError(): void {
     const quantityBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_BLOCK}]`);
     const quantityErrorBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_ERROR}]`);
@@ -215,6 +227,15 @@ export default class ProductView {
     if (quantityBlock instanceof HTMLElement && quantityErrorBlock) {
       quantityBlock.dataset.error = 'false';
       quantityErrorBlock.textContent = '';
+    }
+  }
+
+  private hideDeleteError(): void {
+    const deleteErrorBlock = this.view.querySelector(`[${DataAttrs.DELETE_ERROR}]`);
+
+    if (deleteErrorBlock instanceof HTMLElement) {
+      deleteErrorBlock.textContent = '';
+      deleteErrorBlock.dataset.error = 'false';
     }
   }
 }

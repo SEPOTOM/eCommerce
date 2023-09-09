@@ -17,4 +17,5 @@ export enum DataAttrs {
   QUANTITY_INPUT = 'data-quantity-input',
   QUANTITY_BLOCK = 'data-quantity-block',
   QUANTITY_ERROR = 'data-quantity-error',
+  DELETE_ERROR = 'data-delete-error',
 }
