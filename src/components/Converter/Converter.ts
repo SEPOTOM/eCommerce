@@ -15,7 +15,9 @@ export default class Converter {
 
   public static cartResponseToInfo(cart: CartResponse): CartInfo {
     const formattedCart: CartInfo = {
+      id: cart.id,
       productsInfo: [],
+      version: cart.version,
     };
 
     formattedCart.productsInfo = this.cartItemsToProducts(cart.lineItems);
@@ -26,6 +28,7 @@ export default class Converter {
   private static cartItemsToProducts(cartItems: LineItemResponse[]): ProductInfo[] | [] {
     return cartItems.map((cartItem) => {
       const formattedItem: ProductInfo = {
+        itemId: cartItem.id,
         imageSrc: '',
         name: cartItem.name['en-US'],
         quantity: cartItem.quantity,

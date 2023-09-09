@@ -14,4 +14,8 @@ describe('Cart class', () => {
   it('an instance must have a getProductsInfo method', () => {
     expect(instance.getProductsInfo).toBeDefined();
   });
+
+  it('an instance must have a updateProductQuantity method', () => {
+    expect(instance.updateProductQuantity).toBeDefined();
+  });
 });

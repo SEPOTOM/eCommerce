@@ -16,6 +16,7 @@ describe('Converter class', () => {
       id: 'test-cart-id',
       lineItems: [
         {
+          id: 'test-id-1',
           quantity: 5,
           name: {
             'en-US': 'Item name',
@@ -60,6 +61,7 @@ describe('Converter class', () => {
           },
         },
         {
+          id: 'test-id-2',
           quantity: 2,
           name: {
             'en-US': 'Another Item name',
@@ -113,10 +115,13 @@ describe('Converter class', () => {
           },
         },
       ],
+      version: 1,
     };
     const expected: CartInfo = {
+      id: 'test-cart-id',
       productsInfo: [
         {
+          itemId: 'test-id-1',
           imageSrc: 'test-image-url-1',
           name: 'Item name',
           quantity: 5,
@@ -125,6 +130,7 @@ describe('Converter class', () => {
           discountedIndividualPrice: undefined,
         },
         {
+          itemId: 'test-id-2',
           imageSrc: 'test-image-url-2',
           name: 'Another Item name',
           quantity: 2,
@@ -133,6 +139,7 @@ describe('Converter class', () => {
           discountedIndividualPrice: '$200.00',
         },
       ],
+      version: 1,
     };
     const result = Converter.cartResponseToInfo(cartResponse);
 
