@@ -1,4 +1,9 @@
+export interface CartsResponse {
+  results: CartResponse[];
+}
+
 export interface CartResponse {
+  id: string;
   lineItems: LineItemResponse[];
 }
 

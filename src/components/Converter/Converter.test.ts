@@ -13,6 +13,7 @@ describe('Converter class', () => {
 
   it('the method cartResponseToInfo must work correctly', () => {
     const cartResponse: CartResponse = {
+      id: 'test-cart-id',
       lineItems: [
         {
           quantity: 5,
