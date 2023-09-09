@@ -1,8 +1,4 @@
-enum ErrorMessages {
-  TOO_BIG = 'Invalid value: max - ',
-  TOO_SMALL = 'Invalid value: min -',
-  NOT_INTEGER = 'Invalid value: must be an integer',
-}
+import { ErrorMessages } from './data';
 
 export default class Validator {
   public static validateProductQuantity(value: string, min: string, max: string): Error | true {
