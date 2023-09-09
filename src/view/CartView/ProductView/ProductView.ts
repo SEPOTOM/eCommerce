@@ -9,7 +9,7 @@ import { DataAttrs } from '../data';
 const HIDE_ERROR_DELAY = 3000;
 
 enum ErrorMessages {
-  ERROR = 'Operation error. Try again later',
+  ERROR = 'Operation error. Please, try again later.',
 }
 
 export default class ProductView {
@@ -165,6 +165,7 @@ export default class ProductView {
     const updateResponse = await this.cart.updateProductQuantity(newQuantity, itemId);
 
     if ('message' in updateResponse) {
+      this.showQuantityError(ErrorMessages.ERROR);
       return;
     }
 
