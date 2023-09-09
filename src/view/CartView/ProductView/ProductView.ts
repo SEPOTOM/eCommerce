@@ -175,6 +175,17 @@ export default class ProductView {
     this.updateView(updateResponse);
   }
 
+  private async deleteProduct(): Promise<void> {
+    const itemId = this.getItemId();
+    const response = await this.cart.removeProduct(itemId);
+
+    if ('message' in response) {
+      return;
+    }
+
+    this.view.remove();
+  }
+
   private validateQuantity(quantity: string): Error | true {
     const quantityInput = this.view.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
 
@@ -205,9 +216,5 @@ export default class ProductView {
       quantityBlock.dataset.error = 'false';
       quantityErrorBlock.textContent = '';
     }
-  }
-
-  private deleteProduct(): void {
-    this.view.remove();
   }
 }
