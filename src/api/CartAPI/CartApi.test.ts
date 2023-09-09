@@ -8,4 +8,8 @@ describe('CartAPI class', () => {
   it('must have a get method', () => {
     expect(CartAPI.get).toBeDefined();
   });
+
+  it('must have a updateQuantity method', () => {
+    expect(CartAPI.updateQuantity).toBeDefined();
+  });
 });

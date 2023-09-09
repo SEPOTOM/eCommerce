@@ -1,8 +1,10 @@
 export interface CartResponse {
   lineItems: LineItemResponse[];
+  version: number;
 }
 
 export interface LineItemResponse {
+  id: string;
   quantity: number;
   name: ILocalizedString;
   price: IPrices;
@@ -12,9 +14,11 @@ export interface LineItemResponse {
 
 export interface CartInfo {
   productsInfo: ProductInfo[];
+  version: number;
 }
 
 export interface ProductInfo {
+  itemId: string;
   imageSrc: string;
   name: string;
   quantity: number;
