@@ -1,11 +1,17 @@
 /* eslint-disable import/no-cycle */
 import Converter from '../../../components/Converter/Converter';
 import Cart from '../../../components/Cart/Cart';
+import Validator from '../../../components/Validator/Validator';
 import HTML from './ProductView.html';
 import { ProductInfo } from '../../../types';
 import { DataAttrs } from '../data';
 
 const HIDE_ERROR_DELAY = 3000;
+
+enum ErrorMessages {
+  ERROR = 'Operation error. Try again later',
+}
+
 export default class ProductView {
   private view = Converter.htmlToElement<HTMLLIElement>(HTML) || document.createElement('li');
 
@@ -147,6 +153,13 @@ export default class ProductView {
 
   private async updateProductQuantity(): Promise<void> {
     const newQuantity = this.getNewQuantity();
+    const validatedQuantity = this.validateQuantity(newQuantity);
+
+    if (typeof validatedQuantity === 'object' && 'message' in validatedQuantity) {
+      this.showQuantityError(validatedQuantity.message);
+      return;
+    }
+
     const itemId = this.getItemId();
 
     const updateResponse = await this.cart.updateProductQuantity(newQuantity, itemId);
@@ -156,6 +169,16 @@ export default class ProductView {
     }
 
     this.updateView(updateResponse);
+  }
+
+  private validateQuantity(quantity: string): Error | true {
+    const quantityInput = this.view.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
+
+    if (quantityInput instanceof HTMLInputElement) {
+      return Validator.validateProductQuantity(quantity, quantityInput.min, quantityInput.max);
+    }
+
+    return new Error(ErrorMessages.ERROR);
   }
 
   private showQuantityError(message: string): void {
