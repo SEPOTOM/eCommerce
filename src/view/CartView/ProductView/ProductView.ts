@@ -110,6 +110,9 @@ export default class ProductView {
       if (button && button.hasAttribute(DataAttrs.CHANGE_QUANTITY_BUTTON)) {
         this.updateProductQuantity();
       }
+      if (button && button.hasAttribute(DataAttrs.DELETE_BUTTON)) {
+        this.deleteProduct();
+      }
     }
   }
 
@@ -202,5 +205,9 @@ export default class ProductView {
       quantityBlock.dataset.error = 'false';
       quantityErrorBlock.textContent = '';
     }
+  }
+
+  private deleteProduct(): void {
+    this.view.remove();
   }
 }

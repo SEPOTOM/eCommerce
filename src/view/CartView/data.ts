@@ -11,6 +11,7 @@ export enum DataAttrs {
   ENTER_EDITING_BUTTON = 'data-enter-editing-button',
   EXIT_EDITING_BUTTON = 'data-exit-editing-button',
   CHANGE_QUANTITY_BUTTON = 'data-change-quantity-button',
+  DELETE_BUTTON = 'data-delete-button',
   ROW = 'data-product-row',
   LABEL = 'data-product-label',
   QUANTITY_INPUT = 'data-quantity-input',
