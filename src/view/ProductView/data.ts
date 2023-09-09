@@ -21,6 +21,9 @@ enum ProductElements {
   PRODUCT_PRICE_ORIGINAL = 'original-price',
   PRODUCT_DETAILS = 'product-details',
   PRODUCT_WRAPPER = 'product-wrapper',
+  PRODUCT_ADD = 'add-button',
+  PRODUCT_REMOVE = 'remove-button',
+  PRODUCT_AMOUNT = 'amount',
 }
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import ProductHTML from './ProductView.html';
 import Converter from '../../components/Converter/Converter';
 import ProductModalView from './ProductModalView/ProductModalView';
@@ -6,6 +7,7 @@ import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
 import BreadcrumbsView from '../BreadcrumbsView/BreadcrumbsView';
 import Slider from './Slider/Slider';
+import CartAPI from '../../api/CartAPI/CartAPI';
 import { SliderSelectors } from './Slider/data';
 import {
   CTP_AUTH_URL,
@@ -15,7 +17,17 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
-import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ICategory } from '../../types';
+import {
+  IProduct,
+  IClientLoginResponse,
+  IError,
+  IAttributes,
+  IImages,
+  ICategory,
+  IAddLineItem,
+  CartResponse,
+  ICartTemplate,
+} from '../../types';
 import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
 import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
 
@@ -49,6 +61,8 @@ export default class ProductView {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
 
+        this.addToCartButton(id, productDetails as IProduct);
+
         // Set breadcrumbs
         const productLink: IBreadCrumbsLink = {
           name: (productDetails as IProduct).masterData.current.name['en-US'],
@@ -63,6 +77,146 @@ export default class ProductView {
       (document.querySelector('main') as HTMLElement).firstChild?.remove();
       (document.querySelector('main') as HTMLElement).textContent = clientTokens.message;
     }
+  }
+
+  private async addToCartButton(productID: string, productDetails: IProduct): Promise<void> {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+    const personalCart = await CartAPI.get();
+    const allCarts = await CartAPI.getCarts();
+    const inCart = this.productIsInCart(productID, personalCart);
+    if (inCart) {
+      addToCartButton.disabled = true;
+      addToCartButton.classList.remove('hover:bg-red-700');
+      addToCartButton.classList.add('line-through');
+
+      removeFromCartButton.classList.remove('line-through');
+      removeFromCartButton.classList.add('hover:bg-blue-400');
+    }
+    if ('count' in allCarts) {
+      if (allCarts.count === 0) {
+        const payload: ICartTemplate = {
+          currency: currencyName.USD,
+        };
+        const newCart: CartResponse | Error = await CartAPI.createCustomerCart(payload);
+        console.log('new cart - ', newCart);
+        console.log('all carts - ', await CartAPI.getCarts());
+      } else if ('id' in personalCart) {
+        this.processAddProduct(productID, productDetails, personalCart);
+      }
+    }
+    this.processRemoveProduct(personalCart, productID);
+    // if ('id' in personalCart) {
+    //   this.processAddProduct(productID, productDetails, personalCart);
+    // } else {
+    //   const payload: ICartTemplate = {
+    //     currency: currencyName.USD,
+    //   }
+    //   const newCart: CartResponse | Error = await CartAPI.createCustomerCart(payload);
+    //   console.log('newCart - ', newCart);
+    //   if ('id' in newCart) {
+    //     this.processAddProduct(productID, productDetails, newCart);
+    //   }
+    // }
+  }
+
+  private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    removeFromCartButton.addEventListener('click', async () => {
+      if ('version' in personalCart) {
+        const payload: IAddLineItem = {
+          version: Number(personalCart.version),
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId: await this.getLineItemID(productID),
+            },
+          ],
+        };
+
+        console.log('personalCart - ', personalCart);
+        if ('id' in personalCart) {
+          CartAPI.updateLineItem(String(personalCart.id), payload);
+        }
+      }
+    });
+  }
+
+  private async getLineItemID(productID: string): Promise<string> {
+    let lineItemID: string = '';
+
+    const lineItemsArray = await this.getLineItemArray();
+    console.log(lineItemsArray);
+
+    if ('lineItems' in lineItemsArray[0]) {
+      const activeCart = lineItemsArray[0].lineItems as object[];
+      console.log(activeCart);
+      activeCart.forEach((element) => {
+        if ('id' in element && 'productId' in element) {
+          if (element.productId === productID) {
+            lineItemID = String(element.id);
+            console.log('element.productId - ', element.productId);
+            console.log('element.id - ', element.id);
+          }
+        }
+      });
+    }
+
+    return lineItemID;
+  }
+
+  private async getLineItemArray(): Promise<object[]> {
+    const allCarts = await CartAPI.getCarts();
+    let cartArray: object[] = [];
+
+    if ('results' in allCarts) {
+      cartArray = allCarts.results as object[];
+      return cartArray;
+    }
+    return cartArray;
+  }
+
+  private processAddProduct(productID: string, productDetails: IProduct, personalCart: Error | CartResponse) {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+
+    addToCartButton.addEventListener('click', async () => {
+      if ('id' in personalCart && 'version' in personalCart) {
+        const personalCartID = String(personalCart.id);
+
+        const payload: IAddLineItem = {
+          version: Number(personalCart.version),
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: productID,
+              variantId: productDetails.lastVariantId,
+              quantity: Number(
+                (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+              ),
+            },
+          ],
+        };
+
+        await CartAPI.updateLineItem(personalCartID, payload);
+      }
+    });
+  }
+
+  private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
+    let inCart: boolean = false;
+
+    if ('lineItems' in personalCart) {
+      personalCart.lineItems.forEach((element) => {
+        if ('productId' in element) {
+          if (element.productId === productID) {
+            inCart = true;
+          }
+        }
+      });
+    }
+
+    return inCart;
   }
 
   private async getClientToken(): Promise<IClientLoginResponse | IError | Error> {
