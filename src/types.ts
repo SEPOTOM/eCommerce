@@ -1,4 +1,9 @@
+export interface CartsResponse {
+  results: CartResponse[];
+}
+
 export interface CartResponse {
+  id: string;
   lineItems: LineItemResponse[];
   version: number;
 }
@@ -13,6 +18,7 @@ export interface LineItemResponse {
 }
 
 export interface CartInfo {
+  id: string;
   productsInfo: ProductInfo[];
   version: number;
 }

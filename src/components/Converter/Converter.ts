@@ -15,6 +15,7 @@ export default class Converter {
 
   public static cartResponseToInfo(cart: CartResponse): CartInfo {
     const formattedCart: CartInfo = {
+      id: cart.id,
       productsInfo: [],
       version: cart.version,
     };

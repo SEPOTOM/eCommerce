@@ -23,7 +23,8 @@ export default class Cart {
 
   public async updateProductQuantity(quantity: string, itemId: string): Promise<ProductInfo | Error> {
     const cartVersion = this.getCurrentCartVersion();
-    const cartResponse = await CartAPI.updateQuantity(Number(quantity), itemId, cartVersion);
+    const cartId = this.getCurrentCartId();
+    const cartResponse = await CartAPI.updateQuantity(Number(quantity), itemId, cartVersion, cartId);
     const cart = this.updateCurrentCart(cartResponse);
 
     if ('message' in cart) {
@@ -51,5 +52,9 @@ export default class Cart {
 
   private getCurrentCartVersion(): number {
     return this.cart?.version || 0;
+  }
+
+  private getCurrentCartId(): string {
+    return this.cart?.id || '';
   }
 }
