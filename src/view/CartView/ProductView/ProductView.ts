@@ -5,6 +5,7 @@ import HTML from './ProductView.html';
 import { ProductInfo } from '../../../types';
 import { DataAttrs } from '../data';
 
+const HIDE_ERROR_DELAY = 3000;
 export default class ProductView {
   private view = Converter.htmlToElement<HTMLLIElement>(HTML) || document.createElement('li');
 
@@ -155,5 +156,27 @@ export default class ProductView {
     }
 
     this.updateView(updateResponse);
+  }
+
+  private showQuantityError(message: string): void {
+    const quantityBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_BLOCK}]`);
+    const quantityErrorBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_ERROR}]`);
+
+    if (quantityBlock instanceof HTMLElement && quantityErrorBlock) {
+      quantityBlock.dataset.error = 'true';
+      quantityErrorBlock.textContent = message;
+
+      setTimeout(this.hideQuantityError.bind(this), HIDE_ERROR_DELAY);
+    }
+  }
+
+  private hideQuantityError(): void {
+    const quantityBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_BLOCK}]`);
+    const quantityErrorBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_ERROR}]`);
+
+    if (quantityBlock instanceof HTMLElement && quantityErrorBlock) {
+      quantityBlock.dataset.error = 'false';
+      quantityErrorBlock.textContent = '';
+    }
   }
 }

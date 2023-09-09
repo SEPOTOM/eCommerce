@@ -14,4 +14,6 @@ export enum DataAttrs {
   ROW = 'data-product-row',
   LABEL = 'data-product-label',
   QUANTITY_INPUT = 'data-quantity-input',
+  QUANTITY_BLOCK = 'data-quantity-block',
+  QUANTITY_ERROR = 'data-quantity-error',
 }
