@@ -18,7 +18,7 @@ export default class Validator {
       return new Error(`${ErrorMessages.TOO_SMALL}${innerMin}`);
     }
 
-    if (innerValue !== Math.floor(innerValue)) {
+    if (value.split('.').length > 1) {
       return new Error(ErrorMessages.NOT_INTEGER);
     }
 
