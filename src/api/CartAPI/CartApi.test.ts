@@ -12,4 +12,8 @@ describe('CartAPI class', () => {
   it('must have a updateQuantity method', () => {
     expect(CartAPI.updateQuantity).toBeDefined();
   });
+
+  it('must have a removeItem method', () => {
+    expect(CartAPI.removeItem).toBeDefined();
+  });
 });

@@ -17,13 +17,13 @@ export default class ProductView {
 
   constructor(private cart: Cart) {}
 
-  public buildView(productData: ProductInfo): HTMLLIElement {
-    this.configureView(productData);
+  public buildView(productData: ProductInfo, labelMark: string): HTMLLIElement {
+    this.configureView(productData, labelMark);
 
     return this.view;
   }
 
-  private configureView(productData: ProductInfo): void {
+  private configureView(productData: ProductInfo, labelMark: string): void {
     this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));
 
@@ -32,6 +32,7 @@ export default class ProductView {
     this.configureQuantity(productData.quantity);
     this.configureIndividualPrice(productData.individualPrice, productData.discountedIndividualPrice);
     this.configureTotalPrice(productData.totalPrice);
+    this.configureQuantityRow(labelMark);
   }
 
   private configureImage(src: string, alt: string): void {
@@ -83,6 +84,19 @@ export default class ProductView {
     }
   }
 
+  private configureQuantityRow(labelMark: string): void {
+    const row = this.view.querySelector(`[${DataAttrs.ROW}]`);
+    const label = row?.querySelector(`[${DataAttrs.LABEL}]`);
+    const input = row?.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
+
+    if (label && input) {
+      const labelFor = label.getAttribute('for');
+
+      label.setAttribute('for', `${labelFor}${labelMark}`);
+      input.setAttribute('id', `${labelFor}${labelMark}`);
+    }
+  }
+
   private enterEditMode(): void {
     const quantityInfo = this.getQuantityInfo();
 
@@ -109,6 +123,9 @@ export default class ProductView {
       }
       if (button && button.hasAttribute(DataAttrs.CHANGE_QUANTITY_BUTTON)) {
         this.updateProductQuantity();
+      }
+      if (button && button.hasAttribute(DataAttrs.DELETE_BUTTON)) {
+        this.deleteProduct();
       }
     }
   }
@@ -172,6 +189,18 @@ export default class ProductView {
     this.updateView(updateResponse);
   }
 
+  private async deleteProduct(): Promise<void> {
+    const itemId = this.getItemId();
+    const response = await this.cart.removeProduct(itemId);
+
+    if ('message' in response) {
+      this.showDeleteError(ErrorMessages.ERROR);
+      return;
+    }
+
+    this.view.remove();
+  }
+
   private validateQuantity(quantity: string): Error | true {
     const quantityInput = this.view.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
 
@@ -194,6 +223,17 @@ export default class ProductView {
     }
   }
 
+  private showDeleteError(message: string): void {
+    const deleteErrorBlock = this.view.querySelector(`[${DataAttrs.DELETE_ERROR}]`);
+
+    if (deleteErrorBlock instanceof HTMLElement) {
+      deleteErrorBlock.textContent = message;
+      deleteErrorBlock.dataset.error = 'true';
+
+      setTimeout(this.hideDeleteError.bind(this), HIDE_ERROR_DELAY);
+    }
+  }
+
   private hideQuantityError(): void {
     const quantityBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_BLOCK}]`);
     const quantityErrorBlock = this.view.querySelector(`[${DataAttrs.QUANTITY_ERROR}]`);
@@ -201,6 +241,15 @@ export default class ProductView {
     if (quantityBlock instanceof HTMLElement && quantityErrorBlock) {
       quantityBlock.dataset.error = 'false';
       quantityErrorBlock.textContent = '';
+    }
+  }
+
+  private hideDeleteError(): void {
+    const deleteErrorBlock = this.view.querySelector(`[${DataAttrs.DELETE_ERROR}]`);
+
+    if (deleteErrorBlock instanceof HTMLElement) {
+      deleteErrorBlock.textContent = '';
+      deleteErrorBlock.dataset.error = 'false';
     }
   }
 }

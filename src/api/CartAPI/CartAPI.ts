@@ -2,7 +2,7 @@
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
 import { CartResponse, IError, CartsResponse } from '../../types';
-import { UpdateRequest, LineItemChangeQuantityAction } from './types';
+import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction } from './types';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
@@ -34,6 +34,32 @@ export default class CartAPI {
     const bodyData: UpdateRequest = {
       version: cartVersion,
       actions: [updateQuantityAction],
+    };
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
+  public static async removeItem(
+    lineItemId: string,
+    cartVersion: number,
+    cartId: string
+  ): Promise<CartResponse | Error> {
+    const removeItemAction: LineItemRemoveAction = {
+      lineItemId,
+      action: 'removeLineItem',
+    };
+    const bodyData: UpdateRequest = {
+      version: cartVersion,
+      actions: [removeItemAction],
     };
 
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
