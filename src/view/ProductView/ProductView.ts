@@ -96,7 +96,6 @@ export default class ProductView {
 
       await CartAPI.createCustomerCart(payload);
       this.processAddProduct(productID, productDetails, personalCart);
-
     } else {
       this.processAddProduct(productID, productDetails, personalCart);
     }
@@ -130,7 +129,6 @@ export default class ProductView {
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
     removeFromCartButton.addEventListener('click', async () => {
-
       if ('version' in personalCart) {
         const payload: IAddLineItem = {
           version: await CartAPI.getActiveCartVersion(),
@@ -177,7 +175,6 @@ export default class ProductView {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
 
     addToCartButton.addEventListener('click', async () => {
-
       if ('id' in personalCart && 'version' in personalCart) {
         const personalCartID = String(personalCart.id);
 
