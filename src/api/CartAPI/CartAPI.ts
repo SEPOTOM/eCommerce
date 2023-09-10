@@ -1,20 +1,54 @@
 /* eslint-disable import/no-cycle */
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
+import { UpdateRequest, LineItemChangeQuantityAction } from './types';
 import { CartResponse, IError, IAddLineItem, ICartTemplate } from '../../types';
-
-// In the future, instead of using this constant,
-// the Cart.get method will accept the id as a parameter
-const TEMPORARY_CART_ID = 'f689b145-49c7-43bf-9ef2-d86831ab238c';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
   TRY_LATER = 'Please, try again later.',
+  NO_CART = 'Could not find the cart for the current customer. Please, try again later.',
 }
 
 export default class CartAPI {
   public static async get(): Promise<CartResponse | Error> {
-    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${TEMPORARY_CART_ID}`;
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts`;
+    const requestOptions = {
+      method: 'GET',
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
+  public static async updateQuantity(
+    quantity: number,
+    lineItemId: string,
+    cartVersion: number,
+    cartId: string
+  ): Promise<CartResponse | Error> {
+    const updateQuantityAction: LineItemChangeQuantityAction = {
+      quantity,
+      lineItemId,
+      action: 'changeLineItemQuantity',
+    };
+    const bodyData: UpdateRequest = {
+      version: cartVersion,
+      actions: [updateQuantityAction],
+    };
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
+  private static async sendRequest(endpoint: string, requestOptions: RequestInit): Promise<CartResponse | Error> {
     const tokens = await Tokens.getCustomerTokens();
 
     if (!tokens) {
@@ -25,8 +59,9 @@ export default class CartAPI {
 
     try {
       const response = await fetch(endpoint, {
-        method: 'GET',
+        ...requestOptions,
         headers: {
+          ...requestOptions.headers,
           Authorization: `Bearer ${bearerToken}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -43,24 +78,27 @@ export default class CartAPI {
     }
   }
 
-  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<void> {
+  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<string | Error> {
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts/${cartID}`;
     const tokens = await Tokens.getCustomerTokens();
     const bearerToken = tokens.access_token;
+    let result: string | Error = 'ok';
 
     if (bearerToken) {
       try {
-        await fetch(endpoint, {
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${bearerToken}`,
           },
           body: JSON.stringify(payload),
         });
+        result = await response.json();
       } catch (err) {
-        console.log(ErrorMessages.SERVER);
+        return new Error(ErrorMessages.SERVER);
       }
     }
+    return result;
   }
 
   public static async getCartByID(id: string): Promise<CartResponse | Error> {
@@ -93,42 +131,10 @@ export default class CartAPI {
     }
   }
 
-  public static async getCarts(): Promise<CartResponse | Error> {
+  public static async createCustomerCart(payload: ICartTemplate): Promise<CartResponse | Error> {
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts`;
     const tokens = await Tokens.getCustomerTokens();
-
-    if (!tokens) {
-      return new Error(ErrorMessages.SERVER);
-    }
-
     const bearerToken = tokens.access_token;
-
-    try {
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-      const data: CartResponse | IError = await response.json();
-
-      if ('message' in data) {
-        return new Error(`${data.message} ${ErrorMessages.TRY_LATER}`);
-      }
-
-      return data;
-    } catch (err) {
-      return new Error(ErrorMessages.SERVER);
-    }
-  }
-
-  public static async createCustomerCart(payload: ICartTemplate): Promise<CartResponse | Error> {
-    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts`;
-    const tokens = await Tokens.getCustomerTokens();
-    const bearerToken = tokens.access_token;
-
-    console.log(tokens.access_token);
 
     try {
       const response = await fetch(endpoint, {
@@ -143,5 +149,22 @@ export default class CartAPI {
     } catch (err) {
       return new Error(ErrorMessages.SERVER);
     }
+  }
+
+  public static async getActiveCartVersion(): Promise<number> {
+    const cart = await CartAPI.get();
+
+    let cartVersion: number = 0;
+
+    if ('results' in cart) {
+      const cartArray = cart.results as object[];
+      const activeCart = cartArray[0];
+
+      if ('version' in activeCart) {
+        cartVersion = Number(activeCart.version);
+      }
+    }
+
+    return cartVersion;
   }
 }

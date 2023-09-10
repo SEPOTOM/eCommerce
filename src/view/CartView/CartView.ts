@@ -10,6 +10,10 @@ import { DataAttrs } from './data';
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
+  private cart = new Cart();
+
+  private productsObjects: ProductView[] = [];
+
   constructor() {
     this.configureView();
   }
@@ -24,7 +28,7 @@ export default class CartView {
   }
 
   private async configureView(): Promise<void> {
-    const cartData = await new Cart().getCart();
+    const cartData = await this.cart.getCart();
 
     if ('message' in cartData) {
       this.showError(cartData.message);
@@ -38,7 +42,10 @@ export default class CartView {
     const list = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
 
     productsInfo.forEach((productInfo) => {
-      const productItem = new ProductView().buildView(productInfo);
+      const productObject = new ProductView(this.cart);
+      this.productsObjects.push(productObject);
+
+      const productItem = productObject.buildView(productInfo);
       list?.append(productItem);
     });
   }

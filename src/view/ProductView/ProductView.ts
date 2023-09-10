@@ -61,7 +61,7 @@ export default class ProductView {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
 
-        this.addToCartButton(id, productDetails as IProduct);
+        this.manageCartButtons(id, productDetails as IProduct);
 
         // Set breadcrumbs
         const productLink: IBreadCrumbsLink = {
@@ -79,53 +79,76 @@ export default class ProductView {
     }
   }
 
-  private async addToCartButton(productID: string, productDetails: IProduct): Promise<void> {
-    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
-    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+  private async manageCartButtons(productID: string, productDetails: IProduct): Promise<void> {
     const personalCart = await CartAPI.get();
-    const allCarts = await CartAPI.getCarts();
     const inCart = this.productIsInCart(productID, personalCart);
-    if (inCart) {
-      addToCartButton.disabled = true;
-      addToCartButton.classList.remove('hover:bg-red-700');
-      addToCartButton.classList.add('line-through');
 
-      removeFromCartButton.classList.remove('line-through');
-      removeFromCartButton.classList.add('hover:bg-blue-400');
+    if (inCart) {
+      this.disableAddToCart();
+    } else {
+      this.disableRemoveFromCart();
     }
-    if ('count' in allCarts) {
-      if (allCarts.count === 0) {
+
+    if ('count' in personalCart) {
+      if (personalCart.count === 0) {
         const payload: ICartTemplate = {
           currency: currencyName.USD,
         };
-        const newCart: CartResponse | Error = await CartAPI.createCustomerCart(payload);
-        console.log('new cart - ', newCart);
-        console.log('all carts - ', await CartAPI.getCarts());
-      } else if ('id' in personalCart) {
+        await CartAPI.createCustomerCart(payload);
+        this.processAddProduct(productID, productDetails, personalCart);
+      } else {
         this.processAddProduct(productID, productDetails, personalCart);
       }
     }
+
     this.processRemoveProduct(personalCart, productID);
+  }
+
+  private disableAddToCart(): void {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    addToCartButton.disabled = true;
+    addToCartButton.classList.add('line-through');
+
+    removeFromCartButton.disabled = false;
+    removeFromCartButton.classList.remove('line-through');
+  }
+
+  private disableRemoveFromCart(): void {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    removeFromCartButton.disabled = true;
+    removeFromCartButton.classList.add('line-through');
+
+    addToCartButton.disabled = false;
+    addToCartButton.classList.remove('line-through');
   }
 
   private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
     removeFromCartButton.addEventListener('click', async () => {
-      if ('version' in personalCart) {
-        const payload: IAddLineItem = {
-          version: Number(personalCart.version),
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: await this.getLineItemID(productID),
-            },
-          ],
-        };
+      if ('results' in personalCart) {
+        const cart = (personalCart.results as object[])[0];
 
-        console.log('personalCart - ', personalCart);
-        if ('id' in personalCart) {
-          CartAPI.updateLineItem(String(personalCart.id), payload);
+        if ('version' in cart) {
+          const payload: IAddLineItem = {
+            version: await CartAPI.getActiveCartVersion(),
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId: await this.getLineItemID(productID),
+              },
+            ],
+          };
+
+          if ('id' in cart) {
+            await CartAPI.updateLineItem(String(cart.id), payload);
+
+            this.disableRemoveFromCart();
+          }
         }
       }
     });
@@ -133,19 +156,14 @@ export default class ProductView {
 
   private async getLineItemID(productID: string): Promise<string> {
     let lineItemID: string = '';
-
     const lineItemsArray = await this.getLineItemArray();
-    console.log(lineItemsArray);
 
     if ('lineItems' in lineItemsArray[0]) {
       const activeCart = lineItemsArray[0].lineItems as object[];
-      console.log(activeCart);
       activeCart.forEach((element) => {
         if ('id' in element && 'productId' in element) {
           if (element.productId === productID) {
             lineItemID = String(element.id);
-            console.log('element.productId - ', element.productId);
-            console.log('element.id - ', element.id);
           }
         }
       });
@@ -155,7 +173,7 @@ export default class ProductView {
   }
 
   private async getLineItemArray(): Promise<object[]> {
-    const allCarts = await CartAPI.getCarts();
+    const allCarts = await CartAPI.get();
     let cartArray: object[] = [];
 
     if ('results' in allCarts) {
@@ -169,24 +187,29 @@ export default class ProductView {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
 
     addToCartButton.addEventListener('click', async () => {
-      if ('id' in personalCart && 'version' in personalCart) {
-        const personalCartID = String(personalCart.id);
+      if ('results' in personalCart) {
+        const cart = (personalCart.results as object[])[0];
 
-        const payload: IAddLineItem = {
-          version: Number(personalCart.version),
-          actions: [
-            {
-              action: 'addLineItem',
-              productId: productID,
-              variantId: productDetails.lastVariantId,
-              quantity: Number(
-                (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
-              ),
-            },
-          ],
-        };
+        if ('id' in cart && 'version' in cart) {
+          const personalCartID = String(cart.id);
 
-        await CartAPI.updateLineItem(personalCartID, payload);
+          const payload: IAddLineItem = {
+            version: await CartAPI.getActiveCartVersion(),
+            actions: [
+              {
+                action: 'addLineItem',
+                productId: productID,
+                variantId: productDetails.lastVariantId,
+                quantity: Number(
+                  (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+                ),
+              },
+            ],
+          };
+
+          await CartAPI.updateLineItem(personalCartID, payload);
+          this.disableAddToCart();
+        }
       }
     });
   }
@@ -194,8 +217,10 @@ export default class ProductView {
   private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
     let inCart: boolean = false;
 
-    if ('lineItems' in personalCart) {
-      personalCart.lineItems.forEach((element) => {
+    if ('results' in personalCart) {
+      const cart = (personalCart.results as object[])[0] as object[] & CartResponse;
+
+      cart.lineItems.forEach((element) => {
         if ('productId' in element) {
           if (element.productId === productID) {
             inCart = true;
