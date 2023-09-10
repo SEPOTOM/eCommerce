@@ -17,13 +17,13 @@ export default class ProductView {
 
   constructor(private cart: Cart) {}
 
-  public buildView(productData: ProductInfo): HTMLLIElement {
-    this.configureView(productData);
+  public buildView(productData: ProductInfo, labelMark: string): HTMLLIElement {
+    this.configureView(productData, labelMark);
 
     return this.view;
   }
 
-  private configureView(productData: ProductInfo): void {
+  private configureView(productData: ProductInfo, labelMark: string): void {
     this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));
 
@@ -32,6 +32,7 @@ export default class ProductView {
     this.configureQuantity(productData.quantity);
     this.configureIndividualPrice(productData.individualPrice, productData.discountedIndividualPrice);
     this.configureTotalPrice(productData.totalPrice);
+    this.configureQuantityRow(labelMark);
   }
 
   private configureImage(src: string, alt: string): void {
@@ -80,6 +81,19 @@ export default class ProductView {
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = price;
+    }
+  }
+
+  private configureQuantityRow(labelMark: string): void {
+    const row = this.view.querySelector(`[${DataAttrs.ROW}]`);
+    const label = row?.querySelector(`[${DataAttrs.LABEL}]`);
+    const input = row?.querySelector(`[${DataAttrs.QUANTITY_INPUT}]`);
+
+    if (label && input) {
+      const labelFor = label.getAttribute('for');
+
+      label.setAttribute('for', `${labelFor}${labelMark}`);
+      input.setAttribute('id', `${labelFor}${labelMark}`);
     }
   }
 
