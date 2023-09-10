@@ -8,6 +8,7 @@ import CatalogView from '../../../view/CatalogView/CatalogView';
 import BreadcrumbsView from '../../../view/BreadcrumbsView/BreadcrumbsView';
 import ProductView from '../../../view/ProductView/ProductView';
 import AboutUsView from '../../../view/AboutUsView/AboutUsView';
+import CartView from '../../../view/CartView/CartView';
 import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
 import Navigation from '../../../api/Navigation/Navigation';
@@ -102,8 +103,13 @@ const RouterAlpine = {
     };
 
     this.routers['/about-us'] = () => {
-      new AboutUsView().draw();
-      BreadcrumbsView.clear();
+        new AboutUsView().draw();
+        BreadcrumbsView.clear();
+    };
+
+    this.routers['/cart'] = () => {
+        new CartView().draw();
+        BreadcrumbsView.clear();
     };
 
     // Create category links & menu
