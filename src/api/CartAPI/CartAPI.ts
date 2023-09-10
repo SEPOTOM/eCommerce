@@ -187,14 +187,8 @@ export default class CartAPI {
     const cart = await CartAPI.get();
 
     let cartVersion: number = 0;
-
-    if ('results' in cart) {
-      const cartArray = cart.results as object[];
-      const activeCart = cartArray[0];
-
-      if ('version' in activeCart) {
-        cartVersion = Number(activeCart.version);
-      }
+    if ('version' in cart) {
+      cartVersion = Number(cart.version);
     }
 
     return cartVersion;

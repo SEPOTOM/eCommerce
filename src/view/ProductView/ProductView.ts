@@ -89,16 +89,16 @@ export default class ProductView {
       this.disableRemoveFromCart();
     }
 
-    if ('count' in personalCart) {
-      if (personalCart.count === 0) {
-        const payload: ICartTemplate = {
-          currency: currencyName.USD,
-        };
-        await CartAPI.createCustomerCart(payload);
-        this.processAddProduct(productID, productDetails, personalCart);
-      } else {
-        this.processAddProduct(productID, productDetails, personalCart);
-      }
+    if (personalCart instanceof Error) {
+      const payload: ICartTemplate = {
+        currency: currencyName.USD,
+      };
+
+      await CartAPI.createCustomerCart(payload);
+      this.processAddProduct(productID, productDetails, personalCart);
+
+    } else {
+      this.processAddProduct(productID, productDetails, personalCart);
     }
 
     this.processRemoveProduct(personalCart, productID);
@@ -130,23 +130,21 @@ export default class ProductView {
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
     removeFromCartButton.addEventListener('click', async () => {
-      if ('results' in personalCart) {
-        const cart = (personalCart.results as object[])[0];
 
-        if ('version' in cart) {
-          const payload: IAddLineItem = {
-            version: await CartAPI.getActiveCartVersion(),
-            actions: [
-              {
-                action: 'removeLineItem',
-                lineItemId: await this.getLineItemID(productID),
-              },
-            ],
-          };
+      if ('version' in personalCart) {
+        const payload: IAddLineItem = {
+          version: await CartAPI.getActiveCartVersion(),
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId: await this.getLineItemID(productID),
+            },
+          ],
+        };
 
-          if ('id' in cart) {
-            await CartAPI.updateLineItem(String(cart.id), payload);
-
+        if ('id' in personalCart) {
+          const response = await CartAPI.updateLineItem(String(personalCart.id), payload);
+          if (!(response instanceof Error)) {
             this.disableRemoveFromCart();
           }
         }
@@ -158,56 +156,48 @@ export default class ProductView {
     let lineItemID: string = '';
     const lineItemsArray = await this.getLineItemArray();
 
-    if ('lineItems' in lineItemsArray[0]) {
-      const activeCart = lineItemsArray[0].lineItems as object[];
-      activeCart.forEach((element) => {
-        if ('id' in element && 'productId' in element) {
-          if (element.productId === productID) {
-            lineItemID = String(element.id);
-          }
+    lineItemsArray.forEach((element) => {
+      if ('id' in element && 'productId' in element) {
+        if (element.productId === productID) {
+          lineItemID = String(element.id);
         }
-      });
-    }
+      }
+    });
 
     return lineItemID;
   }
 
   private async getLineItemArray(): Promise<object[]> {
-    const allCarts = await CartAPI.get();
-    let cartArray: object[] = [];
+    const activeCart = await CartAPI.get();
 
-    if ('results' in allCarts) {
-      cartArray = allCarts.results as object[];
-      return cartArray;
-    }
-    return cartArray;
+    return (activeCart as CartResponse).lineItems;
   }
 
   private processAddProduct(productID: string, productDetails: IProduct, personalCart: Error | CartResponse) {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
 
     addToCartButton.addEventListener('click', async () => {
-      if ('results' in personalCart) {
-        const cart = (personalCart.results as object[])[0];
 
-        if ('id' in cart && 'version' in cart) {
-          const personalCartID = String(cart.id);
+      if ('id' in personalCart && 'version' in personalCart) {
+        const personalCartID = String(personalCart.id);
 
-          const payload: IAddLineItem = {
-            version: await CartAPI.getActiveCartVersion(),
-            actions: [
-              {
-                action: 'addLineItem',
-                productId: productID,
-                variantId: productDetails.lastVariantId,
-                quantity: Number(
-                  (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
-                ),
-              },
-            ],
-          };
+        const payload: IAddLineItem = {
+          version: await CartAPI.getActiveCartVersion(),
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: productID,
+              variantId: productDetails.lastVariantId,
+              quantity: Number(
+                (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+              ),
+            },
+          ],
+        };
 
-          await CartAPI.updateLineItem(personalCartID, payload);
+        const response = await CartAPI.updateLineItem(personalCartID, payload);
+
+        if (!(response instanceof Error)) {
           this.disableAddToCart();
         }
       }
@@ -217,17 +207,13 @@ export default class ProductView {
   private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
     let inCart: boolean = false;
 
-    if ('results' in personalCart) {
-      const cart = (personalCart.results as object[])[0] as object[] & CartResponse;
-
-      cart.lineItems.forEach((element) => {
-        if ('productId' in element) {
-          if (element.productId === productID) {
-            inCart = true;
-          }
+    (personalCart as CartResponse).lineItems.forEach((element) => {
+      if ('productId' in element) {
+        if (element.productId === productID) {
+          inCart = true;
         }
-      });
-    }
+      }
+    });
 
     return inCart;
   }
