@@ -20,6 +20,11 @@ const CategoryViewAlpine = {
   filterAllProps: {},
   sortQuery: '',
   sortActive: 'default',
+  productLimit: 5,
+  loadedPage: 1,
+  totalProducts: 0,
+  scrollThreshold: 150,
+  scrollNeedToWait: false,
 
   /* eslint-disable max-lines-per-function */
   init(): void {
@@ -33,13 +38,35 @@ const CategoryViewAlpine = {
     setTimeout(() => {
       this.isLoading = true;
     }, delay);
+
+    // Product lazy loading
+    document.addEventListener('scroll', () => {
+      const clineHeight = window.innerHeight;
+      const scrollFromBottom = Math.ceil(document.body.getBoundingClientRect().bottom);
+
+      if (clineHeight > scrollFromBottom - this.scrollThreshold && !this.scrollNeedToWait) {
+        if (this.productLimit * this.loadedPage <= this.totalProducts) {
+          this.scrollNeedToWait = true;
+          this.loadedPage += 1;
+          this.getProductsByQuery();
+
+          setTimeout((): void => {
+            this.scrollNeedToWait = false;
+          }, delay);
+        }
+      }
+    });
   },
 
   getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
     try {
-      fetch(`${this.urlPath}${filterQuery}${sortQuery}`, this.setBodyRequest())
+      fetch(
+        `${this.urlPath}&limit=${this.productLimit * this.loadedPage}${filterQuery}${sortQuery}`,
+        this.setBodyRequest()
+      )
         .then((resp) => resp.json())
         .then((json: IAllProducts): void => {
+          this.totalProducts = json.total;
           this.setProductData(json.results);
         });
     } catch {
@@ -95,6 +122,11 @@ const CategoryViewAlpine = {
               action: `&filter=variants.attributes.${attr.name}:`,
               active: false,
             });
+
+            // Sort filter by values
+            this.filterAllProps[attr.name].sort((a: { [key: string]: string }, b: { [key: string]: string }) =>
+              a.name > b.name ? 1 : -1
+            );
           }
         }
       });
@@ -211,6 +243,13 @@ const CategoryViewAlpine = {
       });
 
     return `${leftModify.reverse().join('')}.${right}`;
+  },
+
+  addToBasket(e: Event): void {
+    e.stopPropagation();
+    e.preventDefault();
+
+    // TODO: implement after add logic on the PDP
   },
 };
 

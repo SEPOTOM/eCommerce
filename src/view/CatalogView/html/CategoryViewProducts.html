@@ -76,10 +76,20 @@
               </template>
             </div>
 
-            <span
-              class="text-sm text-blue-700 underline underline-offset-2 opacity-70 transition-all duration-300 group-hover:opacity-100 hover:text-red-600"
-              >More information</span
-            >
+            <template x-if="item.onStock">
+              <span
+                class="px-5 pt-1 pb-2 bg-red-600 rounded-lg text-sm text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+                @click="($even) => { addToBasket($event) }"
+              >
+                Add to basket
+              </span>
+            </template>
+            <template x-if="!item.onStock">
+              <span
+                class="text-sm text-blue-700 underline underline-offset-2 opacity-70 transition-all duration-300 group-hover:opacity-100 hover:text-red-600"
+                >More information</span
+              >
+            </template>
           </div>
         </div>
       </a>

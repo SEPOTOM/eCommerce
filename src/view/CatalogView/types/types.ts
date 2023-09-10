@@ -1,5 +1,6 @@
 export interface IAllProducts {
   results: Array<IShortProductsJSON>;
+  total?: number;
 }
 
 export interface IShortProductsJSON {
