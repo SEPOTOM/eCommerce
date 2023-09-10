@@ -2,7 +2,7 @@
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
 import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction } from './types';
-import { CartResponse, IError, IAddLineItem, ICartTemplate } from '../../types';
+import { CartResponse, IError, CartsResponse, IAddLineItem, ICartTemplate } from '../../types';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
@@ -89,13 +89,19 @@ export default class CartAPI {
         headers: {
           ...requestOptions.headers,
           Authorization: `Bearer ${bearerToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      const data: CartResponse | IError = await response.json();
+      const data: CartsResponse | CartResponse | IError = await response.json();
 
       if ('message' in data) {
         return new Error(`${data.message} ${ErrorMessages.TRY_LATER}`);
+      }
+
+      if ('results' in data && data.results[0]) {
+        return data.results[0];
+      }
+      if ('results' in data) {
+        return new Error(ErrorMessages.NO_CART);
       }
 
       return data;
