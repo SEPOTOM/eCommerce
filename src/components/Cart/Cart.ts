@@ -21,6 +21,15 @@ export default class Cart {
     return this.cart?.productsInfo || [];
   }
 
+  public async removeProduct(itemId: string): Promise<Cart | Error> {
+    const cartVersion = this.getCurrentCartVersion();
+    const cartId = this.getCurrentCartId();
+    const cartResponse = await CartAPI.removeItem(itemId, cartVersion, cartId);
+    const cart = this.updateCurrentCart(cartResponse);
+
+    return cart;
+  }
+
   public async updateProductQuantity(quantity: string, itemId: string): Promise<ProductInfo | Error> {
     const cartVersion = this.getCurrentCartVersion();
     const cartId = this.getCurrentCartId();

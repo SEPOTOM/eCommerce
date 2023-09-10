@@ -12,3 +12,8 @@ export interface LineItemChangeQuantityAction extends Action {
   lineItemId: string;
   quantity: number;
 }
+
+export interface LineItemRemoveAction extends Action {
+  action: 'removeLineItem';
+  lineItemId: string;
+}

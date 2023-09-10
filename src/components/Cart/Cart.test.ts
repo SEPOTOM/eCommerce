@@ -18,4 +18,8 @@ describe('Cart class', () => {
   it('an instance must have a updateProductQuantity method', () => {
     expect(instance.updateProductQuantity).toBeDefined();
   });
+
+  it('an instance must have a removeProduct method', () => {
+    expect(instance.removeProduct).toBeDefined();
+  });
 });
