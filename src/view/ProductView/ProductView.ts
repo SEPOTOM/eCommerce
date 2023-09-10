@@ -106,18 +106,6 @@ export default class ProductView {
       }
     }
     this.processRemoveProduct(personalCart, productID);
-    // if ('id' in personalCart) {
-    //   this.processAddProduct(productID, productDetails, personalCart);
-    // } else {
-    //   const payload: ICartTemplate = {
-    //     currency: currencyName.USD,
-    //   }
-    //   const newCart: CartResponse | Error = await CartAPI.createCustomerCart(payload);
-    //   console.log('newCart - ', newCart);
-    //   if ('id' in newCart) {
-    //     this.processAddProduct(productID, productDetails, newCart);
-    //   }
-    // }
   }
 
   private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
