@@ -204,9 +204,11 @@ export default class ProductView {
 
         const response = await CartAPI.updateLineItem(personalCartID, payload);
 
-        if (!(response instanceof Error)) {
+        if ('lineitems' in response) {
           this.disableAddToCart();
           this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+        } else {
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
         }
       }
     });

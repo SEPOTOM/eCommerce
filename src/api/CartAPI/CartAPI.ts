@@ -110,27 +110,30 @@ export default class CartAPI {
     }
   }
 
-  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<string | Error> {
+  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<CartResponse | Error> {
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts/${cartID}`;
     const tokens = await Tokens.getCustomerTokens();
-    const bearerToken = tokens.access_token;
-    let result: string | Error = 'ok';
 
-    if (bearerToken) {
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        result = await response.json();
-      } catch (err) {
-        return new Error(ErrorMessages.SERVER);
-      }
+    if (!tokens) {
+      return new Error(ErrorMessages.SERVER);
     }
-    return result;
+
+    const bearerToken = tokens.access_token;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data: CartResponse | Error = await response.json();
+
+      return data;
+    } catch (err) {
+      return new Error(ErrorMessages.SERVER);
+    }
   }
 
   public static async getCartByID(id: string): Promise<CartResponse | Error> {
