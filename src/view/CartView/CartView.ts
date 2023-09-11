@@ -35,7 +35,12 @@ export default class CartView {
       return;
     }
 
-    this.configureList(cartData.getProductsInfo());
+    const productsInfo = cartData.getProductsInfo();
+
+    if (productsInfo.length > 0) {
+      this.configureList(productsInfo);
+      this.makeFilled();
+    }
   }
 
   private configureList(productsInfo: ProductInfo[]): void {
@@ -55,5 +60,9 @@ export default class CartView {
 
     this.view.innerHTML = '';
     this.view.append(errorBlock);
+  }
+
+  private makeFilled(): void {
+    this.view.dataset.filled = 'true';
   }
 }
