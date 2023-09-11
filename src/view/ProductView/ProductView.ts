@@ -35,7 +35,7 @@ const accessToken = 'access_token';
 
 const sliderClickDelay = 1200;
 
-const errorTimeOut = 5000;
+const errorTimeOut = 1000;
 
 export default class ProductView {
   private static activeImage: number = 0;
@@ -204,7 +204,7 @@ export default class ProductView {
 
         const response = await CartAPI.updateLineItem(personalCartID, payload);
 
-        if ('lineitems' in response) {
+        if ('lineItems' in response) {
           this.disableAddToCart();
           this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
         } else {
