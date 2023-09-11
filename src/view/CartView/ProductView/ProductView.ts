@@ -187,6 +187,7 @@ export default class ProductView {
     }
 
     this.updateView(updateResponse);
+    this.notifyAbout(Events.CHANGE_TOTAL_PRICE);
   }
 
   private async deleteProduct(): Promise<void> {
@@ -198,7 +199,8 @@ export default class ProductView {
       return;
     }
 
-    this.notifyAboutDeletion();
+    this.notifyAbout(Events.PRODUCT_DELETED);
+    this.notifyAbout(Events.CHANGE_TOTAL_PRICE);
     this.view.remove();
   }
 
@@ -254,8 +256,8 @@ export default class ProductView {
     }
   }
 
-  private notifyAboutDeletion(): void {
-    const event = new Event(Events.PRODUCT_DELETED, {
+  private notifyAbout(eventMessage: string): void {
+    const event = new Event(eventMessage, {
       bubbles: true,
     });
     this.view.dispatchEvent(event);

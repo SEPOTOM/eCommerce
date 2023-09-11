@@ -17,8 +17,10 @@ export enum DataAttrs {
   QUANTITY_BLOCK = 'data-quantity-block',
   QUANTITY_ERROR = 'data-quantity-error',
   DELETE_ERROR = 'data-delete-error',
+  TOTAL_PRICE = 'data-total-price',
 }
 
 export enum Events {
+  CHANGE_TOTAL_PRICE = 'changetotalprice',
   PRODUCT_DELETED = 'productdeleted',
 }

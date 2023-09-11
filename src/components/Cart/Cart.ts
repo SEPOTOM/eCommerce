@@ -13,6 +13,7 @@ export default class Cart {
     id: '',
     version: 0,
     productsInfo: [],
+    totalPrice: '',
   };
 
   public async getCart(): Promise<Cart | Error> {
@@ -24,6 +25,10 @@ export default class Cart {
 
   public getProductsInfo(): ProductInfo[] {
     return this.cart?.productsInfo || [];
+  }
+
+  public getTotalPrice(): string {
+    return this.cart?.totalPrice || '';
   }
 
   public async removeProduct(itemId: string): Promise<Cart | Error> {

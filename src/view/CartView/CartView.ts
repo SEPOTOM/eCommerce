@@ -34,6 +34,8 @@ export default class CartView {
       }
     });
 
+    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
+
     const cartData = await this.cart.getCart();
 
     if ('message' in cartData) {
@@ -47,6 +49,7 @@ export default class CartView {
       this.configureList(productsInfo);
       this.makeFilled();
     }
+    this.configureTotalPrice(cartData.getTotalPrice());
   }
 
   private configureList(productsInfo: ProductInfo[]): void {
@@ -59,6 +62,14 @@ export default class CartView {
       const productItem = productObject.buildView(productInfo, `${index}`);
       list?.append(productItem);
     });
+  }
+
+  private configureTotalPrice(totalPrice: string): void {
+    const totalPriceBlock = this.view.querySelector(`[${DataAttrs.TOTAL_PRICE}]`);
+
+    if (totalPriceBlock) {
+      totalPriceBlock.textContent = totalPrice;
+    }
   }
 
   private showError(message: string): void {
@@ -84,5 +95,10 @@ export default class CartView {
     }
 
     return true;
+  }
+
+  private updateTotalPrice(): void {
+    const totalPrice = this.cart.getTotalPrice();
+    this.configureTotalPrice(totalPrice);
   }
 }
