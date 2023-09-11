@@ -21,6 +21,10 @@ export default class Cart {
     return this.cart?.productsInfo || [];
   }
 
+  public getTotalPrice(): string {
+    return this.cart?.totalPrice || '';
+  }
+
   public async removeProduct(itemId: string): Promise<Cart | Error> {
     const cartVersion = this.getCurrentCartVersion();
     const cartId = this.getCurrentCartId();

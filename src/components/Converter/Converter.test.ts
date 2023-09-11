@@ -125,6 +125,7 @@ describe('Converter class', () => {
     };
     const expected: CartInfo = {
       id: 'test-cart-id',
+      totalPrice: '$2900.00',
       productsInfo: [
         {
           itemId: 'test-id-1',

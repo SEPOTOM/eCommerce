@@ -20,6 +20,7 @@ export interface LineItemResponse {
 
 export interface CartInfo {
   id: string;
+  totalPrice: string;
   productsInfo: ProductInfo[];
   version: number;
 }
