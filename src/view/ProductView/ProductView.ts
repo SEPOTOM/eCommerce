@@ -89,17 +89,7 @@ export default class ProductView {
       this.disableRemoveFromCart();
     }
 
-    if (personalCart instanceof Error) {
-      const payload: ICartTemplate = {
-        currency: currencyName.USD,
-      };
-
-      await CartAPI.createCustomerCart(payload);
-      this.processAddProduct(productID, productDetails, personalCart);
-    } else {
-      this.processAddProduct(productID, productDetails, personalCart);
-    }
-
+    this.processAddProduct(productID, productDetails);
     this.processRemoveProduct(personalCart, productID);
   }
 
@@ -171,10 +161,19 @@ export default class ProductView {
     return (activeCart as CartResponse).lineItems;
   }
 
-  private processAddProduct(productID: string, productDetails: IProduct, personalCart: Error | CartResponse) {
+  private processAddProduct(productID: string, productDetails: IProduct) {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
 
     addToCartButton.addEventListener('click', async () => {
+      let personalCart = await CartAPI.get();
+      if (personalCart instanceof Error) {
+        const payload: ICartTemplate = {
+          currency: currencyName.USD,
+        };
+        await CartAPI.createCustomerCart(payload);
+        personalCart = await CartAPI.get();
+      }
+
       if ('id' in personalCart && 'version' in personalCart) {
         const personalCartID = String(personalCart.id);
 
@@ -204,13 +203,15 @@ export default class ProductView {
   private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
     let inCart: boolean = false;
 
-    (personalCart as CartResponse).lineItems.forEach((element) => {
-      if ('productId' in element) {
-        if (element.productId === productID) {
-          inCart = true;
+    if (!(personalCart instanceof Error)) {
+      (personalCart as CartResponse).lineItems.forEach((element) => {
+        if ('productId' in element) {
+          if (element.productId === productID) {
+            inCart = true;
+          }
         }
-      }
-    });
+      });
+    }
 
     return inCart;
   }
