@@ -5,7 +5,7 @@ import HTML from './CartView.html';
 import ProductView from './ProductView/ProductView';
 import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
-import { DataAttrs } from './data';
+import { DataAttrs, Events } from './data';
 
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -28,6 +28,8 @@ export default class CartView {
   }
 
   private async configureView(): Promise<void> {
+    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
+
     const cartData = await this.cart.getCart();
 
     if ('message' in cartData) {
@@ -64,5 +66,10 @@ export default class CartView {
 
     this.view.innerHTML = '';
     this.view.append(errorBlock);
+  }
+
+  private updateTotalPrice(): void {
+    const totalPrice = this.cart.getTotalPrice();
+    this.configureTotalPrice(totalPrice);
   }
 }

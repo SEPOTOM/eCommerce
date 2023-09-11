@@ -4,7 +4,7 @@ import Cart from '../../../components/Cart/Cart';
 import Validator from '../../../components/Validator/Validator';
 import HTML from './ProductView.html';
 import { ProductInfo } from '../../../types';
-import { DataAttrs } from '../data';
+import { DataAttrs, Events } from '../data';
 
 const HIDE_ERROR_DELAY = 3000;
 
@@ -187,6 +187,7 @@ export default class ProductView {
     }
 
     this.updateView(updateResponse);
+    this.notifyAboutChanges();
   }
 
   private async deleteProduct(): Promise<void> {
@@ -198,6 +199,7 @@ export default class ProductView {
       return;
     }
 
+    this.notifyAboutChanges();
     this.view.remove();
   }
 
@@ -251,5 +253,12 @@ export default class ProductView {
       deleteErrorBlock.textContent = '';
       deleteErrorBlock.dataset.error = 'false';
     }
+  }
+
+  private notifyAboutChanges(): void {
+    const event = new Event(Events.CHANGE_TOTAL_PRICE, {
+      bubbles: true,
+    });
+    this.view.dispatchEvent(event);
   }
 }
