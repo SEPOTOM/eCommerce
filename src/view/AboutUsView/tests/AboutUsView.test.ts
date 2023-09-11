@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import AboutUsView from '../AboutUsView';
 
 describe('[AboutUsView]: common test', (): void => {
-  it('-- сlass "AboutUsView" should be defined', (): void => {
+  it('-- class "AboutUsView" should be defined', (): void => {
     expect(AboutUsView).toBeDefined();
   });
 

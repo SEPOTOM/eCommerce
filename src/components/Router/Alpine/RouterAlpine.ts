@@ -103,13 +103,13 @@ const RouterAlpine = {
     };
 
     this.routers['/about-us'] = () => {
-        new AboutUsView().draw();
-        BreadcrumbsView.clear();
+      new AboutUsView().draw();
+      BreadcrumbsView.clear();
     };
 
     this.routers['/cart'] = () => {
-        new CartView().draw();
-        BreadcrumbsView.clear();
+      new CartView().draw();
+      BreadcrumbsView.clear();
     };
 
     // Create category links & menu
