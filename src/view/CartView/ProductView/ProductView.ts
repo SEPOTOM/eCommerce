@@ -4,7 +4,7 @@ import Cart from '../../../components/Cart/Cart';
 import Validator from '../../../components/Validator/Validator';
 import HTML from './ProductView.html';
 import { ProductInfo } from '../../../types';
-import { DataAttrs } from '../data';
+import { DataAttrs, Events } from '../data';
 
 const HIDE_ERROR_DELAY = 3000;
 
@@ -198,6 +198,7 @@ export default class ProductView {
       return;
     }
 
+    this.notifyAboutDeletion();
     this.view.remove();
   }
 
@@ -251,5 +252,12 @@ export default class ProductView {
       deleteErrorBlock.textContent = '';
       deleteErrorBlock.dataset.error = 'false';
     }
+  }
+
+  private notifyAboutDeletion(): void {
+    const event = new Event(Events.PRODUCT_DELETED, {
+      bubbles: true,
+    });
+    this.view.dispatchEvent(event);
   }
 }

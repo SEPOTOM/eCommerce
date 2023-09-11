@@ -5,7 +5,7 @@ import HTML from './CartView.html';
 import ProductView from './ProductView/ProductView';
 import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
-import { DataAttrs } from './data';
+import { DataAttrs, Events } from './data';
 
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -28,6 +28,12 @@ export default class CartView {
   }
 
   private async configureView(): Promise<void> {
+    this.view.addEventListener(Events.PRODUCT_DELETED, () => {
+      if (this.isListEmpty()) {
+        this.makeEmpty();
+      }
+    });
+
     const cartData = await this.cart.getCart();
 
     if ('message' in cartData) {
@@ -64,5 +70,19 @@ export default class CartView {
 
   private makeFilled(): void {
     this.view.dataset.filled = 'true';
+  }
+
+  private makeEmpty(): void {
+    this.view.dataset.filled = 'false';
+  }
+
+  private isListEmpty(): boolean {
+    const list = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
+
+    if (list) {
+      return list.children.length > 0;
+    }
+
+    return true;
   }
 }

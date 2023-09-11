@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export enum DataAttrs {
   PRODUCTS_LIST = 'data-products-list',
   PRODUCT_IMG = 'data-product-image',
@@ -18,4 +17,8 @@ export enum DataAttrs {
   QUANTITY_BLOCK = 'data-quantity-block',
   QUANTITY_ERROR = 'data-quantity-error',
   DELETE_ERROR = 'data-delete-error',
+}
+
+export enum Events {
+  PRODUCT_DELETED = 'productdeleted',
 }
