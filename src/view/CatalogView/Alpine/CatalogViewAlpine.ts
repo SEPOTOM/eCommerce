@@ -20,53 +20,43 @@ const CategoryViewAlpine = {
   filterAllProps: {},
   sortQuery: '',
   sortActive: 'default',
-  productLimit: 5,
+  productLimit: 100,
+  productOffset: 0,
+  maxPaginationCount: 0,
   loadedPage: 1,
-  totalProducts: 0,
-  scrollThreshold: 150,
-  scrollNeedToWait: false,
 
   /* eslint-disable max-lines-per-function */
   init(): void {
-    const delay = 1000;
+    const delayForCategoryLoading = 1000;
+    const delayForSetPAgination = 200;
     this.urlPath = `${CTP_API_URL}/${CTP_PROJECT_KEY}/product-projections/search?filter=categories.id:"${this.categoryId}"`;
     this.filterQuery = '';
     this.filterActiveProps = {};
     this.filterAllProps = {};
+
+    // need to get first all filters
     this.getProductsByQuery();
+    this.productLimit = 4;
+    this.products = [];
+
+    setTimeout(() => {
+      this.getProductsByQuery();
+    }, delayForSetPAgination);
 
     setTimeout(() => {
       this.isLoading = true;
-    }, delay);
-
-    // Product lazy loading
-    document.addEventListener('scroll', () => {
-      const clineHeight = window.innerHeight;
-      const scrollFromBottom = Math.ceil(document.body.getBoundingClientRect().bottom);
-
-      if (clineHeight > scrollFromBottom - this.scrollThreshold && !this.scrollNeedToWait) {
-        if (this.productLimit * this.loadedPage <= this.totalProducts) {
-          this.scrollNeedToWait = true;
-          this.loadedPage += 1;
-          this.getProductsByQuery();
-
-          setTimeout((): void => {
-            this.scrollNeedToWait = false;
-          }, delay);
-        }
-      }
-    });
+    }, delayForCategoryLoading);
   },
 
   getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
     try {
       fetch(
-        `${this.urlPath}&limit=${this.productLimit * this.loadedPage}${filterQuery}${sortQuery}`,
+        `${this.urlPath}&limit=${this.productLimit}&offset=${this.productOffset}${filterQuery}${sortQuery}`,
         this.setBodyRequest()
       )
         .then((resp) => resp.json())
         .then((json: IAllProducts): void => {
-          this.totalProducts = json.total;
+          this.maxPaginationCount = json.total ? Math.ceil(json.total / this.productLimit) : 0;
           this.setProductData(json.results);
         });
     } catch {
@@ -163,6 +153,8 @@ const CategoryViewAlpine = {
       this.filterQuery = this.filterQuery.replace(`${filterQuery}"${value}"`, '');
     }
 
+    this.productOffset = 0;
+    this.loadedPage = 1;
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
@@ -243,6 +235,16 @@ const CategoryViewAlpine = {
       });
 
     return `${leftModify.reverse().join('')}.${right}`;
+  },
+
+  changePagination(action: string): void {
+    if (action === 'next' && this.loadedPage !== this.maxPaginationCount) this.loadedPage += 1;
+    if (action === 'prev' && this.loadedPage !== 1) this.loadedPage -= 1;
+    if (action === 'first') this.loadedPage = 1;
+    if (action === 'last') this.loadedPage = this.maxPaginationCount;
+
+    this.productOffset = this.productLimit * this.loadedPage - this.productLimit;
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   addToBasket(e: Event): void {
