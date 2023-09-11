@@ -187,7 +187,6 @@ export default class ProductView {
 
       if ('id' in personalCart && 'version' in personalCart) {
         const personalCartID = String(personalCart.id);
-
         const payload: IAddLineItem = {
           version: await CartAPI.getActiveCartVersion(),
           actions: [
@@ -201,7 +200,6 @@ export default class ProductView {
             },
           ],
         };
-
         const response = await CartAPI.updateLineItem(personalCartID, payload);
 
         if ('lineItems' in response) {
