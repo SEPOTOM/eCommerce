@@ -153,7 +153,6 @@ export default class ProductView {
     const lineItemsArray = await this.getLineItemArray();
 
     if (!(lineItemsArray instanceof Error) && lineItemsArray !== undefined) {
-      console.log(lineItemsArray);
       lineItemsArray.forEach((element) => {
         if ('id' in element && 'productId' in element) {
           if (element.productId === productID) {
