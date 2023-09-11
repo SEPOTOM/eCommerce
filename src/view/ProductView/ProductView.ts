@@ -30,12 +30,13 @@ import {
 } from '../../types';
 import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
 import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
+import Tokens from '../../components/Tokens/Tokens';
 
 const accessToken = 'access_token';
 
 const sliderClickDelay = 1200;
 
-const errorTimeOut = 1000;
+const errorTimeOut = 3000;
 
 export default class ProductView {
   private static activeImage: number = 0;
@@ -99,22 +100,18 @@ export default class ProductView {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
-    addToCartButton.disabled = true;
-    addToCartButton.classList.add('line-through');
+    addToCartButton.classList.add('hidden');
 
-    removeFromCartButton.disabled = false;
-    removeFromCartButton.classList.remove('line-through');
+    removeFromCartButton.classList.remove('hidden');
   }
 
   private disableRemoveFromCart(): void {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
-    removeFromCartButton.disabled = true;
-    removeFromCartButton.classList.add('line-through');
+    removeFromCartButton.classList.add('hidden');
 
-    addToCartButton.disabled = false;
-    addToCartButton.classList.remove('line-through');
+    addToCartButton.classList.remove('hidden');
   }
 
   private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
@@ -242,6 +239,7 @@ export default class ProductView {
     this.addProductDescription(productDetails, productHTML);
     this.addProductPrice(productDetails, productHTML);
     this.addProductCharacteristics(productDetails, productHTML);
+    this.processButtonsVisibility();
   }
 
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
@@ -390,6 +388,25 @@ export default class ProductView {
         }<br>`;
       }
     });
+  }
+
+  private async processButtonsVisibility(): Promise<void> {
+    const pleaseLoginText = document.querySelector(`#${ProductElements.PRODUCT_PLEASE_LOGIN}`) as HTMLElement;
+    const buttonBlock = document.querySelector(`#${ProductElements.PRODUCT_BUTTON_BLOCK}`) as HTMLButtonElement;
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (tokens) {
+      if ('access_token' in tokens && tokens.access_token) {
+        buttonBlock.classList.remove('hidden');
+        pleaseLoginText.classList.add('hidden');
+      } else {
+        buttonBlock.classList.add('hidden');
+        pleaseLoginText.classList.remove('hidden');
+      }
+    } else {
+      buttonBlock.classList.add('hidden');
+      pleaseLoginText.classList.remove('hidden');
+    }
   }
 
   private getProductView(id: string): HTMLElement {
