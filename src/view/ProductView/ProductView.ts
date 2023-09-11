@@ -35,6 +35,8 @@ const accessToken = 'access_token';
 
 const sliderClickDelay = 1200;
 
+const errorTimeOut = 5000;
+
 export default class ProductView {
   private static activeImage: number = 0;
 
@@ -119,22 +121,28 @@ export default class ProductView {
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
 
     removeFromCartButton.addEventListener('click', async () => {
+      const itemID = await this.getLineItemID(productID);
       if ('version' in personalCart) {
-        const payload: IAddLineItem = {
-          version: await CartAPI.getActiveCartVersion(),
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: await this.getLineItemID(productID),
-            },
-          ],
-        };
+        if (itemID) {
+          const payload: IAddLineItem = {
+            version: await CartAPI.getActiveCartVersion(),
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId: itemID,
+              },
+            ],
+          };
 
-        if ('id' in personalCart) {
-          const response = await CartAPI.updateLineItem(String(personalCart.id), payload);
-          if (!(response instanceof Error)) {
-            this.disableRemoveFromCart();
+          if ('id' in personalCart) {
+            const response = await CartAPI.updateLineItem(String(personalCart.id), payload);
+            if (!(response instanceof Error)) {
+              this.disableRemoveFromCart();
+              this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+            }
           }
+        } else {
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
         }
       }
     });
@@ -144,18 +152,22 @@ export default class ProductView {
     let lineItemID: string = '';
     const lineItemsArray = await this.getLineItemArray();
 
-    lineItemsArray.forEach((element) => {
-      if ('id' in element && 'productId' in element) {
-        if (element.productId === productID) {
-          lineItemID = String(element.id);
+    if (!(lineItemsArray instanceof Error) && lineItemsArray !== undefined) {
+      console.log(lineItemsArray);
+      lineItemsArray.forEach((element) => {
+        if ('id' in element && 'productId' in element) {
+          if (element.productId === productID) {
+            lineItemID = String(element.id);
+          }
         }
-      }
-    });
-
+      });
+    } else {
+      this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
+    }
     return lineItemID;
   }
 
-  private async getLineItemArray(): Promise<object[]> {
+  private async getLineItemArray(): Promise<object[] | Error> {
     const activeCart = await CartAPI.get();
 
     return (activeCart as CartResponse).lineItems;
@@ -195,6 +207,7 @@ export default class ProductView {
 
         if (!(response instanceof Error)) {
           this.disableAddToCart();
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
         }
       }
     });
@@ -384,5 +397,12 @@ export default class ProductView {
     const productHTML: HTMLElement = Converter.htmlToElement(ProductHTML) as HTMLElement;
     this.displayProductByID(id, productHTML);
     return productHTML;
+  }
+
+  private showMessage(messageContainer: HTMLElement): void {
+    messageContainer.classList.remove('hidden');
+    setTimeout(() => {
+      messageContainer.classList.add('hidden');
+    }, errorTimeOut);
   }
 }

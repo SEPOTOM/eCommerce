@@ -24,6 +24,8 @@ enum ProductElements {
   PRODUCT_ADD = 'add-button',
   PRODUCT_REMOVE = 'remove-button',
   PRODUCT_AMOUNT = 'amount',
+  PRODUCT_NETWORK_ERROR = 'network-error',
+  PRODUCT_ADDED_SUCCESSFULLY = 'success',
 }
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];
