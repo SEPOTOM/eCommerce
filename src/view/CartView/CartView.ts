@@ -5,7 +5,7 @@ import HTML from './CartView.html';
 import ProductView from './ProductView/ProductView';
 import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
-import { DataAttrs } from './data';
+import { DataAttrs, Events } from './data';
 
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
@@ -28,6 +28,8 @@ export default class CartView {
   }
 
   private async configureView(): Promise<void> {
+    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
+
     const cartData = await this.cart.getCart();
 
     if ('message' in cartData) {
@@ -36,6 +38,7 @@ export default class CartView {
     }
 
     this.configureList(cartData.getProductsInfo());
+    this.configureTotalPrice(cartData.getTotalPrice());
   }
 
   private configureList(productsInfo: ProductInfo[]): void {
@@ -50,10 +53,23 @@ export default class CartView {
     });
   }
 
+  private configureTotalPrice(totalPrice: string): void {
+    const totalPriceBlock = this.view.querySelector(`[${DataAttrs.TOTAL_PRICE}]`);
+
+    if (totalPriceBlock) {
+      totalPriceBlock.textContent = totalPrice;
+    }
+  }
+
   private showError(message: string): void {
     const errorBlock = new ErrorView().buildView(message);
 
     this.view.innerHTML = '';
     this.view.append(errorBlock);
+  }
+
+  private updateTotalPrice(): void {
+    const totalPrice = this.cart.getTotalPrice();
+    this.configureTotalPrice(totalPrice);
   }
 }

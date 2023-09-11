@@ -6,6 +6,7 @@ export interface CartResponse {
   id: string;
   lineItems: LineItemResponse[];
   version: number;
+  totalPrice: ITypedMoney;
 }
 
 export interface LineItemResponse {
@@ -19,6 +20,7 @@ export interface LineItemResponse {
 
 export interface CartInfo {
   id: string;
+  totalPrice: string;
   productsInfo: ProductInfo[];
   version: number;
 }
