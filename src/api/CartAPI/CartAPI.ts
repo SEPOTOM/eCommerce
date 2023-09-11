@@ -3,11 +3,11 @@ import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
 import { CartResponse, IError, CartsResponse } from '../../types';
 import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction } from './types';
+import { GlobalErrorMessages } from '../../data/errors';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
   TRY_LATER = 'Please, try again later.',
-  NO_CART = 'Could not find the cart for the current customer. Please, try again later.',
 }
 
 export default class CartAPI {
@@ -101,7 +101,7 @@ export default class CartAPI {
         return data.results[0];
       }
       if ('results' in data) {
-        return new Error(ErrorMessages.NO_CART);
+        return new Error(GlobalErrorMessages.NO_CART);
       }
 
       return data;
