@@ -2,7 +2,7 @@
 import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
 import { CartInfo, ProductInfo, CartResponse } from '../../types';
-import HeaderView from '../../view/HeaderView/HeaderView';
+import CART_PRODUCT_COUNT from './data';
 
 enum ErrorMessages {
   NO_PRODUCT = 'The updated product was not found. Please try again later.',
@@ -61,14 +61,22 @@ export default class Cart {
 
     this.cart = Converter.cartResponseToInfo(cartResponse);
 
-    const headerCount = new HeaderView();
-    if ('totalLineItemQuantity' in cartResponse) {
-      headerCount.setProductAmount(cartResponse.totalLineItemQuantity as number);
-    } else {
-      headerCount.setProductAmount(0);
-    }
+    this.updateHeaderCount(cartResponse);
 
     return this;
+  }
+
+  private updateHeaderCount(cartResponse: CartResponse | Error) {
+    if ('totalLineItemQuantity' in cartResponse) {
+      this.setProductAmount(cartResponse.totalLineItemQuantity as number);
+    } else {
+      this.setProductAmount(0);
+    }
+  }
+
+  private setProductAmount(amount: number): void {
+    const cartCount: HTMLElement = document.querySelector(`#${CART_PRODUCT_COUNT}`) as HTMLElement;
+    cartCount.textContent = String(amount);
   }
 
   private getCurrentCartVersion(): number {

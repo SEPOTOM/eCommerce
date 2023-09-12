@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import HeaderView from '../HeaderView/HeaderView';
 import FooterView from '../FooterView/FooterView';
 import HomepageViewHTML from './HomepageView.html';
