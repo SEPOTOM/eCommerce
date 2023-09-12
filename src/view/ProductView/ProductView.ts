@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import ProductHTML from './ProductView.html';
 import Converter from '../../components/Converter/Converter';
 import ProductModalView from './ProductModalView/ProductModalView';
@@ -6,6 +7,7 @@ import Authorization from '../../api/Authorization/Authorization';
 import Category from '../../api/Category/Category';
 import BreadcrumbsView from '../BreadcrumbsView/BreadcrumbsView';
 import Slider from './Slider/Slider';
+import CartAPI from '../../api/CartAPI/CartAPI';
 import { SliderSelectors } from './Slider/data';
 import {
   CTP_AUTH_URL,
@@ -15,13 +17,26 @@ import {
   CTP_CLIENT_SECRET,
   CTP_SCOPES,
 } from '../../api/APIClients/JSNinjas-custom';
-import { IProduct, IClientLoginResponse, IError, IAttributes, IImages, ICategory } from '../../types';
+import {
+  IProduct,
+  IClientLoginResponse,
+  IError,
+  IAttributes,
+  IImages,
+  ICategory,
+  IAddLineItem,
+  CartResponse,
+  ICartTemplate,
+} from '../../types';
 import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
 import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
+import Tokens from '../../components/Tokens/Tokens';
 
 const accessToken = 'access_token';
 
 const sliderClickDelay = 1200;
+
+const errorTimeOut = 3000;
 
 export default class ProductView {
   private static activeImage: number = 0;
@@ -49,6 +64,8 @@ export default class ProductView {
         productDetails = await product.getProductByID(id, clientTokens.access_token);
         this.putProductDataToPage(productDetails as IProduct, productHTML);
 
+        this.manageCartButtons(id, productDetails as IProduct);
+
         // Set breadcrumbs
         const productLink: IBreadCrumbsLink = {
           name: (productDetails as IProduct).masterData.current.name['en-US'],
@@ -65,6 +82,149 @@ export default class ProductView {
     }
   }
 
+  private async manageCartButtons(productID: string, productDetails: IProduct): Promise<void> {
+    const personalCart = await CartAPI.get();
+    const inCart = this.productIsInCart(productID, personalCart);
+
+    if (inCart) {
+      this.disableAddToCart();
+    } else {
+      this.disableRemoveFromCart();
+    }
+
+    this.processAddProduct(productID, productDetails);
+    this.processRemoveProduct(personalCart, productID);
+  }
+
+  private disableAddToCart(): void {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    addToCartButton.classList.add('hidden');
+
+    removeFromCartButton.classList.remove('hidden');
+  }
+
+  private disableRemoveFromCart(): void {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    removeFromCartButton.classList.add('hidden');
+
+    addToCartButton.classList.remove('hidden');
+  }
+
+  private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
+    const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+
+    removeFromCartButton.addEventListener('click', async () => {
+      const itemID = await this.getLineItemID(productID);
+      if ('version' in personalCart) {
+        if (itemID) {
+          const payload: IAddLineItem = {
+            version: await CartAPI.getActiveCartVersion(),
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId: itemID,
+              },
+            ],
+          };
+
+          if ('id' in personalCart) {
+            const response = await CartAPI.updateLineItem(String(personalCart.id), payload);
+            if (!(response instanceof Error)) {
+              this.disableRemoveFromCart();
+              this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+            }
+          }
+        } else {
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
+        }
+      }
+    });
+  }
+
+  private async getLineItemID(productID: string): Promise<string> {
+    let lineItemID: string = '';
+    const lineItemsArray = await this.getLineItemArray();
+
+    if (!(lineItemsArray instanceof Error) && lineItemsArray !== undefined) {
+      lineItemsArray.forEach((element) => {
+        if ('id' in element && 'productId' in element) {
+          if (element.productId === productID) {
+            lineItemID = String(element.id);
+          }
+        }
+      });
+    } else {
+      this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
+    }
+    return lineItemID;
+  }
+
+  private async getLineItemArray(): Promise<object[] | Error> {
+    const activeCart = await CartAPI.get();
+
+    return (activeCart as CartResponse).lineItems;
+  }
+
+  private processAddProduct(productID: string, productDetails: IProduct) {
+    const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
+
+    addToCartButton.addEventListener('click', async () => {
+      let personalCart = await CartAPI.get();
+      if (personalCart instanceof Error) {
+        const payload: ICartTemplate = {
+          currency: currencyName.USD,
+        };
+        await CartAPI.createCustomerCart(payload);
+        personalCart = await CartAPI.get();
+      }
+
+      if ('id' in personalCart && 'version' in personalCart) {
+        const personalCartID = String(personalCart.id);
+        const payload: IAddLineItem = {
+          version: await CartAPI.getActiveCartVersion(),
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: productID,
+              variantId: productDetails.lastVariantId,
+              quantity: Number(
+                (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+              ),
+            },
+          ],
+        };
+        const response = await CartAPI.updateLineItem(personalCartID, payload);
+
+        if ('lineItems' in response) {
+          this.disableAddToCart();
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+        } else {
+          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
+        }
+      }
+    });
+  }
+
+  private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
+    let inCart: boolean = false;
+
+    if (!(personalCart instanceof Error)) {
+      (personalCart as CartResponse).lineItems.forEach((element) => {
+        if ('productId' in element) {
+          if (element.productId === productID) {
+            inCart = true;
+          }
+        }
+      });
+    }
+
+    return inCart;
+  }
+
   private async getClientToken(): Promise<IClientLoginResponse | IError | Error> {
     const endpoint: string = `${CTP_AUTH_URL}/oauth/token?grant_type=client_credentials&scope=${CTP_SCOPES}`;
     const basicToken: string = btoa(`${CTP_CLIENT_ID}:${CTP_CLIENT_SECRET}`);
@@ -79,6 +239,7 @@ export default class ProductView {
     this.addProductDescription(productDetails, productHTML);
     this.addProductPrice(productDetails, productHTML);
     this.addProductCharacteristics(productDetails, productHTML);
+    this.processButtonsVisibility();
   }
 
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
@@ -229,9 +390,35 @@ export default class ProductView {
     });
   }
 
+  private async processButtonsVisibility(): Promise<void> {
+    const pleaseLoginText = document.querySelector(`#${ProductElements.PRODUCT_PLEASE_LOGIN}`) as HTMLElement;
+    const buttonBlock = document.querySelector(`#${ProductElements.PRODUCT_BUTTON_BLOCK}`) as HTMLButtonElement;
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (tokens) {
+      if ('access_token' in tokens && tokens.access_token) {
+        buttonBlock.classList.remove('hidden');
+        pleaseLoginText.classList.add('hidden');
+      } else {
+        buttonBlock.classList.add('hidden');
+        pleaseLoginText.classList.remove('hidden');
+      }
+    } else {
+      buttonBlock.classList.add('hidden');
+      pleaseLoginText.classList.remove('hidden');
+    }
+  }
+
   private getProductView(id: string): HTMLElement {
     const productHTML: HTMLElement = Converter.htmlToElement(ProductHTML) as HTMLElement;
     this.displayProductByID(id, productHTML);
     return productHTML;
+  }
+
+  private showMessage(messageContainer: HTMLElement): void {
+    messageContainer.classList.remove('hidden');
+    setTimeout(() => {
+      messageContainer.classList.add('hidden');
+    }, errorTimeOut);
   }
 }
