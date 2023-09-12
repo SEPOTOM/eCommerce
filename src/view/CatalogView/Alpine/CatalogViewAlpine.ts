@@ -13,6 +13,7 @@ const CategoryViewAlpine = {
   products: [],
   urlPath: '',
   searchRequest: '',
+  searchQuery: '',
   searchResultCount: 0,
   filterQuery: '',
   filterActiveProps: {},
@@ -50,12 +51,13 @@ const CategoryViewAlpine = {
   getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
     try {
       fetch(
-        `${this.urlPath}&limit=${this.productLimit}&offset=${this.productOffset}${filterQuery}${sortQuery}`,
+        `${this.urlPath}${this.searchQuery}&limit=${this.productLimit}&offset=${this.productOffset}${filterQuery}${sortQuery}`,
         this.setBodyRequest()
       )
         .then((resp) => resp.json())
         .then((json: IAllProducts): void => {
           this.maxPaginationCount = json.total ? Math.ceil(json.total / this.productLimit) : 0;
+          this.searchResultCount = json.total ? json.total : 0;
           this.setProductData(json.results);
         });
     } catch {
@@ -175,31 +177,15 @@ const CategoryViewAlpine = {
   },
 
   quickSearch(): void {
-    try {
-      if (this.searchRequest.length > 4) {
-        fetch(
-          `${
-            this.urlPath
-          }${`&fuzzy=true&fuzzyLevel=1&limit=${this.productLimit}&offset=${this.productOffset}&text.en-US="${this.searchRequest}"${this.filterQuery}${this.sortQuery}`}`,
-          this.setBodyRequest()
-        )
-          .then((resp) => resp.json())
-          .then((json: IAllProducts): void => {
-            this.maxPaginationCount = json.total ? Math.ceil(json.total / this.productLimit) : 0;
-            this.searchResultCount = json.total ? json.total : 0;
-            this.setProductData(json.results);
-          });
-      } else {
-        this.searchResultCount = 0;
-        this.getProductsByQuery(this.filterQuery, this.sortQuery);
-      }
-    } catch {
-      /* eslint-disable no-empty */
-    }
+    this.searchQuery =
+      this.searchRequest.length > 4 ? `&fuzzy=true&fuzzyLevel=1&text.en-US="${this.searchRequest}"` : '';
+
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   clearQuickSearch(): void {
     this.searchRequest = '';
+    this.searchQuery = '';
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
@@ -228,9 +214,7 @@ const CategoryViewAlpine = {
     if (action === 'last') this.loadedPage = this.maxPaginationCount;
 
     this.productOffset = this.productLimit * this.loadedPage - this.productLimit;
-
-    /* eslint-disable @typescript-eslint/no-unused-expressions */
-    this.searchRequest.length > 4 ? this.quickSearch() : this.getProductsByQuery(this.filterQuery, this.sortQuery);
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   addToBasket(e: Event): void {
