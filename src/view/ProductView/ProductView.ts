@@ -201,7 +201,6 @@ export default class ProductView {
           ],
         };
         const response = await CartAPI.updateLineItem(personalCartID, payload);
-
         if ('lineItems' in response) {
           this.disableAddToCart();
           this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);

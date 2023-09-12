@@ -63,7 +63,6 @@ export default class Cart {
 
     const headerCount = new HeaderView();
     if ('totalLineItemQuantity' in cartResponse) {
-      console.log(cartResponse.totalLineItemQuantity);
       headerCount.setProductAmount(cartResponse.totalLineItemQuantity as number);
     } else {
       headerCount.setProductAmount(0);
