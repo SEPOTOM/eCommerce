@@ -121,10 +121,16 @@
           </svg>
         </span>
 
-        <template x-if="searchRequest">
+        <template x-if="searchRequest.length > 4">
           <span
             class="absolute top-9 right-3 text-xs text-gray-400 whitespace-nowrap sm:right-auto sm:left-2"
             x-text="'matches found - ' + searchResultCount"
+          ></span>
+        </template>
+        <template x-if="searchRequest.length >= 1 && searchRequest.length < 5">
+          <span
+            class="absolute top-9 right-3 text-xs text-gray-400 whitespace-nowrap sm:right-auto sm:left-2"
+            x-text="'Enter at least 5 characters'"
           ></span>
         </template>
       </div>

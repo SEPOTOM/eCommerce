@@ -13,7 +13,6 @@ const CategoryViewAlpine = {
   products: [],
   urlPath: '',
   searchRequest: '',
-  searchRequestNeedClear: false,
   searchResultCount: 0,
   filterQuery: '',
   filterActiveProps: {},
@@ -177,46 +176,31 @@ const CategoryViewAlpine = {
 
   quickSearch(): void {
     try {
-      if (this.searchRequest.length > 2) {
-        fetch(`${this.urlPath}${`&fuzzy=true&fuzzyLevel=1&text.en-US="${this.searchRequest}"`}`, this.setBodyRequest())
+      if (this.searchRequest.length > 4) {
+        fetch(
+          `${
+            this.urlPath
+          }${`&fuzzy=true&fuzzyLevel=1&limit=${this.productLimit}&offset=${this.productOffset}&text.en-US="${this.searchRequest}"${this.filterQuery}${this.sortQuery}`}`,
+          this.setBodyRequest()
+        )
           .then((resp) => resp.json())
           .then((json: IAllProducts): void => {
-            const array = this.sortQuickSearchByName(json);
-
-            if (array.length) {
-              this.searchResultCount = array.length;
-              this.setProductData(array);
-              this.searchRequestNeedClear = true;
-            } else {
-              this.searchResultCount = 0;
-            }
-
-            if (!this.searchRequest || (this.searchRequestNeedClear && !this.searchResultCount)) {
-              this.getProductsByQuery();
-              this.searchRequestNeedClear = false;
-            }
+            this.maxPaginationCount = json.total ? Math.ceil(json.total / this.productLimit) : 0;
+            this.searchResultCount = json.total ? json.total : 0;
+            this.setProductData(json.results);
           });
       } else {
         this.searchResultCount = 0;
-        this.getProductsByQuery();
+        this.getProductsByQuery(this.filterQuery, this.sortQuery);
       }
     } catch {
       /* eslint-disable no-empty */
     }
   },
 
-  sortQuickSearchByName(json: IAllProducts): IShortProductsJSON[] {
-    return json.results.filter((product) => {
-      const name = product.name['en-US'].toLowerCase();
-      const text = this.searchRequest.toLowerCase();
-
-      return name.includes(text);
-    });
-  },
-
   clearQuickSearch(): void {
     this.searchRequest = '';
-    this.getProductsByQuery();
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   priceConverter(price: string): string {
@@ -244,7 +228,9 @@ const CategoryViewAlpine = {
     if (action === 'last') this.loadedPage = this.maxPaginationCount;
 
     this.productOffset = this.productLimit * this.loadedPage - this.productLimit;
-    this.getProductsByQuery(this.filterQuery, this.sortQuery);
+
+    /* eslint-disable @typescript-eslint/no-unused-expressions */
+    this.searchRequest.length > 4 ? this.quickSearch() : this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   addToBasket(e: Event): void {
