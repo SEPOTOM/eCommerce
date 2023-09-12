@@ -239,7 +239,7 @@ export default class ProductView {
     this.addProductDescription(productDetails, productHTML);
     this.addProductPrice(productDetails, productHTML);
     this.addProductCharacteristics(productDetails, productHTML);
-    this.processButtonsVisibility();
+    this.processButtonsVisibility(productDetails.masterData.current.masterVariant.availability?.isOnStock);
   }
 
   private addSlider(productDetails: IProduct, productHTML: HTMLElement): void {
@@ -390,8 +390,9 @@ export default class ProductView {
     });
   }
 
-  private async processButtonsVisibility(): Promise<void> {
+  private async processButtonsVisibility(isOnStock: boolean | undefined): Promise<void> {
     const pleaseLoginText = document.querySelector(`#${ProductElements.PRODUCT_PLEASE_LOGIN}`) as HTMLElement;
+    const outOfStockText = document.querySelector(`#${ProductElements.PRODUCT_OUT_OF_STOCK}`) as HTMLButtonElement;
     const buttonBlock = document.querySelector(`#${ProductElements.PRODUCT_BUTTON_BLOCK}`) as HTMLButtonElement;
     const tokens = await Tokens.getCustomerTokens();
 
@@ -407,6 +408,13 @@ export default class ProductView {
       buttonBlock.classList.add('hidden');
       pleaseLoginText.classList.remove('hidden');
     }
+
+    if (!isOnStock) {
+      buttonBlock.classList.add('hidden');
+      // show out of stock
+      outOfStockText.classList.remove('hidden');
+    }
+
   }
 
   private getProductView(id: string): HTMLElement {
