@@ -31,6 +31,7 @@ import {
 import { IBreadCrumbsLink } from '../BreadcrumbsView/types/types';
 import { currencySymbol, currencyName, categoryStyles, ProductElements } from './data';
 import Tokens from '../../components/Tokens/Tokens';
+import Cart from '../../components/Cart/Cart';
 
 const accessToken = 'access_token';
 
@@ -136,6 +137,8 @@ export default class ProductView {
             if (!(response instanceof Error)) {
               this.disableRemoveFromCart();
               this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+              const cart = new Cart();
+              cart.updateCurrentCart(response);
             }
           }
         } else {
@@ -202,6 +205,8 @@ export default class ProductView {
         if ('lineItems' in response) {
           this.disableAddToCart();
           this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+          const cart = new Cart();
+          cart.updateCurrentCart(response);
         } else {
           this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
         }

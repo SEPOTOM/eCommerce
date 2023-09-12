@@ -2,6 +2,7 @@
 import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
 import { CartInfo, ProductInfo, CartResponse } from '../../types';
+import HeaderView from '../../view/HeaderView/HeaderView';
 
 enum ErrorMessages {
   NO_PRODUCT = 'The updated product was not found. Please try again later.',
@@ -53,12 +54,20 @@ export default class Cart {
     return new Error(ErrorMessages.NO_PRODUCT);
   }
 
-  private updateCurrentCart(cartResponse: CartResponse | Error): Cart | Error {
+  public updateCurrentCart(cartResponse: CartResponse | Error): Cart | Error {
     if ('message' in cartResponse) {
       return cartResponse;
     }
 
     this.cart = Converter.cartResponseToInfo(cartResponse);
+
+    const headerCount = new HeaderView();
+    if ('totalLineItemQuantity' in cartResponse) {
+      console.log(cartResponse.totalLineItemQuantity);
+      headerCount.setProductAmount(cartResponse.totalLineItemQuantity as number);
+    } else {
+      headerCount.setProductAmount(0);
+    }
 
     return this;
   }
