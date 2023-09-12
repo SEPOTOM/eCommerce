@@ -29,9 +29,11 @@ export default class CartView {
 
   private async configureView(): Promise<void> {
     this.view.addEventListener(Events.PRODUCT_DELETED, () => {
-      if (this.isListEmpty()) {
-        this.makeEmpty();
-      }
+      setTimeout(() => {
+        if (this.isListEmpty()) {
+          this.makeEmpty();
+        }
+      }, 0);
     });
 
     this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
@@ -91,7 +93,7 @@ export default class CartView {
     const list = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
 
     if (list) {
-      return list.children.length > 0;
+      return list.children.length === 0;
     }
 
     return true;
