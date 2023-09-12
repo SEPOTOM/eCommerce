@@ -414,7 +414,6 @@ export default class ProductView {
       // show out of stock
       outOfStockText.classList.remove('hidden');
     }
-
   }
 
   private getProductView(id: string): HTMLElement {
