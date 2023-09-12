@@ -8,6 +8,7 @@ import { GlobalErrorMessages } from '../../data/errors';
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
   TRY_LATER = 'Please, try again later.',
+  LOG_IN = 'Please, login to get to a cart.',
 }
 
 export default class CartAPI {
@@ -77,8 +78,8 @@ export default class CartAPI {
   private static async sendRequest(endpoint: string, requestOptions: RequestInit): Promise<CartResponse | Error> {
     const tokens = await Tokens.getCustomerTokens();
 
-    if (!tokens) {
-      return new Error(ErrorMessages.SERVER);
+    if (!tokens || !tokens.access_token) {
+      return new Error(ErrorMessages.LOG_IN);
     }
 
     const bearerToken = tokens.access_token;
