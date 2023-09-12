@@ -177,6 +177,7 @@ interface IProduct {
   createdBy: object;
   lastModifiedAt: Date;
   lastModifiedBy: object;
+  lastVariantId: number;
 }
 
 interface IProductTypeReference {
@@ -276,6 +277,23 @@ interface IAttributes {
 interface IEnum {
   key: string;
   label: string;
+}
+
+export interface IAddLineItem {
+  version: number;
+  actions: IAction[];
+}
+
+export interface ICartTemplate {
+  currency: string;
+}
+
+interface IAction {
+  action: string;
+  productId?: string;
+  variantId?: number;
+  quantity?: number;
+  lineItemId?: string;
 }
 
 export interface ICategory {

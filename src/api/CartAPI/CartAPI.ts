@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
-import { CartResponse, IError, CartsResponse } from '../../types';
 import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction } from './types';
+import { CartResponse, IError, CartsResponse, IAddLineItem, ICartTemplate } from '../../types';
 
 enum ErrorMessages {
   SERVER = 'Failed to connect to the server. Please, check your connection or try again later.',
@@ -108,5 +108,92 @@ export default class CartAPI {
     } catch (err) {
       return new Error(ErrorMessages.SERVER);
     }
+  }
+
+  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<CartResponse | Error> {
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts/${cartID}`;
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (!tokens) {
+      return new Error(ErrorMessages.SERVER);
+    }
+
+    const bearerToken = tokens.access_token;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data: CartResponse | Error = await response.json();
+
+      return data;
+    } catch (err) {
+      return new Error(ErrorMessages.SERVER);
+    }
+  }
+
+  public static async getCartByID(id: string): Promise<CartResponse | Error> {
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${id}`;
+    const tokens = await Tokens.getCustomerTokens();
+
+    if (!tokens) {
+      return new Error(ErrorMessages.SERVER);
+    }
+
+    const bearerToken = tokens.access_token;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      const data: CartResponse | IError = await response.json();
+
+      if ('message' in data) {
+        return new Error(`${data.message} ${ErrorMessages.TRY_LATER}`);
+      }
+
+      return data;
+    } catch (err) {
+      return new Error(ErrorMessages.SERVER);
+    }
+  }
+
+  public static async createCustomerCart(payload: ICartTemplate): Promise<CartResponse | Error> {
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts`;
+    const tokens = await Tokens.getCustomerTokens();
+    const bearerToken = tokens.access_token;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const newCartID: CartResponse | Error = await response.json();
+      return newCartID;
+    } catch (err) {
+      return new Error(ErrorMessages.SERVER);
+    }
+  }
+
+  public static async getActiveCartVersion(): Promise<number> {
+    const cart = await CartAPI.get();
+
+    let cartVersion: number = 0;
+    if ('version' in cart) {
+      cartVersion = Number(cart.version);
+    }
+
+    return cartVersion;
   }
 }
