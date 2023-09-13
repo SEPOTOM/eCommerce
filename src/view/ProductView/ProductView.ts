@@ -175,42 +175,46 @@ export default class ProductView {
   private processAddProduct(productID: string, productDetails: IProduct) {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
 
-    addToCartButton.addEventListener('click', async () => {
-      let personalCart = await CartAPI.get();
-      if (personalCart instanceof Error) {
-        const payload: ICartTemplate = {
-          currency: currencyName.USD,
-        };
-        await CartAPI.createCustomerCart(payload);
-        personalCart = await CartAPI.get();
-      }
-
-      if ('id' in personalCart && 'version' in personalCart) {
-        const personalCartID = String(personalCart.id);
-        const payload: IAddLineItem = {
-          version: await CartAPI.getActiveCartVersion(),
-          actions: [
-            {
-              action: 'addLineItem',
-              productId: productID,
-              variantId: productDetails.lastVariantId,
-              quantity: Number(
-                (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
-              ),
-            },
-          ],
-        };
-        const response = await CartAPI.updateLineItem(personalCartID, payload);
-        if ('lineItems' in response) {
-          this.disableAddToCart();
-          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
-          const cart = new Cart();
-          cart.updateCurrentCart(response);
-        } else {
-          this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
-        }
-      }
+    addToCartButton.addEventListener('click', () => {
+      this.addProductToCart(productID, productDetails);
     });
+  }
+
+  public async addProductToCart(productID: string, productDetails: IProduct) {
+    let personalCart = await CartAPI.get();
+    if (personalCart instanceof Error) {
+      const payload: ICartTemplate = {
+        currency: currencyName.USD,
+      };
+      await CartAPI.createCustomerCart(payload);
+      personalCart = await CartAPI.get();
+    }
+
+    if ('id' in personalCart && 'version' in personalCart) {
+      const personalCartID = String(personalCart.id);
+      const payload: IAddLineItem = {
+        version: await CartAPI.getActiveCartVersion(),
+        actions: [
+          {
+            action: 'addLineItem',
+            productId: productID,
+            variantId: productDetails.lastVariantId,
+            quantity: Number(
+              (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+            ),
+          },
+        ],
+      };
+      const response = await CartAPI.updateLineItem(personalCartID, payload);
+      if ('lineItems' in response) {
+        this.disableAddToCart();
+        this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+        const cart = new Cart();
+        cart.updateCurrentCart(response);
+      } else {
+        this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
+      }
+    }
   }
 
   private productIsInCart(productID: string, personalCart: CartResponse | Error): boolean {
