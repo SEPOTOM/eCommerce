@@ -203,9 +203,7 @@ export default class ProductView {
             action: 'addLineItem',
             productId: productID,
             variantId: productDetails.lastVariantId,
-            quantity: Number(
-              (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
-            ),
+            quantity: Number((document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value),
           },
         ],
       };
