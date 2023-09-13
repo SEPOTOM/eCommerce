@@ -28,6 +28,7 @@ enum ProductElements {
   PRODUCT_ADDED_SUCCESSFULLY = 'success',
   PRODUCT_PLEASE_LOGIN = 'please-login',
   PRODUCT_BUTTON_BLOCK = 'button-block',
+  PRODUCT_OUT_OF_STOCK = 'out-of-stock',
 }
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];
