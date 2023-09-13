@@ -2,6 +2,7 @@
 import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
 import { CartInfo, ProductInfo, CartResponse } from '../../types';
+import { GlobalErrorMessages } from '../../data/errors';
 import CART_PRODUCT_COUNT from './data';
 
 enum ErrorMessages {
@@ -9,7 +10,12 @@ enum ErrorMessages {
 }
 
 export default class Cart {
-  private cart: CartInfo | null = null;
+  private cart: CartInfo = {
+    id: '',
+    version: 0,
+    productsInfo: [],
+    totalPrice: '',
+  };
 
   public async getCart(): Promise<Cart | Error> {
     const cartResponse = await CartAPI.get();
@@ -55,6 +61,9 @@ export default class Cart {
   }
 
   public updateCurrentCart(cartResponse: CartResponse | Error): Cart | Error {
+    if ('message' in cartResponse && cartResponse.message === GlobalErrorMessages.NO_CART) {
+      return this;
+    }
     if ('message' in cartResponse) {
       return cartResponse;
     }

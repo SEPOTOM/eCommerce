@@ -230,6 +230,14 @@ interface IMasterVariant {
   images?: IImages[];
   attributes?: IAttributes[];
   assets?: object[];
+  availability?: IAvailability;
+}
+
+interface IAvailability {
+  availableQuantity: number;
+  id: string;
+  isOnStock: boolean;
+  version: number;
 }
 
 interface IPrices {
