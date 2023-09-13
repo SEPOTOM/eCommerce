@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import DiscountAPI from '../../api/DiscountAPI/DiscountAPI';
 import Converter from '../Converter/Converter';
 import { DiscountCodeInfo } from '../../types';

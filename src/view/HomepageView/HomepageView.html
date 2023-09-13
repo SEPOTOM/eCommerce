@@ -5,7 +5,7 @@
 >
   <!-- Main section -->
   <section
-    class="relative h-72 text-white bg-center bg-no-repeat md:h-96 lg:bg-cover before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black/40"
+    class="relative h-72 mb-12 text-white bg-center bg-no-repeat md:h-96 lg:bg-cover before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black/40"
     :style="{ 'background-image': mainBanner }"
     data-element="main-banner"
   >
@@ -18,8 +18,19 @@
     </div>
   </section>
 
+  <!-- Promo codes -->
+  <section class="max-w-6xl mx-auto p-5 md:px-7" hidden data-element="promo-block">
+    <div class="pt-5 px-6 pb-7 border-8 border-dashed border-amber-600 rounded-lg bg-amber-200/70 md:px-8">
+      <h2 class="mb-2 text-4xl uppercase text-center font-bold text-amber-600 md:text-left">Promo codes!</h2>
+      <p class="mb-4 text-md font-bold text-center text-amber-500 md:text-left">
+        You can use them on the shopping cart page.
+      </p>
+      <ul class="flex flex-col gap-y-3" data-element="promo-list"></ul>
+    </div>
+  </section>
+
   <!-- Info banner -->
-  <section class="grid gap-6 max-w-6xl my-12 mx-auto text-center p-5 md:grid-cols-3 md:px-7" data-element="info-banner">
+  <section class="grid gap-6 max-w-6xl mb-12 mx-auto text-center p-5 md:grid-cols-3 md:px-7" data-element="info-banner">
     <div class="pt-4 px-4 pb-6 bg-blue-100/50 rounded-lg">
       <svg
         class="w-10 h-10 my-0 mx-auto mb-1 opacity-80"
