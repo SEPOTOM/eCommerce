@@ -1,3 +1,12 @@
+export interface DiscountCodesResponse {
+  results: DiscountCodeResponse[];
+}
+
+export interface DiscountCodeResponse {
+  code: string;
+  description: ILocalizedString;
+}
+
 export interface CartsResponse {
   results: CartResponse[];
 }
