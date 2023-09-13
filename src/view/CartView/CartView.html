@@ -1,7 +1,15 @@
-<section class="flex-grow flex gap-y-3 flex-col justify-center w-full max-w-6xl mx-auto px-5 py-7 md:px-7">
+<section
+  class="group/cart flex-grow flex gap-y-3 flex-col justify-center w-full max-w-6xl mx-auto px-5 py-7 md:px-7"
+  data-filled="false"
+>
   <h2 class="pb-3 mb-3 text-4xl text-gray-600 font-medium border-b border-stone-300">Your Cart</h2>
-  <ul class="flex-grow flex flex-col gap-y-7" data-products-list></ul>
-  <div class="flex justify-end pt-5 mt-3 border-t border-stone-300">
+  <ul class="flex-grow flex flex-col gap-y-7 group-data-[filled=false]/cart:hidden" data-products-list></ul>
+  <p
+    class="flex-grow flex items-center mx-auto text-2xl text-gray-600 text-center group-data-[filled=true]/cart:hidden"
+  >
+    It looks like you haven't chosen any cars yet.
+  </p>
+  <div class="flex justify-end pt-5 mt-3 border-t border-stone-300 group-data-[filled=false]/cart:hidden">
     <p class="text-3xl font-medium text-right">
       Total price: <span class="font-bold text-gray-800" data-total-price></span>
     </p>

@@ -22,4 +22,5 @@ export enum DataAttrs {
 
 export enum Events {
   CHANGE_TOTAL_PRICE = 'changetotalprice',
+  PRODUCT_DELETED = 'productdeleted',
 }

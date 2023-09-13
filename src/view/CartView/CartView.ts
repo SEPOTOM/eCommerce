@@ -28,6 +28,14 @@ export default class CartView {
   }
 
   private async configureView(): Promise<void> {
+    this.view.addEventListener(Events.PRODUCT_DELETED, () => {
+      setTimeout(() => {
+        if (this.isListEmpty()) {
+          this.makeEmpty();
+        }
+      }, 0);
+    });
+
     this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
 
     const cartData = await this.cart.getCart();
@@ -37,7 +45,12 @@ export default class CartView {
       return;
     }
 
-    this.configureList(cartData.getProductsInfo());
+    const productsInfo = cartData.getProductsInfo();
+
+    if (productsInfo.length > 0) {
+      this.configureList(productsInfo);
+      this.makeFilled();
+    }
     this.configureTotalPrice(cartData.getTotalPrice());
   }
 
@@ -66,6 +79,24 @@ export default class CartView {
 
     this.view.innerHTML = '';
     this.view.append(errorBlock);
+  }
+
+  private makeFilled(): void {
+    this.view.dataset.filled = 'true';
+  }
+
+  private makeEmpty(): void {
+    this.view.dataset.filled = 'false';
+  }
+
+  private isListEmpty(): boolean {
+    const list = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
+
+    if (list) {
+      return list.children.length === 0;
+    }
+
+    return true;
   }
 
   private updateTotalPrice(): void {
