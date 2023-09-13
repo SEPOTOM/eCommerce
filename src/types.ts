@@ -7,6 +7,11 @@ export interface DiscountCodeResponse {
   description: ILocalizedString;
 }
 
+export interface DiscountCodeInfo {
+  code: string;
+  description: string;
+}
+
 export interface CartsResponse {
   results: CartResponse[];
 }
