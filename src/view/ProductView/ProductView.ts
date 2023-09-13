@@ -138,7 +138,11 @@ export default class ProductView {
               this.disableRemoveFromCart();
               this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
               const cart = new Cart();
-              cart.updateCurrentCart(response);
+              if ('totalLineItemQuantity' in response) {
+                cart.setProductAmount(response.totalLineItemQuantity as number);
+              } else {
+                cart.setProductAmount(0);
+              }
             }
           }
         } else {
@@ -210,7 +214,11 @@ export default class ProductView {
         this.disableAddToCart();
         this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
         const cart = new Cart();
-        cart.updateCurrentCart(response);
+        if ('totalLineItemQuantity' in response) {
+          cart.setProductAmount(response.totalLineItemQuantity as number);
+        } else {
+          cart.setProductAmount(0);
+        }
       } else {
         this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
       }

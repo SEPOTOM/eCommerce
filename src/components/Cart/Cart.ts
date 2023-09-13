@@ -70,12 +70,6 @@ export default class Cart {
 
     this.cart = Converter.cartResponseToInfo(cartResponse);
 
-    if ('totalLineItemQuantity' in cartResponse) {
-      this.setProductAmount(cartResponse.totalLineItemQuantity as number);
-    } else {
-      this.setProductAmount(0);
-    }
-
     return this;
   }
 
