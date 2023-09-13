@@ -52,37 +52,155 @@
             </div>
           </template>
 
-          <div class="flex justify-between items-center pt-4 flex-wrap gap-x-5 gap-y-3">
-            <div class="flex gap-2 items-center">
-              <template x-if="item.price">
-                <div
-                  class="text-lg font-medium text-gray-800"
-                  :class="{ 'text-sm opacity-50 line-through': item.discount }"
-                >
-                  <span x-text="priceConverter(item.price)"></span>
-                  <span class="text-sm text-gray-500" x-text="item.currency"></span>
-                </div>
-              </template>
+          <template x-if="isCustomerLogin">
+            <div class="flex justify-between items-center pt-4 flex-wrap gap-x-5 gap-y-3">
+              <div class="flex gap-2 items-center">
+                <template x-if="item.price">
+                  <div
+                    class="text-lg font-medium text-gray-800"
+                    :class="{ 'text-sm opacity-50 line-through': item.discount }"
+                  >
+                    <span x-text="priceConverter(item.price)"></span>
+                    <span class="text-sm text-gray-500" x-text="item.currency"></span>
+                  </div>
+                </template>
 
-              <template x-if="!item.price">
-                <div class="text-lg font-medium text-gray-800">No price yet</div>
-              </template>
+                <template x-if="!item.price">
+                  <div class="text-lg font-medium text-gray-800">No price yet</div>
+                </template>
 
-              <template x-if="item.discount">
-                <div class="text-lg font-medium text-gray-800 before:content-['/']">
-                  <span x-text="priceConverter(item.discount)"></span>
-                  <span class="text-sm text-gray-500" x-text="item.currency"></span>
-                </div>
-              </template>
+                <template x-if="item.discount">
+                  <div class="text-lg font-medium text-gray-800 before:content-['/']">
+                    <span x-text="priceConverter(item.discount)"></span>
+                    <span class="text-sm text-gray-500" x-text="item.currency"></span>
+                  </div>
+                </template>
+              </div>
+
+              <span>
+                <template x-if="item.onStock">
+                  <span
+                    class="px-5 py-2 bg-red-600 rounded-lg text-sm text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+                    @click="($even) => { addToBasket($event) }"
+                  >
+                    Add to basket
+                  </span>
+                </template>
+                <template x-if="!item.onStock">
+                  <span
+                    class="text-sm text-blue-700 underline underline-offset-2 opacity-70 transition-all duration-300 group-hover:opacity-100 hover:text-red-600"
+                    >More information</span
+                  >
+                </template>
+              </span>
             </div>
+          </template>
 
-            <span
-              class="text-sm text-blue-700 underline underline-offset-2 opacity-70 transition-all duration-300 group-hover:opacity-100 hover:text-red-600"
-              >More information</span
-            >
-          </div>
+          <template x-if="!isCustomerLogin">
+            <span class="bg-amber-200 opacity-80 text-sm px-5 pt-1.5 pb-2 rounded-lg inline-flex gap-1.5 mt-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
+                />
+              </svg>
+              To see more information, log in first.
+            </span>
+          </template>
         </div>
       </a>
+    </template>
+
+    <template x-if="maxPaginationCount > 1">
+      <div data-element="pagination" class="flex items-center gap-1 justify-center">
+        <span
+          class="p-1 bg-blue-500 rounded-lg text-white transition-colors duration-300 hover:bg-blue-600 cursor-pointer"
+          title="First page"
+          :class="{ 'opacity-50 pointer-events-none': loadedPage === 1 }"
+          @click="changePagination('first')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
+            />
+          </svg>
+        </span>
+        <span
+          class="p-1 bg-red-600 rounded-lg text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+          title="Previous page"
+          :class="{ 'opacity-50 pointer-events-none': loadedPage === 1 }"
+          @click="changePagination('prev')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </span>
+
+        <span class="px-3 py-1 font-medium">
+          <span x-text="loadedPage"></span>
+          <span>of</span>
+          <span x-text="maxPaginationCount"></span>
+        </span>
+
+        <span
+          class="p-1 bg-red-600 rounded-lg text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+          title="Next page"
+          :class="{ 'opacity-50 pointer-events-none': loadedPage === maxPaginationCount }"
+          @click="changePagination('next')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </span>
+        <span
+          class="p-1 bg-blue-500 rounded-lg text-white transition-colors duration-300 hover:bg-blue-600 cursor-pointer"
+          title="Last page"
+          :class="{ 'opacity-50 pointer-events-none': loadedPage === maxPaginationCount }"
+          @click="changePagination('last')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+          </svg>
+        </span>
+      </div>
     </template>
   </div>
 </template>

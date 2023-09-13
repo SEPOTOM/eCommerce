@@ -23,7 +23,7 @@ export default class Navigation {
   }
 
   public async getAllproductJSON(token: string): Promise<IAllProducts | null> {
-    const URL: string = `${CTP_API_URL}/${CTP_PROJECT_KEY}/products`;
+    const URL: string = `${CTP_API_URL}/${CTP_PROJECT_KEY}/products?limit=100`;
 
     try {
       return await fetch(URL, this.setBodyRequest(token)).then((resp) => resp.json());
