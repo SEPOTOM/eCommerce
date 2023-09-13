@@ -61,22 +61,21 @@ export default class Cart {
 
     this.cart = Converter.cartResponseToInfo(cartResponse);
 
-    this.updateHeaderCount(cartResponse);
-
-    return this;
-  }
-
-  private updateHeaderCount(cartResponse: CartResponse | Error) {
     if ('totalLineItemQuantity' in cartResponse) {
       this.setProductAmount(cartResponse.totalLineItemQuantity as number);
     } else {
       this.setProductAmount(0);
     }
+
+    return this;
   }
 
-  private setProductAmount(amount: number): void {
+  public setProductAmount(amount: number): void {
     const cartCount: HTMLElement = document.querySelector(`#${CART_PRODUCT_COUNT}`) as HTMLElement;
-    cartCount.textContent = String(amount);
+    if (cartCount) {
+      cartCount.textContent = String(amount);
+    }
+    localStorage.setItem('cartAmount', String(amount));
   }
 
   private getCurrentCartVersion(): number {
