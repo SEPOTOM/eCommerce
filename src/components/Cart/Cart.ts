@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import CartAPI from '../../api/CartAPI/CartAPI';
-import Converter from '../Converter/Converter';
+import Converter from '../../components/Converter/Converter';
 import { CartInfo, ProductInfo, CartResponse } from '../../types';
 import CART_PRODUCT_COUNT from './data';
 
