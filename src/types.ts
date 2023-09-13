@@ -11,6 +11,7 @@ export interface CartResponse {
 
 export interface LineItemResponse {
   id: string;
+  productId?: string;
   quantity: number;
   name: ILocalizedString;
   price: IPrices;

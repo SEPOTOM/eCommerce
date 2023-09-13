@@ -13,6 +13,7 @@ import Tokens from '../../Tokens/Tokens';
 import Router from '../Router';
 import Navigation from '../../../api/Navigation/Navigation';
 import { INavigation, IRouteProductLink } from '../../../api/Navigation/types/types';
+import Cart from '../../Cart/Cart';
 
 const RouterAlpine = {
   isCustomerLogin: false,
@@ -49,6 +50,8 @@ const RouterAlpine = {
 
   logout(): void {
     Tokens.deleteCustomerTokens();
+    const cart = new Cart();
+    cart.setProductAmount(0);
   },
 
   handleLocation(): void {

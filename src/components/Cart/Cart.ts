@@ -3,6 +3,7 @@ import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
 import { CartInfo, ProductInfo, CartResponse } from '../../types';
 import { GlobalErrorMessages } from '../../data/errors';
+import CART_PRODUCT_COUNT from './data';
 
 enum ErrorMessages {
   NO_PRODUCT = 'The updated product was not found. Please try again later.',
@@ -59,7 +60,7 @@ export default class Cart {
     return new Error(ErrorMessages.NO_PRODUCT);
   }
 
-  private updateCurrentCart(cartResponse: CartResponse | Error): Cart | Error {
+  public updateCurrentCart(cartResponse: CartResponse | Error): Cart | Error {
     if ('message' in cartResponse && cartResponse.message === GlobalErrorMessages.NO_CART) {
       return this;
     }
@@ -69,7 +70,21 @@ export default class Cart {
 
     this.cart = Converter.cartResponseToInfo(cartResponse);
 
+    if ('totalLineItemQuantity' in cartResponse) {
+      this.setProductAmount(cartResponse.totalLineItemQuantity as number);
+    } else {
+      this.setProductAmount(0);
+    }
+
     return this;
+  }
+
+  public setProductAmount(amount: number): void {
+    const cartCount: HTMLElement = document.querySelector(`#${CART_PRODUCT_COUNT}`) as HTMLElement;
+    if (cartCount) {
+      cartCount.textContent = String(amount);
+    }
+    localStorage.setItem('cartAmount', String(amount));
   }
 
   private getCurrentCartVersion(): number {
