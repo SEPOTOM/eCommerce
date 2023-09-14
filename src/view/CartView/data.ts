@@ -14,6 +14,7 @@ export enum DataAttrs {
   PROMO_BUTTON = 'data-promo-button',
   PROMO_INPUT = 'data-promo-input',
   PROMO_SUCCESS = 'data-promo-success',
+  PROMO_ERROR = 'data-promo-error',
   ROW = 'data-product-row',
   LABEL = 'data-product-label',
   QUANTITY_INPUT = 'data-quantity-input',

@@ -131,6 +131,8 @@ export default class CartView {
       const response = await this.cart.applyPromoCode(code);
 
       if (response instanceof Error) {
+        this.showPromoError(response.message);
+        setTimeout(this.hidePromoError.bind(this), HIDE_DELAY);
         return;
       }
 
@@ -140,7 +142,6 @@ export default class CartView {
       this.updateProductsTotalPrices();
 
       this.showPromoSuccess();
-
       setTimeout(this.hidePromoSuccess.bind(this), HIDE_DELAY);
     }
   }
@@ -153,11 +154,29 @@ export default class CartView {
     }
   }
 
+  private showPromoError(message: string): void {
+    const promoErrorBlock = this.view.querySelector(`[${DataAttrs.PROMO_ERROR}]`);
+
+    if (promoErrorBlock instanceof HTMLElement) {
+      promoErrorBlock.classList.remove('hidden');
+      promoErrorBlock.textContent = message;
+    }
+  }
+
   private hidePromoSuccess(): void {
     const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
 
     if (promoSuccessBlock instanceof HTMLElement) {
       promoSuccessBlock.classList.add('hidden');
+    }
+  }
+
+  private hidePromoError(): void {
+    const promoErrorBlock = this.view.querySelector(`[${DataAttrs.PROMO_ERROR}]`);
+
+    if (promoErrorBlock instanceof HTMLElement) {
+      promoErrorBlock.classList.add('hidden');
+      promoErrorBlock.textContent = '';
     }
   }
 }
