@@ -1,5 +1,5 @@
 import Converter from './Converter';
-import { CartResponse, CartInfo } from '../../types';
+import { CartResponse, CartInfo, DiscountCodeResponse, DiscountCodeInfo } from '../../types';
 
 /* eslint-disable max-lines-per-function */
 describe('Converter class', () => {
@@ -149,6 +149,26 @@ describe('Converter class', () => {
       version: 1,
     };
     const result = Converter.cartResponseToInfo(cartResponse);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('must have a discountCodeResponseToInfo method', () => {
+    expect(Converter.discountCodeResponseToInfo).toBeDefined();
+  });
+
+  it('the method discountCodeResponseToInfo must work correctly', () => {
+    const discountCodeResponse: DiscountCodeResponse = {
+      code: 'test-code',
+      description: {
+        'en-US': 'test-description',
+      },
+    };
+    const expected: DiscountCodeInfo = {
+      code: 'test-code',
+      description: 'test-description',
+    };
+    const result = Converter.discountCodeResponseToInfo(discountCodeResponse);
 
     expect(result).toEqual(expected);
   });
