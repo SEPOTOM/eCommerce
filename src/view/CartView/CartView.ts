@@ -38,7 +38,7 @@ export default class CartView {
       }, 0);
     });
 
-    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
+    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrices.bind(this));
 
     const cartData = await this.cart.getCart();
 
@@ -105,6 +105,11 @@ export default class CartView {
     }
 
     return true;
+  }
+
+  private updateTotalPrices(): void {
+    this.updateTotalPrice();
+    this.updateProductsTotalPrices();
   }
 
   private updateTotalPrice(): void {
