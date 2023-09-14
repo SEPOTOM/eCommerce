@@ -123,6 +123,11 @@ export default class CartView {
 
     if (promoInput instanceof HTMLInputElement) {
       const code = promoInput.value;
+
+      if (code === '') {
+        return;
+      }
+
       const response = await this.cart.applyPromoCode(code);
 
       if (response instanceof Error) {
