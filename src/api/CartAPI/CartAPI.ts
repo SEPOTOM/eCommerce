@@ -54,6 +54,32 @@ export default class CartAPI {
     return this.sendRequest(endpoint, requestOptions);
   }
 
+  public static async clearCart(
+    itemsIds: string[],
+    cartId: string,
+    cartVersion: number
+  ): Promise<CartResponse | Error> {
+    const removeItemsActions: LineItemRemoveAction[] = itemsIds.map((itemId) => ({
+      action: 'removeLineItem',
+      lineItemId: itemId,
+    }));
+    const bodyData: UpdateRequest = {
+      version: cartVersion,
+      actions: removeItemsActions,
+    };
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
   public static async removeItem(
     lineItemId: string,
     cartVersion: number,
