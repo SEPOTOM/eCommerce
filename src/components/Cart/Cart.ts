@@ -41,6 +41,15 @@ export default class Cart {
     return cart;
   }
 
+  public async applyPromoCode(promoCode: string): Promise<Cart | Error> {
+    const cartId = this.getCurrentCartId();
+    const cartVersion = this.getCurrentCartVersion();
+    const response = await CartAPI.addPromoCode(promoCode, cartId, cartVersion);
+    const cart = this.updateCurrentCart(response);
+
+    return cart;
+  }
+
   public async updateProductQuantity(quantity: string, itemId: string): Promise<ProductInfo | Error> {
     const cartVersion = this.getCurrentCartVersion();
     const cartId = this.getCurrentCartId();
