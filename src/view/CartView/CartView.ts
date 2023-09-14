@@ -48,10 +48,16 @@ export default class CartView {
     const productsInfo = cartData.getProductsInfo();
 
     if (productsInfo.length > 0) {
+      this.configurePromoButton();
       this.configureList(productsInfo);
+      this.configureTotalPrice(cartData.getTotalPrice());
       this.makeFilled();
     }
-    this.configureTotalPrice(cartData.getTotalPrice());
+  }
+
+  private configurePromoButton(): void {
+    const promoButton = this.view.querySelector(`[${DataAttrs.PROMO_BUTTON}]`);
+    promoButton?.addEventListener('click', this.applyPromoCode.bind(this));
   }
 
   private configureList(productsInfo: ProductInfo[]): void {
@@ -102,5 +108,29 @@ export default class CartView {
   private updateTotalPrice(): void {
     const totalPrice = this.cart.getTotalPrice();
     this.configureTotalPrice(totalPrice);
+  }
+
+  private updateProductsTotalPrices(): void {
+    this.productsObjects.forEach((productObject) => {
+      productObject.updateTotalPrice();
+    });
+  }
+
+  private async applyPromoCode(): Promise<void> {
+    const promoInput = this.view.querySelector(`[${DataAttrs.PROMO_INPUT}]`);
+
+    if (promoInput instanceof HTMLInputElement) {
+      const code = promoInput.value;
+      const response = await this.cart.applyPromoCode(code);
+
+      if (response instanceof Error) {
+        return;
+      }
+
+      promoInput.value = '';
+
+      this.updateTotalPrice();
+      this.updateProductsTotalPrices();
+    }
   }
 }
