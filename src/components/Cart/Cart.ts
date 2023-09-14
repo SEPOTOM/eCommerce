@@ -24,6 +24,10 @@ export default class Cart {
     return cart;
   }
 
+  public getProductInfo(itemId: string): ProductInfo | null {
+    return this.getProductsInfo().find((productInfo) => productInfo.itemId === itemId) || null;
+  }
+
   public getProductsInfo(): ProductInfo[] {
     return this.cart?.productsInfo || [];
   }
