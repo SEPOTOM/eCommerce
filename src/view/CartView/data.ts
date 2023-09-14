@@ -13,6 +13,7 @@ export enum DataAttrs {
   DELETE_BUTTON = 'data-delete-button',
   PROMO_BUTTON = 'data-promo-button',
   PROMO_INPUT = 'data-promo-input',
+  PROMO_SUCCESS = 'data-promo-success',
   ROW = 'data-product-row',
   LABEL = 'data-product-label',
   QUANTITY_INPUT = 'data-quantity-input',

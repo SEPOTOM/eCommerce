@@ -7,6 +7,8 @@ import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
 import { DataAttrs, Events } from './data';
 
+const HIDE_DELAY = 3000;
+
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
@@ -131,6 +133,26 @@ export default class CartView {
 
       this.updateTotalPrice();
       this.updateProductsTotalPrices();
+
+      this.showPromoSuccess();
+
+      setTimeout(this.hidePromoSuccess.bind(this), HIDE_DELAY);
+    }
+  }
+
+  private showPromoSuccess(): void {
+    const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
+
+    if (promoSuccessBlock instanceof HTMLElement) {
+      promoSuccessBlock.classList.remove('hidden');
+    }
+  }
+
+  private hidePromoSuccess(): void {
+    const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
+
+    if (promoSuccessBlock instanceof HTMLElement) {
+      promoSuccessBlock.classList.add('hidden');
     }
   }
 }
