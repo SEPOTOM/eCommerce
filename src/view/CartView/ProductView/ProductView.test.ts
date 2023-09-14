@@ -11,4 +11,8 @@ describe('ProductView class', () => {
   it('an instance must have a buildView method', () => {
     expect(instance.buildView).toBeDefined();
   });
+
+  it('an instance must have a updateTotalPrice method', () => {
+    expect(instance.updateTotalPrice).toBeDefined();
+  });
 });
