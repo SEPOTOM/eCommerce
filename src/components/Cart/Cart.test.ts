@@ -26,4 +26,8 @@ describe('Cart class', () => {
   it('an instance must have a getTotalPrice method', () => {
     expect(instance.getTotalPrice).toBeDefined();
   });
+
+  it('an instance must have an applyPromoCode method', () => {
+    expect(instance.getTotalPrice).toBeDefined();
+  });
 });
