@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../APIClients/JSNinjas-custom';
 import Tokens from '../../components/Tokens/Tokens';
-import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction } from './types';
+import { UpdateRequest, LineItemChangeQuantityAction, LineItemRemoveAction, AddDiscountCodeAction } from './types';
 import { GlobalErrorMessages } from '../../data/errors';
 import { CartResponse, IError, CartsResponse, IAddLineItem, ICartTemplate } from '../../types';
 
@@ -61,6 +61,32 @@ export default class CartAPI {
     const bodyData: UpdateRequest = {
       version: cartVersion,
       actions: [removeItemAction],
+    };
+
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    };
+
+    return this.sendRequest(endpoint, requestOptions);
+  }
+
+  public static async addPromoCode(
+    promoCode: string,
+    cartId: string,
+    cartVersion: number
+  ): Promise<CartResponse | Error> {
+    const addCodeAction: AddDiscountCodeAction = {
+      action: 'addDiscountCode',
+      code: promoCode,
+    };
+    const bodyData: UpdateRequest = {
+      version: cartVersion,
+      actions: [addCodeAction],
     };
 
     const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts/${cartId}`;
