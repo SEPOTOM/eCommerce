@@ -24,6 +24,7 @@ enum ProductElements {
   PRODUCT_ADD = 'add-button',
   PRODUCT_REMOVE = 'remove-button',
   PRODUCT_AMOUNT = 'amount',
+  PRODUCT_AMOUNT_CONTAINER = 'amount-container',
   PRODUCT_NETWORK_ERROR = 'network-error',
   PRODUCT_ADDED_SUCCESSFULLY = 'success',
   PRODUCT_PLEASE_LOGIN = 'please-login',
