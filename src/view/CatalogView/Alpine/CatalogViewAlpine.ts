@@ -76,13 +76,13 @@ const CategoryViewAlpine = {
 
   async setProductData(json: IShortProductsJSON[]): Promise<void> {
     this.products = [];
-    let isInCart: Map<string, boolean> = new Map();
+    const isInCart: Map<string, boolean> = new Map();
     const activeCart = await CartAPI.get();
 
-    json.forEach(element => {
+    json.forEach((element) => {
       let inCart: boolean = false;
       if ('lineItems' in activeCart) {
-        activeCart.lineItems.forEach(elem => {
+        activeCart.lineItems.forEach((elem) => {
           if (element.id === elem.productId) {
             inCart = true;
           }
@@ -100,7 +100,7 @@ const CategoryViewAlpine = {
         description: item.description['en-US'] || '',
         image: item.masterVariant.images.length ? item.masterVariant.images[0].url : imgProductPlaceholder,
         attributes: item.masterVariant?.attributes || [],
-        onStock: item.masterVariant?.availability?.isOnStock || false,
+        onStock: (item.masterVariant?.availability?.isOnStock && !isInCart.get(item.id)) || false,
         price: item.masterVariant.prices.length
           ? (item.masterVariant.prices[0].value.centAmount / 100).toFixed(2)
           : null,
