@@ -240,7 +240,7 @@ const CategoryViewAlpine = {
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
-  async addToBasket(e: Event, id: string): Promise<void> {
+  async addToBasket(e: Event, id: string, item: object): Promise<void> {
     e.stopPropagation();
     e.preventDefault();
     const delay = 1000;
@@ -281,6 +281,10 @@ const CategoryViewAlpine = {
           } else {
             this.messageStatus = 'success';
             HeaderView.setBasketCount(response.totalLineItemQuantity!);
+            if ('onStock' in item) {
+              // eslint-disable-next-line no-param-reassign
+              item.onStock = !item.onStock;
+            }
           }
         })
         .finally(() => {
