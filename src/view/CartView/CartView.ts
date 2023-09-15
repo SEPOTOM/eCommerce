@@ -56,9 +56,9 @@ export default class CartView {
       this.configureList(productsInfo);
       this.configureTotalPrice(cartData.getTotalPrice());
       this.makeFilled();
-    } else {
-      this.configureLinks();
     }
+
+    this.configureLinks();
   }
 
   private configurePromoButton(): void {
