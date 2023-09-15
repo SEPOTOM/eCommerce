@@ -249,6 +249,7 @@ export default class ProductView {
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
     this.addSlider(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
+    this.setQuantity(productDetails, productHTML);
     this.addProductCategories(productDetails, productHTML);
     this.addProductDescription(productDetails, productHTML);
     this.addProductPrice(productDetails, productHTML);
@@ -316,6 +317,20 @@ export default class ProductView {
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
     const productName = productHTML.querySelector(`#${ProductElements.PRODUCT_NAME}`) as HTMLElement;
     productName.textContent = productDetails.masterData.current.name['en-US'];
+  }
+
+  private setQuantity(productDetails: IProduct, productHTML: HTMLElement): void {
+    const quantity = productHTML.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement;
+    const maxValue = productDetails.masterData.current.masterVariant.availability?.availableQuantity;
+
+    if (maxValue) {
+      quantity.setAttribute('max', String());
+      quantity.addEventListener('input', () => {
+        if (Number(quantity.value) > maxValue) {
+          quantity.value = String(maxValue);
+        }
+      });
+    }
   }
 
   private async addProductCategories(productDetails: IProduct, productHTML: HTMLElement): Promise<void> {
