@@ -119,51 +119,6 @@ export default class CartView {
     }
   }
 
-  private showError(message: string): void {
-    const errorBlock = new ErrorView().buildView(message);
-
-    this.view.innerHTML = '';
-    this.view.append(errorBlock);
-  }
-
-  private showModalError(message: string): void {
-    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
-
-    if (modalErrorBlock) {
-      modalErrorBlock.classList.remove('hidden');
-      modalErrorBlock.textContent = message;
-    }
-  }
-
-  private showModal(): void {
-    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
-
-    if (modal) {
-      this.hideModalError();
-
-      document.documentElement.classList.add('overflow-hidden');
-      modal.classList.remove('hidden');
-    }
-  }
-
-  private hideModal(): void {
-    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
-
-    if (modal) {
-      document.documentElement.classList.remove('overflow-hidden');
-      modal.classList.add('hidden');
-    }
-  }
-
-  private hideModalError(): void {
-    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
-
-    if (modalErrorBlock) {
-      modalErrorBlock.classList.add('hidden');
-      modalErrorBlock.textContent = '';
-    }
-  }
-
   private makeFilled(): void {
     this.view.dataset.filled = 'true';
   }
@@ -243,6 +198,33 @@ export default class CartView {
     }
   }
 
+  private showError(message: string): void {
+    const errorBlock = new ErrorView().buildView(message);
+
+    this.view.innerHTML = '';
+    this.view.append(errorBlock);
+  }
+
+  private showModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      this.hideModalError();
+
+      document.documentElement.classList.add('overflow-hidden');
+      modal.classList.remove('hidden');
+    }
+  }
+
+  private showModalError(message: string): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.remove('hidden');
+      modalErrorBlock.textContent = message;
+    }
+  }
+
   private hidePromoSuccess(): void {
     const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
 
@@ -257,6 +239,24 @@ export default class CartView {
     if (promoErrorBlock instanceof HTMLElement) {
       promoErrorBlock.classList.add('hidden');
       promoErrorBlock.textContent = '';
+    }
+  }
+
+  private hideModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      document.documentElement.classList.remove('overflow-hidden');
+      modal.classList.add('hidden');
+    }
+  }
+
+  private hideModalError(): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.add('hidden');
+      modalErrorBlock.textContent = '';
     }
   }
 
