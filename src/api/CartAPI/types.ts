@@ -17,3 +17,8 @@ export interface LineItemRemoveAction extends Action {
   action: 'removeLineItem';
   lineItemId: string;
 }
+
+export interface AddDiscountCodeAction extends Action {
+  action: 'addDiscountCode';
+  code: string;
+}

@@ -23,6 +23,14 @@ export default class ProductView {
     return this.view;
   }
 
+  public updateTotalPrice(): void {
+    const productInfo = this.cart.getProductInfo(this.getItemId());
+
+    if (productInfo) {
+      this.configureTotalPrice(productInfo.totalPrice);
+    }
+  }
+
   private configureView(productData: ProductInfo, labelMark: string): void {
     this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));

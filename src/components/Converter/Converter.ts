@@ -1,5 +1,12 @@
 import Formatter from '../Formatter/Formatter';
-import { CartResponse, CartInfo, LineItemResponse, ProductInfo } from '../../types';
+import {
+  CartResponse,
+  CartInfo,
+  LineItemResponse,
+  ProductInfo,
+  DiscountCodeResponse,
+  DiscountCodeInfo,
+} from '../../types';
 
 export default class Converter {
   public static htmlToElement<T extends HTMLElement>(htmlString: string): T | null {
@@ -11,6 +18,14 @@ export default class Converter {
     }
 
     return null;
+  }
+
+  public static discountCodeResponseToInfo(response: DiscountCodeResponse): DiscountCodeInfo {
+    const info: DiscountCodeInfo = {
+      code: response.code,
+      description: response.description['en-US'],
+    };
+    return info;
   }
 
   public static cartResponseToInfo(cart: CartResponse): CartInfo {

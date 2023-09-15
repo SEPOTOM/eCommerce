@@ -1,5 +1,9 @@
+/* eslint-disable import/no-cycle */
+import Discount from '../../components/Discount/Discount';
+
 import HeaderView from '../HeaderView/HeaderView';
 import FooterView from '../FooterView/FooterView';
+import PromoCodeView from '../PromoCodeView/PromoCodeView';
 import HomepageViewHTML from './HomepageView.html';
 
 // Import images to Home page
@@ -41,5 +45,27 @@ export default class HomepageView {
   public draw(): void {
     const main: HTMLElement = document.querySelector('main')!;
     main.innerHTML = HomepageViewHTML;
+
+    this.drawPromoCodes();
+  }
+
+  private async drawPromoCodes(): Promise<void> {
+    const codesInfo = await Discount.getCodes();
+
+    if ('message' in codesInfo) {
+      return;
+    }
+
+    const promoBlock = document.querySelector('[data-element="promo-block"]');
+    const promoList = document.querySelector('[data-element="promo-list"]');
+
+    if (promoBlock instanceof HTMLElement && promoList && codesInfo.length > 0) {
+      promoBlock.hidden = false;
+
+      codesInfo.forEach(({ code, description }) => {
+        const codeBlock = new PromoCodeView().buildView(code, description);
+        promoList.append(codeBlock);
+      });
+    }
   }
 }

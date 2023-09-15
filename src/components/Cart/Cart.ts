@@ -24,6 +24,10 @@ export default class Cart {
     return cart;
   }
 
+  public getProductInfo(itemId: string): ProductInfo | null {
+    return this.getProductsInfo().find((productInfo) => productInfo.itemId === itemId) || null;
+  }
+
   public getProductsInfo(): ProductInfo[] {
     return this.cart?.productsInfo || [];
   }
@@ -37,6 +41,15 @@ export default class Cart {
     const cartId = this.getCurrentCartId();
     const cartResponse = await CartAPI.removeItem(itemId, cartVersion, cartId);
     const cart = this.updateCurrentCart(cartResponse);
+
+    return cart;
+  }
+
+  public async applyPromoCode(promoCode: string): Promise<Cart | Error> {
+    const cartId = this.getCurrentCartId();
+    const cartVersion = this.getCurrentCartVersion();
+    const response = await CartAPI.addPromoCode(promoCode, cartId, cartVersion);
+    const cart = this.updateCurrentCart(response);
 
     return cart;
   }

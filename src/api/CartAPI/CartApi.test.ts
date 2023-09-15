@@ -32,4 +32,8 @@ describe('CartAPI class', () => {
   it('must have the getActiveCartVersion method', () => {
     expect(CartAPI.getActiveCartVersion).toBeDefined();
   });
+
+  it('must have the addPromoCode method', () => {
+    expect(CartAPI.addPromoCode).toBeDefined();
+  });
 });

@@ -7,6 +7,8 @@ import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
 import { DataAttrs, Events } from './data';
 
+const HIDE_DELAY = 3000;
+
 export default class CartView {
   private view = Converter.htmlToElement<HTMLDivElement>(HTML) || document.createElement('div');
 
@@ -36,7 +38,7 @@ export default class CartView {
       }, 0);
     });
 
-    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrice.bind(this));
+    this.view.addEventListener(Events.CHANGE_TOTAL_PRICE, this.updateTotalPrices.bind(this));
 
     const cartData = await this.cart.getCart();
 
@@ -48,10 +50,16 @@ export default class CartView {
     const productsInfo = cartData.getProductsInfo();
 
     if (productsInfo.length > 0) {
+      this.configurePromoButton();
       this.configureList(productsInfo);
+      this.configureTotalPrice(cartData.getTotalPrice());
       this.makeFilled();
     }
-    this.configureTotalPrice(cartData.getTotalPrice());
+  }
+
+  private configurePromoButton(): void {
+    const promoButton = this.view.querySelector(`[${DataAttrs.PROMO_BUTTON}]`);
+    promoButton?.addEventListener('click', this.applyPromoCode.bind(this));
   }
 
   private configureList(productsInfo: ProductInfo[]): void {
@@ -99,8 +107,81 @@ export default class CartView {
     return true;
   }
 
+  private updateTotalPrices(): void {
+    this.updateTotalPrice();
+    this.updateProductsTotalPrices();
+  }
+
   private updateTotalPrice(): void {
     const totalPrice = this.cart.getTotalPrice();
     this.configureTotalPrice(totalPrice);
+  }
+
+  private updateProductsTotalPrices(): void {
+    this.productsObjects.forEach((productObject) => {
+      productObject.updateTotalPrice();
+    });
+  }
+
+  private async applyPromoCode(): Promise<void> {
+    const promoInput = this.view.querySelector(`[${DataAttrs.PROMO_INPUT}]`);
+
+    if (promoInput instanceof HTMLInputElement) {
+      const code = promoInput.value;
+
+      if (code === '') {
+        return;
+      }
+
+      const response = await this.cart.applyPromoCode(code);
+
+      if (response instanceof Error) {
+        this.showPromoError(response.message);
+        setTimeout(this.hidePromoError.bind(this), HIDE_DELAY);
+        return;
+      }
+
+      promoInput.value = '';
+
+      this.updateTotalPrice();
+      this.updateProductsTotalPrices();
+
+      this.showPromoSuccess();
+      setTimeout(this.hidePromoSuccess.bind(this), HIDE_DELAY);
+    }
+  }
+
+  private showPromoSuccess(): void {
+    const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
+
+    if (promoSuccessBlock instanceof HTMLElement) {
+      promoSuccessBlock.classList.remove('hidden');
+    }
+  }
+
+  private showPromoError(message: string): void {
+    const promoErrorBlock = this.view.querySelector(`[${DataAttrs.PROMO_ERROR}]`);
+
+    if (promoErrorBlock instanceof HTMLElement) {
+      promoErrorBlock.classList.remove('hidden');
+      promoErrorBlock.textContent = message;
+    }
+  }
+
+  private hidePromoSuccess(): void {
+    const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
+
+    if (promoSuccessBlock instanceof HTMLElement) {
+      promoSuccessBlock.classList.add('hidden');
+    }
+  }
+
+  private hidePromoError(): void {
+    const promoErrorBlock = this.view.querySelector(`[${DataAttrs.PROMO_ERROR}]`);
+
+    if (promoErrorBlock instanceof HTMLElement) {
+      promoErrorBlock.classList.add('hidden');
+      promoErrorBlock.textContent = '';
+    }
   }
 }
