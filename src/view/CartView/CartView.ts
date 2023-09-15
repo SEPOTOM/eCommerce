@@ -53,6 +53,9 @@ export default class CartView {
       this.configurePromoButton();
       this.configureList(productsInfo);
       this.configureTotalPrice(cartData.getTotalPrice());
+      this.configureShowModalButton();
+      this.configureModal();
+      this.configureClearCartButton();
       this.makeFilled();
     }
   }
@@ -74,19 +77,46 @@ export default class CartView {
     });
   }
 
+  private configureShowModalButton(): void {
+    const showModalButton = this.view.querySelector(`[${DataAttrs.SHOW_MODAL_BUTTON}]`);
+    showModalButton?.addEventListener('click', this.showModal.bind(this));
+  }
+
+  private configureClearCartButton(): void {
+    const clearCartButton = this.view.querySelector(`[${DataAttrs.CLEAR_BUTTON}]`);
+
+    if (clearCartButton instanceof HTMLButtonElement) {
+      clearCartButton.addEventListener('click', () => {
+        if (clearCartButton.disabled) {
+          return;
+        }
+
+        clearCartButton.disabled = true;
+        this.clearCart();
+      });
+    }
+  }
+
+  private configureModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+    modal?.addEventListener('click', (e: Event) => {
+      if (e.target instanceof Element) {
+        const isModalBody = e.target.closest(`[${DataAttrs.MODAL_BODY}]`);
+        const isCancelButton = e.target.closest(`[${DataAttrs.CANCEL_BUTTON}]`);
+
+        if (!isModalBody || isCancelButton) {
+          this.hideModal();
+        }
+      }
+    });
+  }
+
   private configureTotalPrice(totalPrice: string): void {
     const totalPriceBlock = this.view.querySelector(`[${DataAttrs.TOTAL_PRICE}]`);
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = totalPrice;
     }
-  }
-
-  private showError(message: string): void {
-    const errorBlock = new ErrorView().buildView(message);
-
-    this.view.innerHTML = '';
-    this.view.append(errorBlock);
   }
 
   private makeFilled(): void {
@@ -168,6 +198,33 @@ export default class CartView {
     }
   }
 
+  private showError(message: string): void {
+    const errorBlock = new ErrorView().buildView(message);
+
+    this.view.innerHTML = '';
+    this.view.append(errorBlock);
+  }
+
+  private showModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      this.hideModalError();
+
+      document.documentElement.classList.add('overflow-hidden');
+      modal.classList.remove('hidden');
+    }
+  }
+
+  private showModalError(message: string): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.remove('hidden');
+      modalErrorBlock.textContent = message;
+    }
+  }
+
   private hidePromoSuccess(): void {
     const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
 
@@ -182,6 +239,53 @@ export default class CartView {
     if (promoErrorBlock instanceof HTMLElement) {
       promoErrorBlock.classList.add('hidden');
       promoErrorBlock.textContent = '';
+    }
+  }
+
+  private hideModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      document.documentElement.classList.remove('overflow-hidden');
+      modal.classList.add('hidden');
+    }
+  }
+
+  private hideModalError(): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.add('hidden');
+      modalErrorBlock.textContent = '';
+    }
+  }
+
+  private async clearCart(): Promise<void> {
+    this.hideModalError();
+
+    const itemIds = this.getItemIds();
+    const response = await this.cart.clearCart(itemIds);
+
+    this.enableClearCartButton();
+
+    if (response instanceof Error) {
+      this.showModalError(response.message);
+      return;
+    }
+
+    this.makeEmpty();
+    this.hideModal();
+  }
+
+  private getItemIds(): string[] {
+    return this.productsObjects.map((productObject) => productObject.getItemId());
+  }
+
+  private enableClearCartButton(): void {
+    const clearCartButton = this.view.querySelector(`[${DataAttrs.CLEAR_BUTTON}]`);
+
+    if (clearCartButton instanceof HTMLButtonElement) {
+      clearCartButton.disabled = false;
     }
   }
 }
