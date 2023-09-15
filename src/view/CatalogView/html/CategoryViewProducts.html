@@ -81,7 +81,7 @@
                 <template x-if="item.onStock">
                   <span
                     class="inline-block min-w-[128px] px-5 py-2 bg-red-600 rounded-lg text-sm text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
-                    @click="($even) => { addToBasket($event, item.id) }"
+                    @click="($even) => { addToBasket($event, item.id, item) }"
                   >
                     Add to basket
                   </span>
