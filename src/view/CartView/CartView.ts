@@ -53,6 +53,8 @@ export default class CartView {
       this.configurePromoButton();
       this.configureList(productsInfo);
       this.configureTotalPrice(cartData.getTotalPrice());
+      this.configureShowModalButton();
+      this.configureModal();
       this.makeFilled();
     }
   }
@@ -74,6 +76,25 @@ export default class CartView {
     });
   }
 
+  private configureShowModalButton(): void {
+    const showModalButton = this.view.querySelector(`[${DataAttrs.SHOW_MODAL_BUTTON}]`);
+    showModalButton?.addEventListener('click', this.showModal.bind(this));
+  }
+
+  private configureModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+    modal?.addEventListener('click', (e: Event) => {
+      if (e.target instanceof Element) {
+        const isModalBody = e.target.closest(`[${DataAttrs.MODAL_BODY}]`);
+        const isCancelButton = e.target.closest(`[${DataAttrs.CANCEL_BUTTON}]`);
+
+        if (!isModalBody || isCancelButton) {
+          this.hideModal();
+        }
+      }
+    });
+  }
+
   private configureTotalPrice(totalPrice: string): void {
     const totalPriceBlock = this.view.querySelector(`[${DataAttrs.TOTAL_PRICE}]`);
 
@@ -87,6 +108,24 @@ export default class CartView {
 
     this.view.innerHTML = '';
     this.view.append(errorBlock);
+  }
+
+  private showModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      document.documentElement.classList.add('overflow-hidden');
+      modal.classList.remove('hidden');
+    }
+  }
+
+  private hideModal(): void {
+    const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
+
+    if (modal) {
+      document.documentElement.classList.remove('overflow-hidden');
+      modal.classList.add('hidden');
+    }
   }
 
   private makeFilled(): void {

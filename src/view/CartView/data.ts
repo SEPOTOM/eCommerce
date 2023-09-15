@@ -15,6 +15,9 @@ export enum DataAttrs {
   PROMO_INPUT = 'data-promo-input',
   PROMO_SUCCESS = 'data-promo-success',
   PROMO_ERROR = 'data-promo-error',
+  SHOW_MODAL_BUTTON = 'data-show-modal-button',
+  CLEAR_BUTTON = 'data-clear-button',
+  CANCEL_BUTTON = 'data-cancel-button',
   ROW = 'data-product-row',
   LABEL = 'data-product-label',
   QUANTITY_INPUT = 'data-quantity-input',
@@ -22,6 +25,8 @@ export enum DataAttrs {
   QUANTITY_ERROR = 'data-quantity-error',
   DELETE_ERROR = 'data-delete-error',
   TOTAL_PRICE = 'data-total-price',
+  MODAL = 'data-cart-modal',
+  MODAL_BODY = 'data-cart-modal-body',
 }
 
 export enum Events {
