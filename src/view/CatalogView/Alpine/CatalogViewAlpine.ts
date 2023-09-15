@@ -1,9 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { IAllProducts, IShortProductsJSON } from '../types/types';
+import { CartResponse, IAddLineItem } from '../../../types';
 
 // Import images placeholder if product don't have an image
 import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
-
+import CartAPI from '../../../api/CartAPI/CartAPI';
+import HeaderView from '../../HeaderView/HeaderView';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../../../api/APIClients/JSNinjas';
 
 const CategoryViewAlpine = {
@@ -24,6 +26,13 @@ const CategoryViewAlpine = {
   productOffset: 0,
   maxPaginationCount: 0,
   loadedPage: 1,
+  buttonStatus: {
+    step1: 'Adding...',
+    step2: 'Added',
+    step3: 'Add to basket',
+  },
+  messageStatus: 'success',
+  showMessage: false,
 
   /* eslint-disable max-lines-per-function */
   init(): void {
@@ -217,11 +226,60 @@ const CategoryViewAlpine = {
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
-  addToBasket(e: Event): void {
+  async addToBasket(e: Event, id: string): Promise<void> {
     e.stopPropagation();
     e.preventDefault();
+    const delay = 1000;
 
-    // TODO: implement after add logic on the PDP
+    // Add delay between product adding
+    if (!(e.target as HTMLElement).classList.contains('wait')) {
+      // Run progress
+      (e.target as HTMLElement).innerHTML = this.buttonStatus.step1;
+      (e.target as HTMLElement).classList.add('opacity-50', 'wait');
+
+      // Get or create personal cart
+      const cartData: CartResponse | Error = await CartAPI.get().then(
+        async (response): Promise<CartResponse | Error> => {
+          if (response instanceof Error) {
+            await CartAPI.createCustomerCart({ currency: 'USD' });
+            return CartAPI.get();
+          }
+
+          return response;
+        }
+      );
+
+      const BODY: IAddLineItem = {
+        version: (cartData as CartResponse).version,
+        actions: [
+          {
+            action: 'addLineItem',
+            productId: id,
+          },
+        ],
+      };
+
+      // Add to cart
+      await CartAPI.updateLineItem((cartData as CartResponse).id, BODY)
+        .then((response) => {
+          if (response instanceof Error) {
+            this.messageStatus = 'error';
+          } else {
+            this.messageStatus = 'success';
+            HeaderView.setBasketCount(response.totalLineItemQuantity!);
+          }
+        })
+        .finally(() => {
+          (e.target as HTMLElement).innerHTML = this.buttonStatus.step2;
+          this.showMessage = true;
+
+          setTimeout((): void => {
+            (e.target as HTMLElement).innerHTML = this.buttonStatus.step3;
+            (e.target as HTMLElement).classList.remove('opacity-50', 'wait');
+            this.showMessage = false;
+          }, delay);
+        });
+    }
   },
 };
 

@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import Router from './Router';
 import RouterAlpine from './Alpine/RouterAlpine';
 
@@ -16,6 +17,7 @@ describe('Main [Router] test', (): void => {
 });
 
 describe('[Router alpine] test', (): void => {
+  document.body.innerHTML = '<span data-element="cart-count"></span>';
   it('-- Alpine "Route" object, all properties exist & some return nothing', () => {
     expect(RouterAlpine).toHaveProperty('isCustomerLogin');
     expect(RouterAlpine).toHaveProperty('route');

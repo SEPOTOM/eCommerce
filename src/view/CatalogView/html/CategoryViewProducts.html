@@ -80,8 +80,8 @@
               <span>
                 <template x-if="item.onStock">
                   <span
-                    class="px-5 py-2 bg-red-600 rounded-lg text-sm text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
-                    @click="($even) => { addToBasket($event) }"
+                    class="inline-block min-w-[128px] px-5 py-2 bg-red-600 rounded-lg text-sm text-center text-white transition-colors duration-300 hover:bg-red-700 cursor-pointer"
+                    @click="($even) => { addToBasket($event, item.id) }"
                   >
                     Add to basket
                   </span>
@@ -202,6 +202,16 @@
         </span>
       </div>
     </template>
+
+    <div
+      class="fixed right-3 bottom-3 z-10 py-1.5 px-4 font-medium border rounded shadow transition-transform duration-300 translate-x-80"
+      :class="{ 
+            '!translate-x-0': showMessage,
+            'text-lime-600 bg-lime-200 border-lime-400': messageStatus === 'success',
+            'text-red-600 bg-red-200 border-red-400': messageStatus === 'error'
+        }"
+      x-text="messageStatus === 'success' ? 'Success! Product was added!' : 'Sorry, something went wrong.'"
+    ></div>
   </div>
 </template>
 

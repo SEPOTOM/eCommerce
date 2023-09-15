@@ -2,7 +2,6 @@ import Alpine from 'alpinejs';
 import Converter from '../../components/Converter/Converter';
 import HeaderViewAlpine from './Alpine/HeaderViewAlpine';
 import HeaderViewHTML from './HeaderView.html';
-import CART_PRODUCT_COUNT from '../../components/Cart/data';
 
 export default class HeaderView {
   public draw(): void {
@@ -11,11 +10,15 @@ export default class HeaderView {
     this.setDefaultCartAmount();
   }
 
+  public static setBasketCount(value: number): void {
+    const basket: HTMLElement = document.querySelector('[data-element="cart-count"]')!;
+    const count: string = value > 99 ? '99' : `${value}`;
+    localStorage.setItem('cartAmount', count);
+    basket.innerHTML = count;
+  }
+
   private setDefaultCartAmount(): void {
-    const amount = localStorage.getItem('cartAmount');
-    if (amount) {
-      const cartCount: HTMLElement = document.querySelector(`#${CART_PRODUCT_COUNT}`) as HTMLElement;
-      cartCount.textContent = String(amount);
-    }
+    const basket: HTMLElement = document.querySelector('[data-element="cart-count"]')!;
+    if (localStorage.getItem('cartAmount')) basket.innerHTML = localStorage.getItem('cartAmount')!;
   }
 }
