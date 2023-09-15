@@ -31,6 +31,10 @@ export default class ProductView {
     }
   }
 
+  public getItemId(): string {
+    return this.view.dataset.itemId || '';
+  }
+
   private configureView(productData: ProductInfo, labelMark: string): void {
     this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));
@@ -156,10 +160,6 @@ export default class ProductView {
     }
 
     return '';
-  }
-
-  private getItemId(): string {
-    return this.view.dataset.itemId || '';
   }
 
   private setQuantityValue(value: string): void {

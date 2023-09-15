@@ -2,7 +2,16 @@
   class="group/cart flex-grow flex gap-y-3 flex-col justify-center w-full max-w-6xl mx-auto px-5 py-7 md:px-7"
   data-filled="false"
 >
-  <h2 class="pb-3 mb-3 text-4xl text-gray-600 font-medium border-b border-stone-300">Your Cart</h2>
+  <div class="flex justify-between items-end mb-3 pb-3 border-b border-stone-300">
+    <h2 class="text-4xl text-gray-600 font-medium">Your Cart</h2>
+    <button
+      class="px-3 py-1 text-lg font-bold text-white rounded-lg bg-red-600 transition-colors duration-300 hover:bg-red-800 group-data-[filled=false]/cart:hidden"
+      type="button"
+      data-show-modal-button
+    >
+      Clear Cart
+    </button>
+  </div>
   <ul class="flex-grow flex flex-col gap-y-7 group-data-[filled=false]/cart:hidden" data-products-list></ul>
   <div class="flex-grow flex flex-col justify-center items-center mx-auto group-data-[filled=true]/cart:hidden">
     <p class="text-2xl text-gray-600 text-center">It looks like you haven't chosen any cars yet.</p>
@@ -39,6 +48,49 @@
         data-promo-error
       >
         Operation error. Please, try later.
+      </div>
+    </div>
+  </div>
+  <div class="fixed top-0 left-0 z-50 flex items-center w-full h-full bg-black/50 hidden" data-cart-modal>
+    <div
+      class="flex flex-col gap-y-7 max-w-sm mx-auto p-5 border-2 border-gray-400 rounded-xl bg-white overflow-hidden"
+      data-cart-modal-body
+    >
+      <h3 class="mb-2 text-3xl font-bold text-center">Are you sure you want to clear your cart?</h3>
+      <div class="hideen mb-1 p-2 text-red-600 bg-red-200 rounded-lg" data-modal-error></div>
+      <div class="flex gap-x-2">
+        <button
+          class="flex-grow flex justify-center p-1 text-green-600 border-2 border-green-600 rounded-lg transition-colors duration-300 hover:text-white hover:bg-green-600 disabled:text-green-600/50 disabled:border-green-600/50 disabled:hover:bg-white group-data-[error=true]/quantity:hidden"
+          type="button"
+          data-clear-button
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </button>
+        <button
+          class="flex-grow flex justify-center p-1 text-red-600 border-2 border-red-600 rounded-lg transition-colors duration-300 hover:text-white hover:bg-red-600 group-data-[error=true]/quantity:hidden"
+          type="button"
+          data-cancel-button
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>

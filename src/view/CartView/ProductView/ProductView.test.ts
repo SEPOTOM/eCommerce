@@ -15,4 +15,8 @@ describe('ProductView class', () => {
   it('an instance must have a updateTotalPrice method', () => {
     expect(instance.updateTotalPrice).toBeDefined();
   });
+
+  it('an instance must have a getItemId method', () => {
+    expect(instance.getItemId).toBeDefined();
+  });
 });

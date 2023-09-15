@@ -1,5 +1,6 @@
 import CartAPI from './CartAPI';
 
+/* eslint-disable max-lines-per-function */
 describe('CartAPI class', () => {
   it('must be defined', () => {
     expect(CartAPI).toBeDefined();
@@ -11,6 +12,10 @@ describe('CartAPI class', () => {
 
   it('must have a updateQuantity method', () => {
     expect(CartAPI.updateQuantity).toBeDefined();
+  });
+
+  it('must have a clearCart method', () => {
+    expect(CartAPI.clearCart).toBeDefined();
   });
 
   it('must have a removeItem method', () => {

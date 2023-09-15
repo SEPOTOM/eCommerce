@@ -36,6 +36,15 @@ export default class Cart {
     return this.cart?.totalPrice || '';
   }
 
+  public async clearCart(itemsIds: string[]): Promise<Cart | Error> {
+    const cartVersion = this.getCurrentCartVersion();
+    const cartId = this.getCurrentCartId();
+    const cartResponse = await CartAPI.clearCart(itemsIds, cartId, cartVersion);
+    const cart = this.updateCurrentCart(cartResponse);
+
+    return cart;
+  }
+
   public async removeProduct(itemId: string): Promise<Cart | Error> {
     const cartVersion = this.getCurrentCartVersion();
     const cartId = this.getCurrentCartId();
