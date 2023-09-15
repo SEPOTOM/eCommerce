@@ -55,6 +55,7 @@ export default class CartView {
       this.configureTotalPrice(cartData.getTotalPrice());
       this.configureShowModalButton();
       this.configureModal();
+      this.configureClearCartButton();
       this.makeFilled();
     }
   }
@@ -79,6 +80,21 @@ export default class CartView {
   private configureShowModalButton(): void {
     const showModalButton = this.view.querySelector(`[${DataAttrs.SHOW_MODAL_BUTTON}]`);
     showModalButton?.addEventListener('click', this.showModal.bind(this));
+  }
+
+  private configureClearCartButton(): void {
+    const clearCartButton = this.view.querySelector(`[${DataAttrs.CLEAR_BUTTON}]`);
+
+    if (clearCartButton instanceof HTMLButtonElement) {
+      clearCartButton.addEventListener('click', () => {
+        if (clearCartButton.disabled) {
+          return;
+        }
+
+        clearCartButton.disabled = true;
+        this.clearCart();
+      });
+    }
   }
 
   private configureModal(): void {
@@ -221,6 +237,31 @@ export default class CartView {
     if (promoErrorBlock instanceof HTMLElement) {
       promoErrorBlock.classList.add('hidden');
       promoErrorBlock.textContent = '';
+    }
+  }
+
+  private async clearCart(): Promise<void> {
+    const itemIds = this.getItemIds();
+    const response = await this.cart.clearCart(itemIds);
+
+    if (response instanceof Error) {
+      return;
+    }
+
+    this.makeEmpty();
+    this.hideModal();
+    this.enableClearCartButton();
+  }
+
+  private getItemIds(): string[] {
+    return this.productsObjects.map((productObject) => productObject.getItemId());
+  }
+
+  private enableClearCartButton(): void {
+    const clearCartButton = this.view.querySelector(`[${DataAttrs.CLEAR_BUTTON}]`);
+
+    if (clearCartButton instanceof HTMLButtonElement) {
+      clearCartButton.disabled = false;
     }
   }
 }
