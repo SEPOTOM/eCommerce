@@ -13,6 +13,10 @@ describe('CartAPI class', () => {
     expect(CartAPI.updateQuantity).toBeDefined();
   });
 
+  it('must have a clearCart method', () => {
+    expect(CartAPI.clearCart).toBeDefined();
+  });
+
   it('must have a removeItem method', () => {
     expect(CartAPI.removeItem).toBeDefined();
   });
