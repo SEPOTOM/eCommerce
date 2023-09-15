@@ -1,5 +1,6 @@
 import CartAPI from './CartAPI';
 
+/* eslint-disable max-lines-per-function */
 describe('CartAPI class', () => {
   it('must be defined', () => {
     expect(CartAPI).toBeDefined();

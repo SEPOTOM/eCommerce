@@ -54,6 +54,17 @@ export default class CartAPI {
     return this.sendRequest(endpoint, requestOptions);
   }
 
+  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<CartResponse | Error> {
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts/${cartID}`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {},
+      body: JSON.stringify(payload),
+    };
+
+    return CartAPI.sendRequest(endpoint, requestOptions);
+  }
+
   public static async clearCart(
     itemsIds: string[],
     cartId: string,
@@ -132,8 +143,9 @@ export default class CartAPI {
     return this.sendRequest(endpoint, requestOptions);
   }
 
-  public static async updateLineItem(cartID: string, payload: IAddLineItem): Promise<CartResponse | Error> {
-    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/carts/${cartID}`;
+  public static async createCustomerCart(payload: ICartTemplate): Promise<CartResponse | Error> {
+    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts`;
+
     const requestOptions = {
       method: 'POST',
       headers: {},
@@ -151,18 +163,6 @@ export default class CartAPI {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    };
-
-    return CartAPI.sendRequest(endpoint, requestOptions);
-  }
-
-  public static async createCustomerCart(payload: ICartTemplate): Promise<CartResponse | Error> {
-    const endpoint = `${CTP_API_URL}/${CTP_PROJECT_KEY}/me/carts`;
-
-    const requestOptions = {
-      method: 'POST',
-      headers: {},
-      body: JSON.stringify(payload),
     };
 
     return CartAPI.sendRequest(endpoint, requestOptions);
