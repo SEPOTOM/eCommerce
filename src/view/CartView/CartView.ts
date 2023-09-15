@@ -126,10 +126,21 @@ export default class CartView {
     this.view.append(errorBlock);
   }
 
+  private showModalError(message: string): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.remove('hidden');
+      modalErrorBlock.textContent = message;
+    }
+  }
+
   private showModal(): void {
     const modal = this.view.querySelector(`[${DataAttrs.MODAL}]`);
 
     if (modal) {
+      this.hideModalError();
+
       document.documentElement.classList.add('overflow-hidden');
       modal.classList.remove('hidden');
     }
@@ -141,6 +152,15 @@ export default class CartView {
     if (modal) {
       document.documentElement.classList.remove('overflow-hidden');
       modal.classList.add('hidden');
+    }
+  }
+
+  private hideModalError(): void {
+    const modalErrorBlock = this.view.querySelector(`[${DataAttrs.MODAL_ERROR}]`);
+
+    if (modalErrorBlock) {
+      modalErrorBlock.classList.add('hidden');
+      modalErrorBlock.textContent = '';
     }
   }
 
@@ -241,16 +261,20 @@ export default class CartView {
   }
 
   private async clearCart(): Promise<void> {
+    this.hideModalError();
+
     const itemIds = this.getItemIds();
     const response = await this.cart.clearCart(itemIds);
 
+    this.enableClearCartButton();
+
     if (response instanceof Error) {
+      this.showModalError(response.message);
       return;
     }
 
     this.makeEmpty();
     this.hideModal();
-    this.enableClearCartButton();
   }
 
   private getItemIds(): string[] {

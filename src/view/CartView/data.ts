@@ -27,6 +27,7 @@ export enum DataAttrs {
   TOTAL_PRICE = 'data-total-price',
   MODAL = 'data-cart-modal',
   MODAL_BODY = 'data-cart-modal-body',
+  MODAL_ERROR = 'data-modal-error',
 }
 
 export enum Events {
