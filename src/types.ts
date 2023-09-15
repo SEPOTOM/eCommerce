@@ -7,7 +7,7 @@ export interface CartResponse {
   lineItems: LineItemResponse[];
   version: number;
   totalPrice: ITypedMoney;
-  totalLineItemQuantity?: number | undefined;
+  totalLineItemQuantity?: number;
 }
 
 export interface LineItemResponse {

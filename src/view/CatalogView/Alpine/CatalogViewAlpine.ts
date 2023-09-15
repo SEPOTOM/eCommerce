@@ -255,8 +255,6 @@ const CategoryViewAlpine = {
           {
             action: 'addLineItem',
             productId: id,
-            variantId: 1,
-            quantity: 1,
           },
         ],
       };
