@@ -22,6 +22,7 @@ export enum DataAttrs {
   QUANTITY_ERROR = 'data-quantity-error',
   DELETE_ERROR = 'data-delete-error',
   TOTAL_PRICE = 'data-total-price',
+  LINKS_LIST = 'data-links-list',
 }
 
 export enum Events {

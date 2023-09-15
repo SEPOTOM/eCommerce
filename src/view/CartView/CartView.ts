@@ -1,8 +1,10 @@
 /* eslint-disable import/no-cycle */
 import Converter from '../../components/Converter/Converter';
 import Cart from '../../components/Cart/Cart';
+import Links from '../../components/Links/Links';
 import HTML from './CartView.html';
 import ProductView from './ProductView/ProductView';
+import LinkView from './LinkView/LinkView';
 import ErrorView from '../ErrorView/ErrorView';
 import { ProductInfo } from '../../types';
 import { DataAttrs, Events } from './data';
@@ -54,6 +56,8 @@ export default class CartView {
       this.configureList(productsInfo);
       this.configureTotalPrice(cartData.getTotalPrice());
       this.makeFilled();
+    } else {
+      this.configureLinks();
     }
   }
 
@@ -79,6 +83,23 @@ export default class CartView {
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = totalPrice;
+    }
+  }
+
+  private configureLinks(): void {
+    const categoriesLinks = Links.getCategoriesLinks();
+
+    if (categoriesLinks.length === 0) {
+      return;
+    }
+
+    const linkList = this.view.querySelector(`[${DataAttrs.LINKS_LIST}]`);
+
+    if (linkList) {
+      categoriesLinks.forEach((categoryLink) => {
+        const link = new LinkView().buildView(categoryLink);
+        linkList.append(link);
+      });
     }
   }
 
