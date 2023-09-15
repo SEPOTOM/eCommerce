@@ -14,6 +14,7 @@ import Router from '../Router';
 import Navigation from '../../../api/Navigation/Navigation';
 import { INavigation, IRouteProductLink } from '../../../api/Navigation/types/types';
 import Cart from '../../Cart/Cart';
+import Links from '../../Links/Links';
 
 const RouterAlpine = {
   isCustomerLogin: false,
@@ -117,6 +118,9 @@ const RouterAlpine = {
 
     // Create category links & menu
     new Navigation().getCategoryJSON(this.token).then((json): void => {
+      if (json) {
+        Links.setCategoriesLinks(json);
+      }
       // create menu
       /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
       this.menu = new Navigation().createMenu(json?.results!);

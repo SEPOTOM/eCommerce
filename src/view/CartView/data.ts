@@ -28,6 +28,7 @@ export enum DataAttrs {
   MODAL = 'data-cart-modal',
   MODAL_BODY = 'data-cart-modal-body',
   MODAL_ERROR = 'data-modal-error',
+  LINKS_LIST = 'data-links-list',
 }
 
 export enum Events {

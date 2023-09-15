@@ -1,3 +1,8 @@
+export interface Link {
+  content: string;
+  href: string;
+}
+
 export interface DiscountCodesResponse {
   results: DiscountCodeResponse[];
 }
