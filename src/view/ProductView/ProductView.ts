@@ -193,16 +193,15 @@ export default class ProductView {
     const quantityInput = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT_CONTAINER}`) as HTMLInputElement;
     let personalCart = await CartAPI.get();
     if (personalCart instanceof Error) {
-      const payload: ICartTemplate = {
-        currency: currencyName.USD,
-      };
+      const payload: ICartTemplate = {currency: currencyName.USD};
       await CartAPI.createCustomerCart(payload);
       personalCart = await CartAPI.get();
     }
-
     if ('id' in personalCart && 'version' in personalCart) {
       const personalCartID = String(personalCart.id);
-      const buyQuantity = Number((document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value);
+      const buyQuantity = Number(
+        (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+      );
       const payload: IAddLineItem = {
         version: await CartAPI.getActiveCartVersion(),
         actions: [
