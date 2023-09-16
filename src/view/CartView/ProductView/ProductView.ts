@@ -27,7 +27,7 @@ export default class ProductView {
     const productInfo = this.cart.getProductInfo(this.getItemId());
 
     if (productInfo) {
-      this.configureTotalPrice(productInfo.totalPrice);
+      this.configureTotalPrice(productInfo.totalPrice, productInfo.originalTotalPrice);
     }
   }
 
@@ -43,7 +43,7 @@ export default class ProductView {
     this.configureName(productData.name);
     this.configureQuantity(productData.quantity);
     this.configureIndividualPrice(productData.individualPrice, productData.discountedIndividualPrice);
-    this.configureTotalPrice(productData.totalPrice);
+    this.configureTotalPrice(productData.totalPrice, productData.originalTotalPrice);
     this.configureQuantityRow(labelMark);
   }
 
@@ -88,11 +88,19 @@ export default class ProductView {
     }
   }
 
-  private configureTotalPrice(price: string): void {
+  private configureTotalPrice(price: string, originalPrice?: string): void {
     const totalPriceBlock = this.view.querySelector(`[${DataAttrs.PRODUCT_TOTAL_PRICE}]`);
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = price;
+    }
+
+    const originalTotalPriceBlock = this.view.querySelector(`[${DataAttrs.PRODUCT_ORIGINAL_TOTAL_PRICE}]`);
+
+    if (originalPrice && originalTotalPriceBlock) {
+      originalTotalPriceBlock.textContent = originalPrice;
+    } else if (originalTotalPriceBlock) {
+      originalTotalPriceBlock.textContent = '';
     }
   }
 

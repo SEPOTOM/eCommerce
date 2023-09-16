@@ -6,6 +6,7 @@ export enum DataAttrs {
   PRODUCT_CURRENT_PRICE = 'data-product-current-price',
   PRODUCT_OLD_PRICE = 'data-product-old-price',
   PRODUCT_TOTAL_PRICE = 'data-product-total-price',
+  PRODUCT_ORIGINAL_TOTAL_PRICE = 'data-product-original-total-price',
   PRODUCT_CARD = 'data-product-card',
   ENTER_EDITING_BUTTON = 'data-enter-editing-button',
   EXIT_EDITING_BUTTON = 'data-exit-editing-button',
