@@ -35,6 +35,7 @@ export interface LineItemResponse {
   quantity: number;
   name: ILocalizedString;
   price: IPrices;
+  discountedPrice?: IPrices;
   totalPrice: ITypedMoney;
   variant: IMasterVariant;
 }
@@ -52,8 +53,9 @@ export interface ProductInfo {
   name: string;
   quantity: number;
   individualPrice: string;
-  totalPrice: string;
   discountedIndividualPrice?: string;
+  totalPrice: string;
+  originalTotalPrice?: string;
 }
 
 export interface CustomerCredentials {

@@ -59,7 +59,31 @@ export default class Converter {
         formattedItem.imageSrc = cartItem.variant.images[0].url;
       }
 
+      this.addOriginalTotalToProduct(cartItem, formattedItem);
+
       return formattedItem;
     });
+  }
+
+  private static addOriginalTotalToProduct(cartItem: LineItemResponse, product: ProductInfo): ProductInfo {
+    const localProduct = product;
+
+    if (cartItem.discountedPrice && cartItem.price.discounted) {
+      const originalTotalPriceValue = {
+        ...cartItem.price.discounted.value,
+      };
+      originalTotalPriceValue.centAmount = cartItem.quantity * cartItem.price.discounted.value.centAmount;
+
+      localProduct.originalTotalPrice = Formatter.formatPrice(originalTotalPriceValue);
+    } else if (cartItem.discountedPrice) {
+      const originalTotalPriceValue = {
+        ...cartItem.price.value,
+      };
+      originalTotalPriceValue.centAmount = cartItem.quantity * cartItem.price.value.centAmount;
+
+      localProduct.originalTotalPrice = Formatter.formatPrice(originalTotalPriceValue);
+    }
+
+    return localProduct;
   }
 }
