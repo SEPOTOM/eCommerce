@@ -19,13 +19,44 @@
   </section>
 
   <!-- Promo codes -->
-  <section class="max-w-6xl mx-auto p-5 md:px-7" hidden data-element="promo-block">
-    <div class="pt-5 px-6 pb-7 border-8 border-dashed border-amber-600 rounded-lg bg-amber-200/70 md:px-8">
-      <h2 class="mb-2 text-4xl uppercase text-center font-bold text-amber-600 md:text-left">Promo codes!</h2>
-      <p class="mb-4 text-md font-bold text-center text-amber-500 md:text-left">
-        You can use them on the shopping cart page.
-      </p>
-      <ul class="flex flex-col gap-y-3" data-element="promo-list"></ul>
+  <section x-data="Promo()">
+    <template x-if="promoCodes.length">
+      <div class="max-w-6xl mx-auto p-5 md:px-7 mb-12 text-center">
+        <div class="pt-5 px-6 pb-7 border-8 border-dashed rounded-lg md:px-8">
+          <h2 class="mb-2 text-4xl uppercase font-bold text-red-600">Promo codes!</h2>
+          <div class="mb-8 text-md font-medium text-gray-500">
+            <p>You can use them on the shopping cart page.</p>
+            <p>
+              <span class="text-blue-600 font-bold underline underline-offset-2">Click</span>
+              on the promo code to
+              <span class="text-blue-600 font-bold underline underline-offset-2">copy</span>
+              it.
+            </p>
+          </div>
+
+          <ul class="grid gap-4 text-white md:grid-cols-2 lg:grid-cols-4">
+            <template x-for="code in promoCodes">
+              <li class="flex flex-col p-5 bg-gradient-to-r from-red-500 to-red-700 rounded-lg border-2 border-red-800">
+                <span x-text="code.description" class="mb-6"></span>
+                <input
+                  class="mt-auto px-3 py-1.5 font-medium tracking-widest bg-blue-100/20 cursor-pointer rounded-lg border-dashed border-2 border-white transition-colors duration-300 hover:bg-blue-200/30 text-center outline-none"
+                  readonly="readonly"
+                  unselectable="on"
+                  :value="code.code"
+                  @click="copyCodeToBuffer($el)"
+                />
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </template>
+
+    <div
+      class="fixed right-3 bottom-3 z-10 py-1.5 px-4 text-lime-600 bg-lime-200 border-lime-400 font-medium border rounded shadow transition-transform duration-300 translate-x-80"
+      :class="{ '!translate-x-0': showMessage }"
+    >
+      Code was copied!
     </div>
   </section>
 
