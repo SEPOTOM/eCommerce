@@ -54,7 +54,7 @@ export default class CartView {
     if (productsInfo.length > 0) {
       this.configurePromoButton();
       this.configureList(productsInfo);
-      this.configureTotalPrice(cartData.getTotalPrice());
+      this.configureTotalPrice(cartData.getTotalPrices().totalPrice);
       this.configureShowModalButton();
       this.configureModal();
       this.configureClearCartButton();
@@ -164,7 +164,7 @@ export default class CartView {
   }
 
   private updateTotalPrice(): void {
-    const totalPrice = this.cart.getTotalPrice();
+    const { totalPrice } = this.cart.getTotalPrices();
     this.configureTotalPrice(totalPrice);
   }
 

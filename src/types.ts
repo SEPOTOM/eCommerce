@@ -17,6 +17,11 @@ export interface DiscountCodeInfo {
   description: string;
 }
 
+export interface CartTotalPrices {
+  totalPrice: string;
+  originalTotalPrice?: string;
+}
+
 export interface CartsResponse {
   results: CartResponse[];
 }
@@ -43,6 +48,7 @@ export interface LineItemResponse {
 export interface CartInfo {
   id: string;
   totalPrice: string;
+  originalTotalPrice?: string;
   productsInfo: ProductInfo[];
   version: number;
 }

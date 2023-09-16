@@ -6,9 +6,12 @@ import {
   ProductInfo,
   DiscountCodeResponse,
   DiscountCodeInfo,
+  ITypedMoney,
 } from '../../types';
 
 export default class Converter {
+  private static originalTotalPrice = 0;
+
   public static htmlToElement<T extends HTMLElement>(htmlString: string): T | null {
     const template = document.createElement('template');
     template.innerHTML = htmlString;
@@ -29,6 +32,8 @@ export default class Converter {
   }
 
   public static cartResponseToInfo(cart: CartResponse): CartInfo {
+    this.originalTotalPrice = 0;
+
     const formattedCart: CartInfo = {
       id: cart.id,
       totalPrice: Formatter.formatPrice(cart.totalPrice),
@@ -37,6 +42,13 @@ export default class Converter {
     };
 
     formattedCart.productsInfo = this.cartItemsToProducts(cart.lineItems);
+
+    if (this.originalTotalPrice > 0 && this.originalTotalPrice !== cart.totalPrice.centAmount) {
+      formattedCart.originalTotalPrice = Formatter.formatPrice({
+        ...cart.totalPrice,
+        centAmount: this.originalTotalPrice,
+      });
+    }
 
     return formattedCart;
   }
@@ -67,22 +79,30 @@ export default class Converter {
 
   private static addOriginalTotalToProduct(cartItem: LineItemResponse, product: ProductInfo): ProductInfo {
     const localProduct = product;
+    let originalTotalPriceValue: ITypedMoney = {
+      centAmount: 0,
+      currencyCode: '',
+      type: '',
+      fractionDigits: 0,
+    };
 
     if (cartItem.discountedPrice && cartItem.price.discounted) {
-      const originalTotalPriceValue = {
+      originalTotalPriceValue = {
         ...cartItem.price.discounted.value,
       };
       originalTotalPriceValue.centAmount = cartItem.quantity * cartItem.price.discounted.value.centAmount;
 
       localProduct.originalTotalPrice = Formatter.formatPrice(originalTotalPriceValue);
     } else if (cartItem.discountedPrice) {
-      const originalTotalPriceValue = {
+      originalTotalPriceValue = {
         ...cartItem.price.value,
       };
       originalTotalPriceValue.centAmount = cartItem.quantity * cartItem.price.value.centAmount;
 
       localProduct.originalTotalPrice = Formatter.formatPrice(originalTotalPriceValue);
     }
+
+    this.originalTotalPrice += originalTotalPriceValue?.centAmount || 0;
 
     return localProduct;
   }
