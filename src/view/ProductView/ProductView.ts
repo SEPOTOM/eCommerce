@@ -193,7 +193,7 @@ export default class ProductView {
     const quantityInput = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT_CONTAINER}`) as HTMLInputElement;
     let personalCart = await CartAPI.get();
     if (personalCart instanceof Error) {
-      const payload: ICartTemplate = {currency: currencyName.USD};
+      const payload: ICartTemplate = { currency: currencyName.USD };
       await CartAPI.createCustomerCart(payload);
       personalCart = await CartAPI.get();
     }
