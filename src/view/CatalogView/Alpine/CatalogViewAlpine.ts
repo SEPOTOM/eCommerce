@@ -13,6 +13,7 @@ const CategoryViewAlpine = {
   description: null,
   isLoading: false,
   products: [],
+  productInCart: [],
   urlPath: '',
   searchRequest: '',
   searchQuery: '',
@@ -29,7 +30,6 @@ const CategoryViewAlpine = {
   buttonStatus: {
     step1: 'Adding...',
     step2: 'Added',
-    step3: 'Add to basket',
   },
   messageStatus: 'success',
   showMessage: false,
@@ -37,11 +37,15 @@ const CategoryViewAlpine = {
   /* eslint-disable max-lines-per-function */
   init(): void {
     const delayForCategoryLoading = 1000;
-    const delayForSetPAgination = 200;
+    const delayForSetPagination = 200;
     this.urlPath = `${CTP_API_URL}/${CTP_PROJECT_KEY}/product-projections/search?filter=categories.id:"${this.categoryId}"`;
     this.filterQuery = '';
     this.filterActiveProps = {};
     this.filterAllProps = {};
+
+    // Create array of products in cart
+    this.productInCart = [];
+    this.getProductInCart();
 
     // need to get first all filters
     this.getProductsByQuery();
@@ -50,7 +54,7 @@ const CategoryViewAlpine = {
 
     setTimeout(() => {
       this.getProductsByQuery();
-    }, delayForSetPAgination);
+    }, delayForSetPagination);
 
     setTimeout(() => {
       this.isLoading = true;
@@ -238,16 +242,7 @@ const CategoryViewAlpine = {
       (e.target as HTMLElement).classList.add('opacity-50', 'wait');
 
       // Get or create personal cart
-      const cartData: CartResponse | Error = await CartAPI.get().then(
-        async (response): Promise<CartResponse | Error> => {
-          if (response instanceof Error) {
-            await CartAPI.createCustomerCart({ currency: 'USD' });
-            return CartAPI.get();
-          }
-
-          return response;
-        }
-      );
+      const cartData: CartResponse = await this.getCartData();
 
       const BODY: IAddLineItem = {
         version: (cartData as CartResponse).version,
@@ -260,6 +255,8 @@ const CategoryViewAlpine = {
       };
 
       // Add to cart
+      let savedResponse: CartResponse;
+
       await CartAPI.updateLineItem((cartData as CartResponse).id, BODY)
         .then((response) => {
           if (response instanceof Error) {
@@ -267,6 +264,7 @@ const CategoryViewAlpine = {
           } else {
             this.messageStatus = 'success';
             HeaderView.setBasketCount(response.totalLineItemQuantity!);
+            savedResponse = response;
           }
         })
         .finally(() => {
@@ -274,11 +272,39 @@ const CategoryViewAlpine = {
           this.showMessage = true;
 
           setTimeout((): void => {
-            (e.target as HTMLElement).innerHTML = this.buttonStatus.step3;
-            (e.target as HTMLElement).classList.remove('opacity-50', 'wait');
+            this.saveProductsInCart(savedResponse);
             this.showMessage = false;
           }, delay);
         });
+    }
+  },
+
+  async getCartData(): Promise<CartResponse | Error> {
+    // Get or create personal cart
+    const cartData: CartResponse | Error = await CartAPI.get().then(async (response): Promise<CartResponse | Error> => {
+      if (response instanceof Error) {
+        await CartAPI.createCustomerCart({ currency: 'USD' });
+        return CartAPI.get();
+      }
+
+      return response;
+    });
+
+    return cartData;
+  },
+
+  async getProductInCart() {
+    const cartData: CartResponse = await this.getCartData();
+    this.saveProductsInCart(cartData);
+  },
+
+  saveProductsInCart(cartData: CartResponse): void {
+    if ((cartData as CartResponse).lineItems) {
+      for (const item of (cartData as CartResponse).lineItems) {
+        this.productInCart.push(item.productId);
+      }
+
+      this.productInCart = [...new Set(this.productInCart)];
     }
   },
 };
