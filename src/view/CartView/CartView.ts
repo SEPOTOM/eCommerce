@@ -6,7 +6,7 @@ import HTML from './CartView.html';
 import ProductView from './ProductView/ProductView';
 import LinkView from './LinkView/LinkView';
 import ErrorView from '../ErrorView/ErrorView';
-import { ProductInfo } from '../../types';
+import { ProductInfo, CartTotalPrices } from '../../types';
 import { DataAttrs, Events } from './data';
 
 const HIDE_DELAY = 3000;
@@ -54,7 +54,7 @@ export default class CartView {
     if (productsInfo.length > 0) {
       this.configurePromoButton();
       this.configureList(productsInfo);
-      this.configureTotalPrice(cartData.getTotalPrices().totalPrice);
+      this.configureTotalPrices(cartData.getTotalPrices());
       this.configureShowModalButton();
       this.configureModal();
       this.configureClearCartButton();
@@ -115,11 +115,21 @@ export default class CartView {
     });
   }
 
-  private configureTotalPrice(totalPrice: string): void {
+  private configureTotalPrices({ totalPrice, originalTotalPrice }: CartTotalPrices): void {
     const totalPriceBlock = this.view.querySelector(`[${DataAttrs.TOTAL_PRICE}]`);
 
     if (totalPriceBlock) {
       totalPriceBlock.textContent = totalPrice;
+    }
+
+    const originalTotalPriceBlock = this.view.querySelector(`[${DataAttrs.ORIGINAL_TOTAL_PRICE}]`);
+
+    if (originalTotalPrice && originalTotalPriceBlock instanceof HTMLElement) {
+      originalTotalPriceBlock.textContent = originalTotalPrice;
+      originalTotalPriceBlock.hidden = false;
+    } else if (originalTotalPriceBlock instanceof HTMLElement) {
+      originalTotalPriceBlock.textContent = '';
+      originalTotalPriceBlock.hidden = true;
     }
   }
 
@@ -164,8 +174,8 @@ export default class CartView {
   }
 
   private updateTotalPrice(): void {
-    const { totalPrice } = this.cart.getTotalPrices();
-    this.configureTotalPrice(totalPrice);
+    const totalPrices = this.cart.getTotalPrices();
+    this.configureTotalPrices(totalPrices);
   }
 
   private updateProductsTotalPrices(): void {

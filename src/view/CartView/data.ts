@@ -26,6 +26,7 @@ export enum DataAttrs {
   QUANTITY_ERROR = 'data-quantity-error',
   DELETE_ERROR = 'data-delete-error',
   TOTAL_PRICE = 'data-total-price',
+  ORIGINAL_TOTAL_PRICE = 'data-original-total-price',
   MODAL = 'data-cart-modal',
   MODAL_BODY = 'data-cart-modal-body',
   MODAL_ERROR = 'data-modal-error',
