@@ -84,13 +84,16 @@ export default class ProductView {
   }
 
   private async manageCartButtons(productID: string, productDetails: IProduct): Promise<void> {
+    const quantityInput = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT_CONTAINER}`) as HTMLInputElement;
     const personalCart = await CartAPI.get();
     const inCart = this.productIsInCart(productID, personalCart);
 
     if (inCart) {
       this.disableAddToCart();
+      quantityInput.classList.add('hidden');
     } else {
       this.disableRemoveFromCart();
+      quantityInput.classList.remove('hidden');
     }
 
     this.processAddProduct(productID, productDetails);
@@ -117,6 +120,7 @@ export default class ProductView {
 
   private processRemoveProduct(personalCart: CartResponse | Error, productID: string) {
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+    const quantityInput = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT_CONTAINER}`) as HTMLInputElement;
 
     removeFromCartButton.addEventListener('click', async () => {
       const itemID = await this.getLineItemID(productID);
@@ -137,6 +141,7 @@ export default class ProductView {
             if (!(response instanceof Error)) {
               this.disableRemoveFromCart();
               this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+              quantityInput.classList.remove('hidden');
               const cart = new Cart();
               if ('totalLineItemQuantity' in response) {
                 cart.setProductAmount(response.totalLineItemQuantity as number);
@@ -185,17 +190,18 @@ export default class ProductView {
   }
 
   public async addProductToCart(productID: string, productDetails: IProduct) {
+    const quantityInput = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT_CONTAINER}`) as HTMLInputElement;
     let personalCart = await CartAPI.get();
     if (personalCart instanceof Error) {
-      const payload: ICartTemplate = {
-        currency: currencyName.USD,
-      };
+      const payload: ICartTemplate = { currency: currencyName.USD };
       await CartAPI.createCustomerCart(payload);
       personalCart = await CartAPI.get();
     }
-
     if ('id' in personalCart && 'version' in personalCart) {
       const personalCartID = String(personalCart.id);
+      const buyQuantity = Number(
+        (document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value
+      );
       const payload: IAddLineItem = {
         version: await CartAPI.getActiveCartVersion(),
         actions: [
@@ -203,7 +209,7 @@ export default class ProductView {
             action: 'addLineItem',
             productId: productID,
             variantId: productDetails.lastVariantId,
-            quantity: Number((document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement).value),
+            quantity: buyQuantity,
           },
         ],
       };
@@ -211,6 +217,7 @@ export default class ProductView {
       if ('lineItems' in response) {
         this.disableAddToCart();
         this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_ADDED_SUCCESSFULLY}`) as HTMLElement);
+        quantityInput.classList.add('hidden');
         const cart = new Cart();
         if ('totalLineItemQuantity' in response) {
           cart.setProductAmount(response.totalLineItemQuantity as number);
@@ -249,6 +256,7 @@ export default class ProductView {
   private putProductDataToPage(productDetails: IProduct, productHTML: HTMLElement): void {
     this.addSlider(productDetails, productHTML);
     this.addProductName(productDetails, productHTML);
+    this.setQuantity(productDetails.masterData.current.masterVariant.availability?.availableQuantity);
     this.addProductCategories(productDetails, productHTML);
     this.addProductDescription(productDetails, productHTML);
     this.addProductPrice(productDetails, productHTML);
@@ -316,6 +324,18 @@ export default class ProductView {
   private addProductName(productDetails: IProduct, productHTML: HTMLElement): void {
     const productName = productHTML.querySelector(`#${ProductElements.PRODUCT_NAME}`) as HTMLElement;
     productName.textContent = productDetails.masterData.current.name['en-US'];
+  }
+
+  private setQuantity(maxValue: number | undefined): void {
+    const quantity = document.querySelector(`#${ProductElements.PRODUCT_AMOUNT}`) as HTMLInputElement;
+
+    if (maxValue) {
+      quantity.addEventListener('input', () => {
+        if (Number(quantity.value) > maxValue) {
+          quantity.value = String(maxValue);
+        }
+      });
+    }
   }
 
   private async addProductCategories(productDetails: IProduct, productHTML: HTMLElement): Promise<void> {
