@@ -17,6 +17,11 @@ export interface DiscountCodeInfo {
   description: string;
 }
 
+export interface CartTotalPrices {
+  totalPrice: string;
+  originalTotalPrice?: string;
+}
+
 export interface CartsResponse {
   results: CartResponse[];
 }
@@ -35,6 +40,7 @@ export interface LineItemResponse {
   quantity: number;
   name: ILocalizedString;
   price: IPrices;
+  discountedPrice?: IPrices;
   totalPrice: ITypedMoney;
   variant: IMasterVariant;
 }
@@ -42,6 +48,7 @@ export interface LineItemResponse {
 export interface CartInfo {
   id: string;
   totalPrice: string;
+  originalTotalPrice?: string;
   productsInfo: ProductInfo[];
   version: number;
 }
@@ -52,8 +59,9 @@ export interface ProductInfo {
   name: string;
   quantity: number;
   individualPrice: string;
-  totalPrice: string;
   discountedIndividualPrice?: string;
+  totalPrice: string;
+  originalTotalPrice?: string;
 }
 
 export interface CustomerCredentials {

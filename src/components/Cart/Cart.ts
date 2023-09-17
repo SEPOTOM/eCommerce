@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import CartAPI from '../../api/CartAPI/CartAPI';
 import Converter from '../Converter/Converter';
-import { CartInfo, ProductInfo, CartResponse } from '../../types';
+import { CartInfo, ProductInfo, CartResponse, CartTotalPrices } from '../../types';
 import { GlobalErrorMessages } from '../../data/errors';
 import HeaderView from '../../view/HeaderView/HeaderView';
 
@@ -15,6 +15,7 @@ export default class Cart {
     version: 0,
     productsInfo: [],
     totalPrice: '',
+    originalTotalPrice: '',
   };
 
   public async getCart(): Promise<Cart | Error> {
@@ -32,8 +33,11 @@ export default class Cart {
     return this.cart?.productsInfo || [];
   }
 
-  public getTotalPrice(): string {
-    return this.cart?.totalPrice || '';
+  public getTotalPrices(): CartTotalPrices {
+    return {
+      totalPrice: this.cart.totalPrice,
+      originalTotalPrice: this.cart.originalTotalPrice,
+    };
   }
 
   public async clearCart(itemsIds: string[]): Promise<Cart | Error> {
