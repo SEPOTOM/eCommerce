@@ -13,7 +13,6 @@
 - [ ] put acceptance criteria here
 
 **Tests**:
-- [ ] put test filenames here
 - [ ] covered already
 - [ ] not required
 - [ ] N/A
