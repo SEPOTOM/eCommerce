@@ -103,17 +103,21 @@ export default class ProductView {
   private disableAddToCart(): void {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+    const inCartText = document.querySelector(`#${ProductElements.PRODUCT_IN_CART}`) as HTMLButtonElement;
 
     addToCartButton.classList.add('hidden');
 
     removeFromCartButton.classList.remove('hidden');
+    inCartText.classList.remove('hidden');
   }
 
   private disableRemoveFromCart(): void {
     const addToCartButton = document.querySelector(`#${ProductElements.PRODUCT_ADD}`) as HTMLButtonElement;
     const removeFromCartButton = document.querySelector(`#${ProductElements.PRODUCT_REMOVE}`) as HTMLButtonElement;
+    const inCartText = document.querySelector(`#${ProductElements.PRODUCT_IN_CART}`) as HTMLButtonElement;
 
     removeFromCartButton.classList.add('hidden');
+    inCartText.classList.add('hidden');
 
     addToCartButton.classList.remove('hidden');
   }
@@ -224,9 +228,9 @@ export default class ProductView {
         } else {
           cart.setProductAmount(0);
         }
-      } else {
-        this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
       }
+    } else {
+      this.showMessage(document.querySelector(`#${ProductElements.PRODUCT_NETWORK_ERROR}`) as HTMLElement);
     }
   }
 
