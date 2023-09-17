@@ -79,12 +79,7 @@ export default class Converter {
 
   private static addOriginalTotalToProduct(cartItem: LineItemResponse, product: ProductInfo): ProductInfo {
     const localProduct = product;
-    let originalTotalPriceValue: ITypedMoney = {
-      centAmount: 0,
-      currencyCode: '',
-      type: '',
-      fractionDigits: 0,
-    };
+    let originalTotalPriceValue: ITypedMoney = cartItem.totalPrice;
 
     if (cartItem.discountedPrice && cartItem.price.discounted) {
       originalTotalPriceValue = {
@@ -102,7 +97,7 @@ export default class Converter {
       localProduct.originalTotalPrice = Formatter.formatPrice(originalTotalPriceValue);
     }
 
-    this.originalTotalPrice += originalTotalPriceValue?.centAmount || 0;
+    this.originalTotalPrice += originalTotalPriceValue.centAmount;
 
     return localProduct;
   }
