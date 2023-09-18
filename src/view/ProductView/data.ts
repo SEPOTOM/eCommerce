@@ -30,6 +30,7 @@ enum ProductElements {
   PRODUCT_PLEASE_LOGIN = 'please-login',
   PRODUCT_BUTTON_BLOCK = 'button-block',
   PRODUCT_OUT_OF_STOCK = 'out-of-stock',
+  PRODUCT_IN_CART = 'in-cart',
 }
 
 const categoryStyles = ['border-solid', 'rounded-full', 'border-2', 'px-3', 'text-center', 'self-center'];
