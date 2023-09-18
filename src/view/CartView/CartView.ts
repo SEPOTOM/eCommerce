@@ -62,7 +62,6 @@ export default class CartView {
     }
 
     this.configureLinks();
-    this.showContent();
   }
 
   private configurePromoButton(): void {
@@ -255,10 +254,6 @@ export default class CartView {
       modalErrorBlock.classList.remove('hidden');
       modalErrorBlock.textContent = message;
     }
-  }
-
-  private showContent(): void {
-    this.view.dataset.loaded = 'true';
   }
 
   private hidePromoSuccess(): void {
