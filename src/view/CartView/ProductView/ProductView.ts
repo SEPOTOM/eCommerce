@@ -35,6 +35,10 @@ export default class ProductView {
     return this.view.dataset.itemId || '';
   }
 
+  public getView(): HTMLLIElement {
+    return this.view;
+  }
+
   private configureView(productData: ProductInfo, labelMark: string): void {
     this.view.dataset.itemId = productData.itemId;
     this.view.addEventListener('click', this.handleClicks.bind(this));

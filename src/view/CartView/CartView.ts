@@ -34,6 +34,7 @@ export default class CartView {
   private async configureView(): Promise<void> {
     this.view.addEventListener(Events.PRODUCT_DELETED, () => {
       setTimeout(() => {
+        this.deleteProduct();
         if (this.isListEmpty()) {
           this.makeEmpty();
         }
@@ -322,6 +323,16 @@ export default class CartView {
 
     if (clearCartButton instanceof HTMLButtonElement) {
       clearCartButton.disabled = false;
+    }
+  }
+
+  private deleteProduct(): void {
+    const productList = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
+
+    if (productList) {
+      this.productsObjects = this.productsObjects.filter((productObject) => {
+        return productList.contains(productObject.getView());
+      });
     }
   }
 }

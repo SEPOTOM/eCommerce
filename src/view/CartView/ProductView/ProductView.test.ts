@@ -19,4 +19,8 @@ describe('ProductView class', () => {
   it('an instance must have a getItemId method', () => {
     expect(instance.getItemId).toBeDefined();
   });
+
+  it('an instance must have a getView method', () => {
+    expect(instance.getView).toBeDefined();
+  });
 });
