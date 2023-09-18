@@ -62,6 +62,7 @@ export default class CartView {
     }
 
     this.configureLinks();
+    this.showContent();
   }
 
   private configurePromoButton(): void {
@@ -318,5 +319,9 @@ export default class CartView {
     if (clearCartButton instanceof HTMLButtonElement) {
       clearCartButton.disabled = false;
     }
+  }
+
+  private showContent(): void {
+    this.view.dataset.loaded = 'true';
   }
 }

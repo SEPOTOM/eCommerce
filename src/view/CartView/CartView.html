@@ -1,25 +1,31 @@
 <section
   class="group/cart flex-grow flex gap-y-3 flex-col justify-center w-full max-w-6xl mx-auto px-5 py-7 md:px-7"
   data-filled="false"
+  data-loaded="false"
 >
   <div class="flex justify-between items-end mb-3 pb-3 border-b border-stone-300">
     <h2 class="text-4xl text-gray-600 font-medium">Your Cart</h2>
     <button
-      class="px-3 py-1 text-lg font-bold text-white rounded-lg bg-red-600 transition-colors duration-300 hover:bg-red-800 group-data-[filled=false]/cart:hidden"
+      class="px-3 py-1 text-lg font-bold text-white rounded-lg bg-red-600 transition-colors duration-300 hover:bg-red-800 group-data-[filled=false]/cart:hidden group-data-[loaded=false]/cart:hidden"
       type="button"
       data-show-modal-button
     >
       Clear Cart
     </button>
   </div>
-  <ul class="flex-grow flex flex-col gap-y-7 group-data-[filled=false]/cart:hidden" data-products-list></ul>
-  <div class="flex-grow flex flex-col justify-center items-center mx-auto group-data-[filled=true]/cart:hidden">
+  <ul
+    class="flex-grow flex flex-col gap-y-7 group-data-[filled=false]/cart:hidden group-data-[loaded=false]/cart:hidden"
+    data-products-list
+  ></ul>
+  <div
+    class="flex-grow flex flex-col justify-center items-center mx-auto group-data-[filled=true]/cart:hidden group-data-[loaded=false]/cart:hidden"
+  >
     <p class="text-2xl text-gray-600 text-center">It looks like you haven't chosen any cars yet.</p>
     <p class="mb-4 text-2xl text-gray-600 text-center">But you can do it on the category pages!</p>
     <ul class="flex flex-col justify-center gap-y-4 w-full" data-links-list></ul>
   </div>
   <div
-    class="flex flex-col items-end gap-y-3 pt-5 mt-3 border-t border-stone-300 group-data-[filled=false]/cart:hidden md:flex-row-reverse md:justify-between md:items-center"
+    class="flex flex-col items-end gap-y-3 pt-5 mt-3 border-t border-stone-300 group-data-[filled=false]/cart:hidden md:flex-row-reverse md:justify-between md:items-center group-data-[loaded=false]/cart:hidden"
   >
     <div class="self-center text-3xl font-medium leading-7 text-right">
       <span class="align-bottom">Total price:</span>
@@ -55,6 +61,9 @@
       </div>
     </div>
   </div>
+  <p class="flex-grow flex justify-center items-center text-2xl text-gray-600 group-data-[loaded=true]/cart:hidden">
+    Loading...
+  </p>
   <div class="fixed top-0 left-0 z-50 flex items-center w-full h-full bg-black/50 hidden" data-cart-modal>
     <div
       class="flex flex-col gap-y-7 max-w-sm mx-auto p-5 border-2 border-gray-400 rounded-xl bg-white overflow-hidden"
