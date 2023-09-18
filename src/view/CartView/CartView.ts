@@ -34,6 +34,7 @@ export default class CartView {
   private async configureView(): Promise<void> {
     this.view.addEventListener(Events.PRODUCT_DELETED, () => {
       setTimeout(() => {
+        this.deleteProduct();
         if (this.isListEmpty()) {
           this.makeEmpty();
         }
@@ -257,6 +258,10 @@ export default class CartView {
     }
   }
 
+  private showContent(): void {
+    this.view.dataset.loaded = 'true';
+  }
+
   private hidePromoSuccess(): void {
     const promoSuccessBlock = this.view.querySelector(`[${DataAttrs.PROMO_SUCCESS}]`);
 
@@ -321,7 +326,13 @@ export default class CartView {
     }
   }
 
-  private showContent(): void {
-    this.view.dataset.loaded = 'true';
+  private deleteProduct(): void {
+    const productList = this.view.querySelector(`[${DataAttrs.PRODUCTS_LIST}]`);
+
+    if (productList) {
+      this.productsObjects = this.productsObjects.filter((productObject) => {
+        return productList.contains(productObject.getView());
+      });
+    }
   }
 }
