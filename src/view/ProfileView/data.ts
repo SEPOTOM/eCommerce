@@ -44,6 +44,7 @@ export enum AddressTypes {
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   EMAIL: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.AT_SYMBOL, ErrorMessages.ONE_AT_SYMBOL],
     [RegExps.DOMAIN, ErrorMessages.DOMAIN],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
@@ -64,6 +65,7 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
   STREET: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
