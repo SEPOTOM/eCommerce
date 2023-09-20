@@ -10,11 +10,11 @@
     <div class="text-left w-full flex flex-col gap-y-4">
       <h3 class="text-4xl font-bold" id="product-name"></h3>
       <div class="text-xl font-bold border-b-2 py-3 flex flex-row flex-wrap gap-x-2" id="product-category"></div>
-      <div>
+      <div class="hidden" id="amount-container">
         <label for="amount">Quantity</label>
         <input
           type="number"
-          class="rounded-lg w-16 bg-slate-300 h-10 px-2 outline-none"
+          class="rounded-lg w-20 bg-slate-300 h-10 px-2 outline-none"
           id="amount"
           value="1"
           min="1"
@@ -28,18 +28,45 @@
       <div class="flex flex-row justify-between gap-x-2">
         <div class="text-left" id="product-details"></div>
         <div class="flex flex-col gap-x-2 gap-y-2">
-          <button
-            class="px-6 pt-3 pb-3 w-48 rounded-lg font-medium text-center text-white transition-colors duration-300 bg-blue-900 hover:bg-blue-400"
-          >
-            Buy it now
-          </button>
-          <button
-            class="px-6 pt-3 pb-3 w-48 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700"
-          >
-            Add to cart
-          </button>
+          <div class="p-2 font-bold text-red-600 bg-red-200 hidden" id="please-login">
+            Please login for adding to cart
+          </div>
+          <div class="p-2 font-bold text-red-600 bg-red-200 hidden" id="out-of-stock">Out of stock</div>
+          <div class="hidden" id="button-block">
+            <button
+              class="px-6 pt-3 pb-3 w-48 bg-red-600 rounded-lg font-medium text-center text-white transition-colors duration-300 hover:bg-red-700 hidden"
+              id="add-button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 inline"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                />
+              </svg>
+              Add to cart
+            </button>
+            <div class="p-2 font-bold text-red-600 bg-red-200 mb-2 hidden" id="in-cart">In the cart already</div>
+            <button
+              class="px-6 pt-3 pb-3 w-48 rounded-lg font-medium text-center text-white transition-colors duration-300 bg-blue-900 hover:bg-blue-400 hidden"
+              id="remove-button"
+            >
+              Remove from Cart
+            </button>
+          </div>
         </div>
       </div>
+      <div class="p-2 font-bold text-red-600 bg-red-200 hidden" id="network-error">
+        Network error! Check connection!
+      </div>
+      <div class="hidden p-2 font-bold text-lime-600 bg-lime-200" id="success">Operation successful!</div>
       <div class="text-left" id="product-description"></div>
     </div>
   </div>

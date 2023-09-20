@@ -1,0 +1,920 @@
+<section
+  class="w-full mx-auto px-5 py-10 max-w-6xl md:px-7"
+  x-data="{ 
+        rsLogo: '/assets/rs-logo.jpg',
+        participant1: '/assets/participant1.jpg',
+        participant2: '/assets/participant2.jpg',
+        participant3: '/assets/participant3.jpg',
+        mentor: '/assets/mentor.jpg'
+    }"
+>
+  <div data-element="about-us-header" class="grid gap-6 grid-cols-[auto_1fr] pb-8 mb-8 border-b border-gray-300">
+    <a href="https://rs.school/js/" target="_blank">
+      <img :src="rsLogo" alt="RSschool" loading="lazy" width="96" height="96" />
+    </a>
+    <div class="max-w-2xl">
+      <h1 class="flex flex-col mb-3 text-2xl font-semibold sm:text-3xl">
+        Javascript Ninjas
+        <span class="text-xs font-medium tracking-wider text-red-500">( our team )</span>
+      </h1>
+      <div class="text-sm sm:text-base opacity-80">
+        The dream team was created based on and supported by RSSchool. This project is the quintessence of a
+        programmer's life. We gained a lot of experience working in a team, honed our skills and understood our
+        weaknesses and strengths. We really hope that you will like our creation =)
+      </div>
+    </div>
+  </div>
+
+  <div data-element="about-us-team" class="grid gap-6">
+    <h2 class="flex gap-2 justify-center -mb-2 text-xl font-semibold text-red-600 sm:text-2xl md:justify-end">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-5 h-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+        />
+      </svg>
+      Heroes of our projects
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-5 h-5 md:hidden"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+        />
+      </svg>
+    </h2>
+
+    <div
+      id="participant1"
+      class="grid gap-6 sm:grid-cols-[auto_1fr] p-4 border border-gray-200 rounded-lg text-gray-600 bg-blue-50 transition-all duration-300 hover:drop-shadow-md hover:border-gray-300 scroll-mt-28"
+    >
+      <img
+        :src="participant1"
+        width="200"
+        height="200"
+        alt="Artyom Pizin"
+        loading="lazy"
+        class="rounded-lg w-full sm:w-[200px]"
+      />
+      <div>
+        <h3 class="relative flex gap-3 items-end justify-between mb-6 pb-[14px] text-[22px] font-medium text-gray-800">
+          Artyom Pizin
+          <span class="absolute bottom-0 text-xs font-normal tracking-wider opacity-70">
+            Technical leader / Conflict Solver
+          </span>
+
+          <a href="https://github.com/SEPOTOM" target="_blank" class="flex gap-2 mb-1 items-center h-6 text-sm group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+            <span class="transition-colors duration-300 group-hover:text-blue-500">SEPOTOM</span>
+          </a>
+        </h3>
+        <div class="grid gap-2 mb-4 text-xs leading-5 italic text-justify indent-3 md:text-sm md:leading-6">
+          <h3 class="pb-3 indent-0 not-italic text-base font-medium text-red-400 border-b border-gray-300">
+            Shortly about me:
+          </h3>
+          <p>
+            In high school, I began to be interested in the layout of websites. In 2021, after graduating from high
+            school (11th grade), I took a paid course on website layout.
+          </p>
+          <p>
+            In this course, I became interested in the Javascript language. After the course on website layout, I
+            started looking for free Javascript courses or schools and found RSSchool. At this school, I signed up for a
+            course on front-end development.
+          </p>
+          <p>
+            I successfully passed stage 0, and stage 1 was able to pass only the second time. At the time of writing
+            this short autobiography, I am quite successfully passing the final stage 2. The TrueCar project is the
+            final task of the front-end development course.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="participant2"
+      class="grid gap-6 sm:grid-cols-[auto_1fr] p-4 border border-gray-200 rounded-lg text-gray-600 bg-gray-50 transition-all duration-300 hover:drop-shadow-md hover:border-gray-300 scroll-mt-28"
+    >
+      <img
+        :src="participant2"
+        width="200"
+        height="200"
+        alt="Yuriy Lakhtin"
+        loading="lazy"
+        class="rounded-lg w-full sm:w-[200px]"
+      />
+      <div>
+        <h3 class="relative flex gap-3 items-end justify-between mb-3 pb-[14px] text-[22px] font-medium text-gray-800">
+          Yuriy Lakhtin
+          <span class="absolute bottom-0 text-xs font-normal tracking-wider opacity-70"
+            >Scrum master / QA Engineer</span
+          >
+
+          <a href="https://github.com/ylakhtin" target="_blank" class="flex gap-2 mb-1 items-center h-6 text-sm group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+            <span class="transition-colors duration-300 group-hover:text-blue-500">ylakhtin</span>
+          </a>
+        </h3>
+        <div class="grid gap-2 mb-4 text-xs leading-5 italic text-justify indent-3 md:text-sm md:leading-6">
+          <h3 class="pb-3 indent-0 not-italic text-base font-medium text-red-400 border-b border-gray-300">
+            Shortly about me:
+          </h3>
+          <p>
+            I have a bachelor's degree in computer science and more than 15 years of experience in the field of
+            information technology. Professional skills cover 3 years of work in the field of technical support, 8 years
+            in the field of information technology and 4 years in the field of software quality assurance.
+          </p>
+          <p>
+            Throughout his career, he had the opportunity to apply his knowledge and skills in various industries,
+            including industry, banking and finance.
+          </p>
+          <p>
+            I am a highly disciplined software engineer, always ready for professional growth and strive to work hard. I
+            believe in my abilities and potential to change the situation for the better in the field of software
+            development.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="participant3"
+      class="grid gap-6 sm:grid-cols-[auto_1fr] p-4 border border-gray-200 rounded-lg text-gray-600 bg-red-50 transition-all duration-300 hover:drop-shadow-md hover:border-gray-300 scroll-mt-28"
+    >
+      <img
+        :src="participant3"
+        width="200"
+        height="200"
+        alt="Maria Zhirova"
+        loading="lazy"
+        class="rounded-lg w-full sm:w-[200px]"
+      />
+      <div>
+        <h3 class="relative flex gap-3 items-end justify-between mb-3 pb-[14px] text-[22px] font-medium text-gray-800">
+          Maria Zhirova
+          <span class="absolute bottom-0 text-xs font-normal tracking-wider opacity-70"
+            >The soul of the company / Visual Architect</span
+          >
+
+          <a href="https://github.com/Mary-FE" target="_blank" class="flex gap-2 mb-1 items-center h-6 text-sm group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+            <span class="transition-colors duration-300 group-hover:text-blue-500">Mary-FE</span>
+          </a>
+        </h3>
+        <div class="grid gap-2 mb-4 text-xs leading-5 italic text-justify indent-3 md:text-sm md:leading-6">
+          <h3 class="pb-3 indent-0 not-italic text-base font-medium text-red-400 border-b border-gray-300">
+            Shortly about me:
+          </h3>
+          <p>
+            I graduated from Irkutsk State Medical University. However, my soul did not lie to this work. On the advice
+            of my friend, I decided to try myself in programming and start with RSSchool.
+          </p>
+          <p>
+            But to begin with, I studied and practiced in the frontend for a year on my own. During this time, I learned
+            HTML, CSS and JS. Then I successfully passed stage 0 and stage 1.
+          </p>
+          <p>
+            Thanks to the RSSschool, I gained experience working in a team, the experience of passing interviews,
+            acquired new knowledge. I also worked on interesting projects and was able to improve my skills and, most
+            importantly, put them into practice.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="mentor"
+      class="grid gap-6 sm:grid-cols-[1fr_auto] p-4 mb-14 border border-gray-200 rounded-lg text-gray-600 bg-green-50 transition-all duration-300 hover:drop-shadow-md hover:border-gray-300 scroll-mt-28"
+    >
+      <div>
+        <h3 class="relative flex gap-3 items-end justify-between mb-3 pb-[14px] text-[22px] font-medium text-gray-800">
+          Andrei Saiko
+          <span class="absolute bottom-0 text-xs font-normal tracking-wider opacity-70">
+            Mentor / Senior FE Developer (EPAM)
+          </span>
+        </h3>
+        <div class="grid gap-2 mb-4 text-xs leading-5 italic text-justify indent-3 md:text-sm md:leading-6">
+          <h3 class="pb-3 indent-0 not-italic text-base font-medium text-red-400 border-b border-gray-300">
+            My experience:
+          </h3>
+          <p>
+            Software Developer, 5 years of experience in creation forms, writing enhancements and tests for websites. I
+            have extensive knowledge of front-end JavaScript and browser APIs as well as significant experience with
+            popular frameworks and libraries like Angular, jQuery, Lodash, RxJs and NgRx.
+          </p>
+        </div>
+      </div>
+      <img
+        :src="mentor"
+        width="200"
+        height="200"
+        alt="Andrei Saiko"
+        loading="lazy"
+        class="rounded-lg w-full sm:w-[200px] -order-1 sm:order-1 border border-gray-200"
+      />
+    </div>
+  </div>
+
+  <div data-element="about-us-collaboration" class="text-justify text-gray-600">
+    <h3 class="text-2xl font-medium text-gray-700 mb-4">Cooperation</h3>
+    <div class="grid gap-4 mb-4 text-sm sm:text-base italic indent-3 opacity-80">
+      <p>
+        Throughout the project, we actively cooperated with each other: we communicated in discord chats, held meetings
+        every weekday, reported on the work done. At the end of each sprint, a retrospective was held, opinions were
+        exchanged, and ideas for improving communications were offered. They adequately perceived each other's
+        criticism, tried to distribute tasks equally.
+      </p>
+      <p>
+        We were supported by a mentor, also participated in rallies. In the second sprint, there were conflicts
+        regarding code review and priority of tasks, but we managed to solve these problems and improve communication
+        within the team.
+      </p>
+      <p>
+        Thanks to our joint work, the project turned out to be successful and each of us gained experience in team
+        development and implementation of a real project.
+      </p>
+    </div>
+  </div>
+
+  <div data-element="contribution" id="contribution" class="grid gap-4 mt-16 text-gray-600 scroll-mt-28">
+    <h2 class="text-2xl font-medium text-gray-700 mb-2">
+      Contribution <span class="text-red-600">to the project</span>
+    </h2>
+    <div class="grid">
+      <div class="grid md:grid-cols-[150px_1fr] gap-3 p-3 bg-gray-50 rounded-lg">
+        <h3 class="text-lg text-gray-700 mb-1">Artyom Pizin:</h3>
+        <div class="text-sm">
+          <h3 class="font-medium text-base mb-1">Sprint 1</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Repo Setup ] - Team members access to git / create base readme, gitignore, dependencies
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Repo Setup ] - Create folder structure
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Dev Scripts ] - Setup & run ESLint
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Dev Scripts ] - Setup & run Jest
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 2</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Registration page: create page / add input validation / error handling
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Registration page: integration with "commercetools" / error handling with response
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Registration page: add logic for adding default address & possibility change address values
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 3</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - User Profile: create page / integration with "commercetools" / add personal information
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - User Profile: add edit mode / change password / manage addresses
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 4</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Basket page: display basket items / empty cart
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Basket page: modify product quantity / clear shopping cart
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Basket page: recalculate total cost / apply promo code / display correct price
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-[150px_1fr] gap-3 p-3 rounded-lg">
+        <h3 class="text-lg text-gray-700 mb-1">Yuriy Lakhtin:</h3>
+        <div class="text-sm">
+          <h3 class="font-medium text-base mb-1">Sprint 1</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ CommerceTools ] - Create new project / create API client
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Task Board ] - Full board setup in trello / add tasks / assign people
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Task Board ] - Integrate robot for short report / add notice for daily meeting
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Repo Setup ] - Create template for "Pull request"
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Dev Scripts ] - Setup & run Prettier
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 2</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Login Page: create page / add input validation / error handling
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Login Page: integration with "commercetools" / error handling with response
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 3</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Product Page: create page / integration with "commercetools"
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Product Page: image slider / create modal window for slider and zooming images
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 4</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Product Page: add to cart, remove from cart
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Help ] - Help in solving past problems
+          </p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-[150px_1fr] gap-3 p-3 bg-gray-50 rounded-lg">
+        <h3 class="text-lg text-gray-700 mb-1">Maria Zhirova:</h3>
+        <div class="text-sm">
+          <h3 class="font-medium text-base mb-1">Sprint 1</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Documentation ] - Create README.md file / describe all project details
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Dev Scripts ] - Add base webpack config / typescript config
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Dev Scripts ] - Setup & run Husky
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 2</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Create header / footer / connecte and integrate alpine.js
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Create pages: Home page & 404
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Create & integrate routing / checking the correct operation / optimization
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 3</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Navigation: create menu based on data from "commercetools" / add 2 menu levels
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Catalog page: create page / integration with "commercetools"
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Catalog page: filtering / sorting / quick search
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Routing: expand the work of routing / creating breadcrumbs
+          </p>
+
+          <h3 class="font-medium text-base mb-1 mt-3">Sprint 4</h3>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Catalog page: add infinite loading of products
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Feature ] - Create About us page
+          </p>
+          <p class="grid gap-2 grid-cols-[auto_1fr]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mt-[3px] w-4 h-4 text-green-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+              />
+            </svg>
+            [ Improve ] - Integration of the routing into the work of other pages of the application
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

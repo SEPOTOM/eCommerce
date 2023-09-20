@@ -23,9 +23,9 @@ Our application is that it's responsive calling, ensuring it looks great on vari
 ## Technologies and utilities:
 |   |   |
 | :------------ | :------------ |
-|  [JavaScript](https://javascript.info/)  |  dynamic programming language  |
 |  [TypeScript](https://www.typescriptlang.org/docs/)  |  a strongly typed programming language built on JavaScript  |
 |  [Tailwind CSS](https://tailwindcss.com/docs/installation)  |  CSS framework  |
+|  [Alpine.js](https://alpinejs.dev/start-here)  |  JavaScript framework  |
 |  [Webpack](https://webpack.js.org/)  |  modular assembler for applications  |
 |  [Git](https://git-scm.com/doc)  |  version control system  |
 |  [Husky](https://typicode.github.io/husky/)  |  allows you to use Git hooks  |
@@ -34,12 +34,13 @@ Our application is that it's responsive calling, ensuring it looks great on vari
 |  [ESLint](https://eslint.org/docs/latest/)  |  a tool for code quality analysis  |
 |  [Prettier](https://prettier.io/docs/en/)  |  a tool for formatting code  |
 |  [Jest](https://jestjs.io/docs/getting-started)  |  JavaScript testing framework  |
+|  [Netlify](https://docs.netlify.com/)  |  Website Hosting platform  |
 
 
 ## How to install and run project:
 1. clone the project to your computer, using `git clone` command;
 2. install all node modules `npm install`;
-3. allows to use husky `npm husky install`, run it once;
+3. allows to use husky `npx husky install`, run it once;
 4. open terminal, run `npm run tailwind-watch` command for watching with style generation;
 5. open another terminal, run `npm run dev` command for open project and enjoy =)
 

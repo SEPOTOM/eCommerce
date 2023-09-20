@@ -33,6 +33,8 @@ import {
   passwordErrorAttributes,
   registrationButtonAttributes,
 } from './data';
+import CartAPI from '../../api/CartAPI/CartAPI';
+import Cart from '../../components/Cart/Cart';
 
 export default class LoginView {
   private static loginWindow: HTMLDivElement;
@@ -196,6 +198,11 @@ export default class LoginView {
           document.getElementById('password-error')?.nextElementSibling?.remove();
           Tokens.setCustomerTokens(customerLogin);
           // TODO: do the actions needed on successful login right here
+          const cartData = await CartAPI.get();
+          if ('totalLineItemQuantity' in cartData) {
+            const cart = new Cart();
+            cart.setProductAmount(cartData.totalLineItemQuantity as number);
+          }
         }
       }
     });

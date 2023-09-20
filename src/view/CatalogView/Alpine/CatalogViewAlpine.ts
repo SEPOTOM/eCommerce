@@ -1,9 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { IAllProducts, IShortProductsJSON } from '../types/types';
+import { CartResponse, IAddLineItem } from '../../../types';
 
 // Import images placeholder if product don't have an image
 import imgProductPlaceholder from '../../../assets/image_placeholder.jpg';
-
+import CartAPI from '../../../api/CartAPI/CartAPI';
+import HeaderView from '../../HeaderView/HeaderView';
 import { CTP_API_URL, CTP_PROJECT_KEY } from '../../../api/APIClients/JSNinjas';
 
 const CategoryViewAlpine = {
@@ -11,35 +13,64 @@ const CategoryViewAlpine = {
   description: null,
   isLoading: false,
   products: [],
+  productInCart: [],
   urlPath: '',
   searchRequest: '',
-  searchRequestNeedClear: false,
+  searchQuery: '',
   searchResultCount: 0,
   filterQuery: '',
   filterActiveProps: {},
   filterAllProps: {},
   sortQuery: '',
   sortActive: 'default',
+  productLimit: 100,
+  productOffset: 0,
+  maxPaginationCount: 0,
+  loadedPage: 1,
+  buttonStatus: {
+    step1: 'Adding...',
+    step2: 'Added',
+  },
+  messageStatus: 'success',
+  showMessage: false,
 
   /* eslint-disable max-lines-per-function */
   init(): void {
-    const delay = 1000;
+    const delayForCategoryLoading = 1000;
+    const delayForSetPagination = 200;
     this.urlPath = `${CTP_API_URL}/${CTP_PROJECT_KEY}/product-projections/search?filter=categories.id:"${this.categoryId}"`;
     this.filterQuery = '';
     this.filterActiveProps = {};
     this.filterAllProps = {};
+
+    // Create array of products in cart
+    this.productInCart = [];
+    this.getProductInCart();
+
+    // need to get first all filters
     this.getProductsByQuery();
+    this.productLimit = 4;
+    this.products = [];
+
+    setTimeout(() => {
+      this.getProductsByQuery();
+    }, delayForSetPagination);
 
     setTimeout(() => {
       this.isLoading = true;
-    }, delay);
+    }, delayForCategoryLoading);
   },
 
   getProductsByQuery(filterQuery: string = '', sortQuery: string = ''): void {
     try {
-      fetch(`${this.urlPath}${filterQuery}${sortQuery}`, this.setBodyRequest())
+      fetch(
+        `${this.urlPath}${this.searchQuery}&limit=${this.productLimit}&offset=${this.productOffset}${filterQuery}${sortQuery}`,
+        this.setBodyRequest()
+      )
         .then((resp) => resp.json())
         .then((json: IAllProducts): void => {
+          this.maxPaginationCount = json.total ? Math.ceil(json.total / this.productLimit) : 0;
+          this.searchResultCount = json.total ? json.total : 0;
           this.setProductData(json.results);
         });
     } catch {
@@ -95,6 +126,11 @@ const CategoryViewAlpine = {
               action: `&filter=variants.attributes.${attr.name}:`,
               active: false,
             });
+
+            // Sort filter by values
+            this.filterAllProps[attr.name].sort((a: { [key: string]: string }, b: { [key: string]: string }) =>
+              a.name > b.name ? 1 : -1
+            );
           }
         }
       });
@@ -131,6 +167,8 @@ const CategoryViewAlpine = {
       this.filterQuery = this.filterQuery.replace(`${filterQuery}"${value}"`, '');
     }
 
+    this.productOffset = 0;
+    this.loadedPage = 1;
     this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
@@ -152,47 +190,16 @@ const CategoryViewAlpine = {
   },
 
   quickSearch(): void {
-    try {
-      if (this.searchRequest.length > 2) {
-        fetch(`${this.urlPath}${`&fuzzy=true&fuzzyLevel=1&text.en-US="${this.searchRequest}"`}`, this.setBodyRequest())
-          .then((resp) => resp.json())
-          .then((json: IAllProducts): void => {
-            const array = this.sortQuickSearchByName(json);
+    this.searchQuery =
+      this.searchRequest.length > 4 ? `&fuzzy=true&fuzzyLevel=1&text.en-US="${this.searchRequest}"` : '';
 
-            if (array.length) {
-              this.searchResultCount = array.length;
-              this.setProductData(array);
-              this.searchRequestNeedClear = true;
-            } else {
-              this.searchResultCount = 0;
-            }
-
-            if (!this.searchRequest || (this.searchRequestNeedClear && !this.searchResultCount)) {
-              this.getProductsByQuery();
-              this.searchRequestNeedClear = false;
-            }
-          });
-      } else {
-        this.searchResultCount = 0;
-        this.getProductsByQuery();
-      }
-    } catch {
-      /* eslint-disable no-empty */
-    }
-  },
-
-  sortQuickSearchByName(json: IAllProducts): IShortProductsJSON[] {
-    return json.results.filter((product) => {
-      const name = product.name['en-US'].toLowerCase();
-      const text = this.searchRequest.toLowerCase();
-
-      return name.includes(text);
-    });
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   clearQuickSearch(): void {
     this.searchRequest = '';
-    this.getProductsByQuery();
+    this.searchQuery = '';
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
   },
 
   priceConverter(price: string): string {
@@ -211,6 +218,94 @@ const CategoryViewAlpine = {
       });
 
     return `${leftModify.reverse().join('')}.${right}`;
+  },
+
+  changePagination(action: string): void {
+    if (action === 'next' && this.loadedPage !== this.maxPaginationCount) this.loadedPage += 1;
+    if (action === 'prev' && this.loadedPage !== 1) this.loadedPage -= 1;
+    if (action === 'first') this.loadedPage = 1;
+    if (action === 'last') this.loadedPage = this.maxPaginationCount;
+
+    this.productOffset = this.productLimit * this.loadedPage - this.productLimit;
+    this.getProductsByQuery(this.filterQuery, this.sortQuery);
+  },
+
+  async addToBasket(e: Event, id: string): Promise<void> {
+    e.stopPropagation();
+    e.preventDefault();
+    const delay = 1000;
+
+    // Add delay between product adding
+    if (!(e.target as HTMLElement).classList.contains('wait')) {
+      // Run progress
+      (e.target as HTMLElement).innerHTML = this.buttonStatus.step1;
+      (e.target as HTMLElement).classList.add('opacity-50', 'wait');
+
+      // Get or create personal cart
+      const cartData: CartResponse = await this.getCartData();
+
+      const BODY: IAddLineItem = {
+        version: (cartData as CartResponse).version,
+        actions: [
+          {
+            action: 'addLineItem',
+            productId: id,
+          },
+        ],
+      };
+
+      // Add to cart
+      let savedResponse: CartResponse;
+
+      await CartAPI.updateLineItem((cartData as CartResponse).id, BODY)
+        .then((response) => {
+          if (response instanceof Error) {
+            this.messageStatus = 'error';
+          } else {
+            this.messageStatus = 'success';
+            HeaderView.setBasketCount(response.totalLineItemQuantity!);
+            savedResponse = response;
+          }
+        })
+        .finally(() => {
+          (e.target as HTMLElement).innerHTML = this.buttonStatus.step2;
+          this.showMessage = true;
+
+          setTimeout((): void => {
+            this.saveProductsInCart(savedResponse);
+            this.showMessage = false;
+          }, delay);
+        });
+    }
+  },
+
+  async getCartData(): Promise<CartResponse | Error> {
+    // Get or create personal cart
+    const cartData: CartResponse | Error = await CartAPI.get().then(async (response): Promise<CartResponse | Error> => {
+      if (response instanceof Error) {
+        await CartAPI.createCustomerCart({ currency: 'USD' });
+        return CartAPI.get();
+      }
+
+      return response;
+    });
+
+    return cartData;
+  },
+
+  async getProductInCart() {
+    const cartData: CartResponse = await this.getCartData();
+    this.saveProductsInCart(cartData);
+  },
+
+  saveProductsInCart(cartData: CartResponse): void {
+    if ((cartData as CartResponse).lineItems) {
+      for (const item of (cartData as CartResponse).lineItems) {
+        this.productInCart.push(item.productId);
+      }
+
+      this.productInCart = [...new Set(this.productInCart)];
+    }
   },
 };
 

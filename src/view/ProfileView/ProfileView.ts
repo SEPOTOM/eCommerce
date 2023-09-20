@@ -5,7 +5,7 @@ import HTML from './ProfileView.html';
 import UserInfoView from './UserInfoView/UserInfoView';
 import BillingAddressesView from './AddressesView/BillingAddressesView/BillingAddressesView';
 import ShippingAddressesView from './AddressesView/ShippingAddressesView/ShippingAddressesView';
-import ErrorView from './ErrorView/ErrorView';
+import ErrorView from '../ErrorView/ErrorView';
 import ButtonsView from './ButtonsView/ButtonsView';
 import PasswordModalView from '../PasswordModalView/PasswordModalView';
 import AddressView from './AddressesView/AddressView/AddressView';

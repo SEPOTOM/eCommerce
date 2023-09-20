@@ -1,6 +1,10 @@
+/* eslint-disable import/no-cycle */
+import Alpine from 'alpinejs';
 import HeaderView from '../HeaderView/HeaderView';
 import FooterView from '../FooterView/FooterView';
 import HomepageViewHTML from './HomepageView.html';
+
+import HomepageViewPromo from './Alpine/HomepageViewPromo';
 
 // Import images to Home page
 import imgMainBanner from '../../assets/main-banner.jpg';
@@ -36,6 +40,8 @@ export default class HomepageView {
     document.body.append(breadcrumbs);
     document.body.append(main);
     new FooterView().draw();
+
+    Alpine.data('Promo', HomepageViewPromo);
   }
 
   public draw(): void {

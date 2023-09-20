@@ -12,6 +12,7 @@ export enum DataAttrs {
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   PASSWORD: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.MIN_LENGTH, ErrorMessages.MIN_LENGTH],
     [RegExps.ONE_UPPERCASE, ErrorMessages.ONE_UPPERCASE],
     [RegExps.ONE_LOWERCASE, ErrorMessages.ONE_LOWERCASE],

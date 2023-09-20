@@ -1,3 +1,69 @@
+export interface Link {
+  content: string;
+  href: string;
+}
+
+export interface DiscountCodesResponse {
+  results: DiscountCodeResponse[];
+}
+
+export interface DiscountCodeResponse {
+  code: string;
+  description: ILocalizedString;
+}
+
+export interface DiscountCodeInfo {
+  code: string;
+  description: string;
+}
+
+export interface CartTotalPrices {
+  totalPrice: string;
+  originalTotalPrice?: string;
+}
+
+export interface CartsResponse {
+  results: CartResponse[];
+}
+
+export interface CartResponse {
+  id: string;
+  lineItems: LineItemResponse[];
+  version: number;
+  totalPrice: ITypedMoney;
+  totalLineItemQuantity?: number;
+}
+
+export interface LineItemResponse {
+  id: string;
+  productId?: string;
+  quantity: number;
+  name: ILocalizedString;
+  price: IPrices;
+  discountedPrice?: IPrices;
+  totalPrice: ITypedMoney;
+  variant: IMasterVariant;
+}
+
+export interface CartInfo {
+  id: string;
+  totalPrice: string;
+  originalTotalPrice?: string;
+  productsInfo: ProductInfo[];
+  version: number;
+}
+
+export interface ProductInfo {
+  itemId: string;
+  imageSrc: string;
+  name: string;
+  quantity: number;
+  individualPrice: string;
+  discountedIndividualPrice?: string;
+  totalPrice: string;
+  originalTotalPrice?: string;
+}
+
 export interface CustomerCredentials {
   email: string;
   firstName: string;
@@ -140,6 +206,7 @@ interface IProduct {
   createdBy: object;
   lastModifiedAt: Date;
   lastModifiedBy: object;
+  lastVariantId: number;
 }
 
 interface IProductTypeReference {
@@ -192,6 +259,14 @@ interface IMasterVariant {
   images?: IImages[];
   attributes?: IAttributes[];
   assets?: object[];
+  availability?: IAvailability;
+}
+
+interface IAvailability {
+  availableQuantity: number;
+  id: string;
+  isOnStock: boolean;
+  version: number;
 }
 
 interface IPrices {
@@ -241,6 +316,23 @@ interface IEnum {
   label: string;
 }
 
+export interface IAddLineItem {
+  version: number;
+  actions: IAction[];
+}
+
+export interface ICartTemplate {
+  currency: string;
+}
+
+interface IAction {
+  action: string;
+  productId?: string;
+  variantId?: number;
+  quantity?: number;
+  lineItemId?: string;
+}
+
 export interface ICategory {
   id: string;
   version: number;
@@ -270,6 +362,15 @@ enum TokenPayload {
   TOKEN_TYPE = 'token_type',
 }
 
-export { IClientLoginResponse, ICustomerLoginResponse, IError, IProduct, IAttributes, IImages, TokenPayload };
+export {
+  IClientLoginResponse,
+  ICustomerLoginResponse,
+  IError,
+  IProduct,
+  IAttributes,
+  IImages,
+  ITypedMoney,
+  TokenPayload,
+};
 
 export type EventCallback = (e: Event) => void;

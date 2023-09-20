@@ -3,12 +3,14 @@ import { RegExps, ErrorMessages, InputTypes } from '../../data/validation';
 
 export const ValidationData: Record<string, PatternAndMessage[]> = {
   EMAIL: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.AT_SYMBOL, ErrorMessages.ONE_AT_SYMBOL],
     [RegExps.DOMAIN, ErrorMessages.DOMAIN],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
     [RegExps.EMAIL, ErrorMessages.EMAIL],
   ],
   PASSWORD: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.MIN_LENGTH, ErrorMessages.MIN_LENGTH],
     [RegExps.ONE_UPPERCASE, ErrorMessages.ONE_UPPERCASE],
     [RegExps.ONE_LOWERCASE, ErrorMessages.ONE_LOWERCASE],
@@ -31,6 +33,7 @@ export const ValidationData: Record<string, PatternAndMessage[]> = {
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
   STREET: [
+    [RegExps.NO_HASH, ErrorMessages.NO_HASH],
     [RegExps.ONE_SYMBOL, ErrorMessages.ONE_SYMBOL],
     [RegExps.NO_EDGE_WHITESPACE, ErrorMessages.NO_EDGE_WHITESPACE],
   ],
